@@ -100,13 +100,14 @@ ${render_comment(comment, thread.title, i == thread.stat.comments)}
 ${render_comment(comment, None, i == thread.stat.comments)}
 % endfor
 
+% if web.user:
 <div class="row row-offcanvas row-offcanvas-left" id="comment">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
-            <img src="http://image.eveonline.com/Character/${comment.creator.character.id}_64.jpg" style="width: 64px; height: 64px;" class="img-thumbnail img-circle">
+            <img src="http://image.eveonline.com/Character/${web.user.character.id}_64.jpg" style="width: 64px; height: 64px;" class="img-thumbnail img-circle">
         </div>
         <div class="media-body" style="padding-top: 12px;">
-            <a href="/profile/${comment.creator.id}"><strong>${comment.creator.character.name}</strong></a><br>
+            <a href="/profile/${web.user.id}"><strong>${web.user.character.name}</strong></a><br>
             <small>right now</small>
         </div>
     </div>
@@ -136,4 +137,4 @@ ${render_comment(comment, None, i == thread.stat.comments)}
         </div>
     </div>
 </div>
-<!-- End Forum Thread -->
+% endif
