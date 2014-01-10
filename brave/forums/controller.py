@@ -82,8 +82,8 @@ class RootController(Controller):
         util.mail.start()
         
         # Load our keys into a usable form.
-        config['api.private'] = SigningKey.from_string(unhexlify(config['api.key']), curve=NIST256p, hashfunc=sha256)
-        config['api.public'] = config['api.private'].get_verifying_key()
+        config['api.private'] = SigningKey.from_string(unhexlify(config['api.private']), curve=NIST256p, hashfunc=sha256)
+        config['api.public'] = VerifyingKey.from_string(unhexlify(config['api.private']), curve=NIST256p, hashfunc=sha256)
     
     def die(self):
         """Simply explode.  Useful to get the interactive debugger up."""
