@@ -91,7 +91,7 @@ class RootController(Controller):
     
     def index(self):
         if authenticated:
-            return 'brave.forums.template.index', dict()
+            return 'brave.forums.template.index', dict(announcements=Forum.objects.get(short='ann'))
         
         return 'brave.forums.template.welcome', dict()
     

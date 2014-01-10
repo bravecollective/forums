@@ -5,10 +5,6 @@
 
 <%block name="title">${forum.name}</%block>
 
-<%block name="header">
-    ${parent.header()}
-</%block>
-
 <%block name="post">
     ${parent.post()}
 
@@ -38,7 +34,6 @@
                 
                 return false;
             });
-
         
             $('#new-discussion').on('click', function(){
                 var self = $(this);
@@ -51,18 +46,17 @@
     </script>
 </%block>
 
-
 <div class="page-header">
     <h1>${forum.name} <small>${forum.summary}</small></h1>
 </div>
 
 % if web.user:  # todo: check security
-<div class="row row-offcanvas row-offcanvas-left" id="discuss" style="display: none;">
-    <div class="col-xs-3 col-sm-3 text-right media">
+<div class="row row-offcanvas row-offcanvas-left" id="discuss">
+    <div class="col-xs-3 col-sm-3 text-right media thumb-64">
         <div class="pull-right media-object text-center">
-            <img src="http://image.eveonline.com/Character/${web.user.character.id}_64.jpg" style="width: 64px; height: 64px;" class="img-thumbnail img-circle">
+            <img src="http://image.eveonline.com/Character/${web.user.character.id}_64.jpg" class="img-thumbnail img-circle">
         </div>
-        <div class="media-body" style="padding-top: 12px;">
+        <div class="media-body">
             <a href="/profile/${web.user.id}"><strong>${web.user.character.name}</strong></a><br>
             <small>right now</small>
         </div>
@@ -70,47 +64,48 @@
     
     <div class="col-xs-9 col-sm-9">
         <div class="panel panel-default">
-            <nav class="navbar navbar-default navbar-static-top" style="margin: 0; border-top-left-radius: 4px; border-top-right-radius: 4px;">
+            <nav class="navbar navbar-default navbar-static-top">
                 <div class="navbar-header">
-                    <span class="navbar-brand"><i class="fa fa-comments"></i> Discuss</span>
+                    <span class="navbar-brand"><i class="fa fa-lg fa-comments"></i> Discuss</span>
                 </div>
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#comment-panel" data-toggle="tab"><i class="fa fa-pencil-square"></i> Write</a></li>
                     <li><a id="trigger-preview" href="#preview-panel" data-toggle="tab"><i class="fa fa-check-square"></i> Preview</a></li>
                 </ul>
-                <button id="comment-submit" type="button" class="btn navbar-btn btn-primary navbar-right" style="margin-right: 8px;"><i class="fa fa-fw fa-check"></i> Start Discussion</button>
+                <button id="comment-submit" type="button" class="btn navbar-btn btn-primary navbar-right"><i class="fa fa-fw fa-check"></i> Start Discussion</button>
             </nav>
 
-            <div class="tab-content" style="padding: 0;">
-                <form class="tab-pane fade in active panel-body" id="comment-panel" action="/${forum.short}/" method="post" style="padding: 0;">
-                    <input id="thread-title" class="form-control" placeholder="Enter a title for your discussion." style="border-width: 0; padding: 25px 15px; font-size: 16px; line-height: 1.4em; border-radius: 0;" autofocus>
-                    <textarea id="comment-message" class="form-control" placeholder="Leave a comment." style="border-width: 0; padding: 15px; font-size: 14px; line-height: 1.4em; border-top-left-radius: 0; border-top-right-radius: 0;" rows="5"></textarea>
+            <div class="tab-content">
+                <form class="tab-pane fade in active panel-body" id="comment-panel" action="/${forum.short}/" method="post">
+                    <input id="thread-title" class="form-control" placeholder="Enter a title for your discussion." autofocus>
+                    <textarea id="comment-message" class="form-control" placeholder="Leave a comment." rows="5"></textarea>
                 </form>
                 <div class="tab-pane fade" id="preview-panel">
-                    <div id="spinner" style="display: none; text-align: center; padding: 25px;"><i class="fa fa-5x fa-cog fa-spin"></i></div>
-                    <div class="content" style="display: none; padding: 15px; font-size: 14px; line-height: 1.4em;"></div>
+                    <div id="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
+                    <div class="content"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<ul class="nav nav-pills pull-right" style="margin: 0;">
-    <li><a href="#" id="new-discussion"><i class="fa fa-comments" style="margin-right: 5px;"></i>Start Discussion</a></li>
+<ul class="nav nav-pills pull-right">
+    <li><a href="#" id="new-discussion"><i class="fa fa-comments fa-lg"></i>Start Discussion</a></li>
 </ul>
 % endif
 
-<h4 style="padding-left: 16px; padding-top: 15px;">Discussion Threads</h4>
-        
+<h4>Discussion Threads</h4>
+
+<%def name="threads(forum, results, page=1, limit=15)">
 <ul class="list-group media-list clearfix">
-    % if not forum.threads.skip((page-1)*15).limit(15).count():
+    % if not results.skip((page-1) * limit).limit(limit).count():
     <li class="list-group-item">
         <h4>No threads found.</h4>
     </li>
     % endif
-    % for thread in forum.threads.skip((page-1)*15).limit(15):
-    <a href="/${forum.short}/${thread.id}" class="list-group-item media" style="margin-top: 0;">
-        <img src="http://image.eveonline.com/Character/${thread.comments[0].creator.character.id}_64.jpg" class="pull-left media-object" style="width: 44px; height: 44px; border-radius: 5px;">
+    % for thread in results.skip((page-1)*limit).limit(limit):
+    <a href="/${forum.short}/${thread.id}" class="list-group-item media thread">
+        <img src="http://image.eveonline.com/Character/${thread.comments[0].creator.character.id}_64.jpg" class="pull-left media-object thumb-44">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${thread.stat.views}</big><br><small>view${'' if thread.stat.views == 1 else 's'}</small>
         </div>
@@ -142,3 +137,6 @@
     </a>
     % endfor
 </ul>
+</%def>
+
+${threads(forum, forum.threads, page)}

@@ -95,6 +95,7 @@ class Forum(Document):
     # The tag needed to read (view) or wrie (post to) this forum.
     read = StringField(db_field='r')
     write = StringField(db_field='w')
+    moderate = StringField(db_field='m')
     
     @property
     def threads(self):

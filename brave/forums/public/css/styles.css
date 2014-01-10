@@ -1,0 +1,169 @@
+h5 {
+    text-align: center;
+}
+
+.page-header {
+    margin-bottom: 10px;
+}
+
+#wrap > .container {
+    padding-top: 50px;
+}
+
+.jumbotron .actions {
+    margin: 35px 0 0;
+    text-align: center;
+}
+
+.jumbotron .actions em {
+    margin: 0 15px;
+}
+
+#wrap > .container > ul.nav-pills.pull-right {
+    margin: 0;
+}
+
+#wrap > .container > h4 {
+    padding-left: 16px;
+    padding-top: 15px;
+}
+
+ul.nav-pills i.fa {
+    margin-right: 5px;
+}
+
+.navbar.navbar-inverse.navbar-fixed-top {
+    box-shadow: 1px 0px 5px rgba(0,0,0,0.35);
+}
+
+.navbar.navbar-inverse.navbar-fixed-top .navbar-brand {
+    text-transform: uppercase;
+}
+
+.navbar-brand small {
+    font-weight: 200;
+}
+
+.thumb-64 img {
+    width: 64px;
+    height: 64px;
+}
+
+.thumb-44 {
+    width: 44px;
+    height: 44px;
+    border-radius: 5px;
+}
+
+.thumb-50 {
+    width: 50px;
+    height: 50px;
+}
+
+.thumb-64 .media-body {
+    padding-top: 12px;
+}
+
+#discuss {
+    display: none;
+}
+
+#discuss .panel > .navbar {
+    margin: 0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+#discuss .tab-content, #comment .tab-content {
+    padding: 0;
+}
+
+#discuss form, #comment form {
+    padding: 0;
+}
+
+#discuss #spinner, #comment #spinner {
+    display: none;
+    text-align: center;
+    padding: 25px;
+}
+
+#comment textarea {
+    border-width: 0;
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.4em;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#discuss .tab-pane .content, #comment .tab-pane .content {
+    display: none;
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.4em;
+}
+
+#thread-title {
+    border-width: 0;
+    padding: 25px 15px;
+    font-size: 16px;
+    line-height: 1.4em;
+    border-radius: 0;
+}
+
+#comment-message {
+    border-width: 0;
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.4em;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#comment-submit {
+    margin-right: 8px;
+}
+
+.thread {
+    margin-top: 0;
+}
+
+.comment {
+    position: relative;
+}
+
+.comment > .media {
+    z-index: 2;
+}
+
+.comment > .media-body {
+    padding-top: 5px;
+}
+
+.comment > .liner {
+    position: absolute;
+    left: 250px;
+    top: 0px;
+    bottom: 0px;
+    width: 4px;
+    background-color: #f0f0f0;
+    z-index: 1;
+}
+
+.thread-actions {
+    margin: 10px 0;
+}
+
+div[id^="comment-"] {
+}
+
+#comment .author {
+    padding-top: 12px;
+}
+
+#comment .navbar {
+    margin: 0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
