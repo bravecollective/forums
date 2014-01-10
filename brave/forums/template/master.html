@@ -1,0 +1,53 @@
+## encoding: utf-8
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%block name="header">
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title><%block name="title"/> — Brave Collective: Forums</title>
+
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="shortcut icon" href="/ico/favicon.png">
+        
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+        <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        
+        <%block name="styles"/>
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+        </%block>
+    </head>
+    <body>
+        <%block name="pre"/>
+        <div id="wrap">
+            <%include file="brave.forums.template.navigation"/>
+
+            <div class="container" style="padding-top: 50px;">
+                ${self.body()}
+            </div>
+        </div>
+
+        <%block name="post">
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <script src="/js/vendor/jquery.timeago.js" charset="utf-8"></script>
+        <script src="/js/vendor/jquery.cookie.js" charset="utf-8"></script>
+        <script src="/js/changedelay.js"></script>
+        <script src="/js/script.js"></script>
+        </%block>
+    </body>
+</html>

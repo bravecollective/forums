@@ -1,0 +1,13 @@
+## encoding: utf-8
+
+<%!
+
+import bbcode
+
+%>
+
+<%def name="iso(date)">${date.strftime('%Y-%m-%dT%H:%M:%S%z') if date else ''}</%def>
+
+<%def name="pretty(date)">${date.strftime('%B %e, %G at %H:%M:%S') if date else 'Never'}</%def>
+
+<%def name="bb(source)">${bbcode.render_html(source)|n}</%def>

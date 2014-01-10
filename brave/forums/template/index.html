@@ -1,0 +1,23 @@
+## encoding: utf-8
+
+<%inherit file="brave.forums.template.master"/>
+
+<%block name="title">Forum Index</%block>
+
+<%block name="header">
+    ${parent.header()}
+</%block>
+
+<%block name="post">
+    ${parent.post()}
+
+    <script type="text/javascript" charset="utf-8">
+        $(function(){
+        });
+    </script>
+</%block>
+
+<div class="page-header">
+    <h1>Use the Menu, Luke <small>Select the forum you wish to browse from the menu above.</small></h1>
+</div>
+
