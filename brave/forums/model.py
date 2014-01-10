@@ -63,7 +63,7 @@ class Ticket(Document):
         
         else:
             # TODO: Also update the corporate details, if appropriate.
-            user.update(set__token=identifier, set__seen=datetime.utcnow(), set__tags=result.tags)
+            user.update(set__token=identifier, set__seen=datetime.utcnow(), set__tags=result.get('tags', []))
         
         return user.id, user
     
