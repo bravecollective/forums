@@ -56,6 +56,7 @@
     <h1>${forum.name} <small>${forum.summary}</small></h1>
 </div>
 
+% if web.user:
 <div class="row row-offcanvas row-offcanvas-left" id="discuss" style="display: none;">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
@@ -97,6 +98,7 @@
 <ul class="nav nav-pills pull-right" style="margin: 0;">
     <li><a href="#" id="new-discussion"><i class="fa fa-comments" style="margin-right: 5px;"></i>Start Discussion</a></li>
 </ul>
+% endif
 
 <h4 style="padding-left: 16px; padding-top: 15px;">Discussion Threads</h4>
         
