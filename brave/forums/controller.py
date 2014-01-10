@@ -83,7 +83,7 @@ class RootController(Controller):
         
         # Load our keys into a usable form.
         config['api.private'] = SigningKey.from_string(unhexlify(config['api.private']), curve=NIST256p, hashfunc=sha256)
-        config['api.public'] = VerifyingKey.from_string(unhexlify(config['api.private']), curve=NIST256p, hashfunc=sha256)
+        config['api.public'] = VerifyingKey.from_string(unhexlify(config['api.public']), curve=NIST256p, hashfunc=sha256)
     
     def die(self):
         """Simply explode.  Useful to get the interactive debugger up."""
