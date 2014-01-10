@@ -33,7 +33,7 @@ class Ticket(Document):
     character = EmbeddedDocumentField(Entity, db_field='c', default=lambda: Entity())
     corporation = EmbeddedDocumentField(Entity, db_field='o', default=lambda: Entity())
     alliance = EmbeddedDocumentField(Entity, db_field='a', default=lambda: Entity())
-    tags = ListField(StringField(), db_field='t', default=list)
+    tags = ListField(StringField(), db_field='g', default=list)
     
     expires = DateTimeField(db_field='e')
     seen = DateTimeField(db_field='s')
