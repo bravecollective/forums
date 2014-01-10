@@ -56,7 +56,7 @@
     <h1>${forum.name} <small>${forum.summary}</small></h1>
 </div>
 
-% if web.user:
+% if web.user:  # todo: check security
 <div class="row row-offcanvas row-offcanvas-left" id="discuss" style="display: none;">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
@@ -114,6 +114,11 @@
         <div class="pull-right media-object hidden-xs text-center">
             <big>${thread.stat.views}</big><br><small>view${'' if thread.stat.views == 1 else 's'}</small>
         </div>
+        % if thread.flag.locked:
+        <div class="pull-right media-object hidden-xs text-center">
+            <big><i class="fa fa-lock fa-lg"></i></big><br><small>locked</small>
+        </div>
+        % endif
         % if thread.stat.comments:
         <div class="pull-right media-object hidden-xs text-center">
             <big>${thread.stat.comments}</big><br><small>repl${'y' if thread.stat.comments == 1 else 'ies'}</small>

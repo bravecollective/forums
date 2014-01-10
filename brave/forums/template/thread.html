@@ -83,6 +83,11 @@
     <div class="col-xs-9 col-sm-9">
         <ul class="nav nav-pills">
             <li><a href="/${forum.short}/"><i class="fa fa-arrow-circle-o-up fa-lg"></i> Back to <strong>${forum.name}</strong></a></li>
+            % if thread.flag.locked:
+            <li class="pull-right disabled"><a href="#comment-panel" class="disabled"><i class="fa fa-lock fa-lg"></i> Thread Locked</a></li>
+            % else:
+            <li class="pull-right" class="disabled"><a href="#comment-panel"><i class="fa fa-arrow-circle-o-down fa-lg"></i> Comment</a></li>
+            % endif
         </ul>
     </div>
 </div>
@@ -100,7 +105,7 @@ ${render_comment(comment, thread.title, i == thread.stat.comments)}
 ${render_comment(comment, None, i == thread.stat.comments)}
 % endfor
 
-% if web.user:
+% if web.user and not thread.flag.locked:
 <div class="row row-offcanvas row-offcanvas-left" id="comment">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
