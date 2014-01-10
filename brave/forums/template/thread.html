@@ -106,7 +106,7 @@ ${render_comment(comment, None, i == thread.stat.comments)}
 % endfor
 
 % if web.user and not thread.flag.locked:
-<div class="row row-offcanvas row-offcanvas-left" id="comment">
+<div class="row row-offcanvas row-offcanvas-left" id="comment-${i}">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
             <img src="http://image.eveonline.com/Character/${web.user.character.id}_64.jpg" style="width: 64px; height: 64px;" class="img-thumbnail img-circle">
