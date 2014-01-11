@@ -50,7 +50,7 @@ Channel.defaults = {
     
     accept: 'text/plain, application/json, text/html',
     type: 'auto',
-    retry: 500, // retry after 5 seconds
+    retry: 1500, // retry after 15 seconds
     timeout: 300000, // 5 minutes
 };
  
@@ -72,9 +72,7 @@ Channel.prototype.listen = function() {
         }).done(this.success).fail(this.failure).complete(this.done);
     }
     
-    this.failures += 1;
-    
-    if ( this.failures > 3 ) {
+    if ( ! this.alive ) {
         jQuery(this).trigger('channel.death');
         return;
     }

@@ -33,7 +33,8 @@
                         return;
                     }
                     
-                    window.location = window.location;
+                    // We would have had our own message pushed to us.  :3
+                    $('#comment-message').val('');
                 });
                 
                 return false;
@@ -49,6 +50,9 @@
             
             $(channel).on({
                     "channel.message": function(e, data, xhr) {
+                            if ( $('#comment-' + data.index).exists() ) return;
+                            if ( data.index === undefined ) return;
+                            
                             var template = $('.comment:last').clone();
                             $('.media-object img', template).attr('src', 'http://image.eveonline.com/Character/' + data.character.nid + '_64.jpg');
                             $('.media-object time', template).attr('datetime', data.when.iso).text(data.when.pretty);

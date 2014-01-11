@@ -45,6 +45,7 @@ class ThreadController(Controller):
             import bbcode
             
             payload = dict(
+                    index = len(self.thread.comments) - 1,
                     character = dict(id=unicode(user.id), nid=user.character.id, name=user.character.name),
                     when = dict(
                             iso = self.thread.comments[-1].created.strftime('%Y-%m-%dT%H:%M:%S%z'),
