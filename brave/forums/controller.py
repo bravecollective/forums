@@ -46,7 +46,10 @@ class ThreadController(Controller):
             
             payload = dict(
                     character = dict(id=unicode(user.id), nid=user.character.id, name=user.character.name),
-                    when = dict(iso="", pretty=""),
+                    when = dict(
+                            iso = self.thread.comments[-1].created.strftime('%Y-%m-%dT%H:%M:%S%z'),
+                            pretty = self.thread.comments[-1].created.strftime('%B %e, %G at %H:%M:%S')
+                        ),
                     message = bbcode.render_html(message)
                 )
             

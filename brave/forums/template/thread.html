@@ -51,6 +51,7 @@
                     "channel.message": function(e, data, xhr) {
                             var template = $('.comment:last').clone();
                             $('.media-object img', template).attr('src', 'http://image.eveonline.com/Character/' + data.character.nid + '_64.jpg');
+                            $('.media-object time', template).attr('datetime', data.when.iso).text(data.when.pretty);
                             $('.media-body > a', template).attr('href', '/profile/' + data.character.id);
                             $('.media-body > a strong', template).text(data.character.name);
                             $('.panel-heading', template).remove();
