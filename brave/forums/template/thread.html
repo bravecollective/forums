@@ -55,7 +55,7 @@
                             $('.media-body > a strong', template).text(data.character.name);
                             $('.panel-heading', template).remove();
                             $('.panel-body', template).html(data.message);
-                            template.appendTo($('.comment:last').parent());
+                            $('.comment:last').parent().append(template);
                         },
                     "channel.death": function(e) {
                             $('.connection-state').removeClass('active');
