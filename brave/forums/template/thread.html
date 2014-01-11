@@ -11,7 +11,16 @@
 
 <%block name="post">
     ${parent.post()}
-
+    
+    <script src="/js/live.js">
+        $(function(){
+        
+            var thread = new Thread();
+            thread.toggle();
+        
+        });
+    </script>
+    
     <script type="text/javascript" charset="utf-8">
         $(function(){
             
@@ -45,52 +54,6 @@
             $('#jump-to-comment').on('click', function(){
                 $('#comment-message').focus();
             });
-            
-            // Realtime, bitches!  (I've been up for a few days...)
-            
-            var channel = $.channel({path: window.location + '/live', type: 'json'});
-            
-            $(channel).on({
-                    "channel.message": function(e, data, xhr) {
-                            if ( ! data.hasOwnProperty('index') ) return;
-                            if ( $('#comment-' + data.index).length ) return;
-                            
-                            var template = $('.comment:last').clone();
-                            $('.media-object img', template).attr('src', 'http://image.eveonline.com/Character/' + data.character.nid + '_64.jpg');
-                            $('.media-object time', template).attr('datetime', data.when.iso).text(data.when.pretty);
-                            $('.media-body > a', template).attr('href', '/profile/' + data.character.id);
-                            $('.media-body > a strong', template).text(data.character.name);
-                            $('.panel-heading', template).remove();
-                            $('.panel-body', template).html(data.message);
-                            $('<div class="liner"></div>').insertAfter('.comment:last .media');
-                            template.insertAfter('.comment:last');
-                        },
-                    "channel.death": function(e) {
-                            $('.connection-state').removeClass('active');
-                            $('i.live').addClass('hidden');
-                            $('i.disconnected').removeClass('hidden');
-                        },
-                });
-            
-            $('#toggle-live').click(function(){
-                var self = $(this);
-                
-                if ( $('.connection-state').hasClass('active') ) {
-                    $('i.live').addClass('hidden');
-                    $('i.disconnected').removeClass('hidden');
-                    channel.live = false;
-                } else {
-                    $('i.live').removeClass('hidden');
-                    $('i.disconnected').addClass('hidden');
-                    channel.failures = 0;
-                    channel.listen();
-                }
-                
-                $('.connection-state').toggleClass('active');
-            });
-            
-            
-            
         });
     </script>
 </%block>
@@ -144,7 +107,7 @@ id="comment-${i}">
             % else:
             <li class="pull-right"><a href="#comment-panel" id="jump-to-comment"><i class="fa fa-arrow-circle-o-down fa-lg"></i> Comment</a></li>
             % endif
-            <li><a href="/${forum.short}/"><i class="fa fa-arrow-circle-o-up fa-lg"></i> Back to <strong>${forum.name}</strong></a></li>
+            <li><a href="/${forum.short}/"><i class="fa fa-arrow-circle-o-left fa-lg"></i> Back to <strong>${forum.name}</strong></a></li>
             <li class="pull-right connection-state active"><a href="#" id="toggle-live">
                 <i class="fa fa-lg fa-refresh fa-spin live"></i>
                 <i class="fa fa-lg fa-cog fa-spin connecting hidden"></i>
