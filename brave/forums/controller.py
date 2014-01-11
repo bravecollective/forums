@@ -63,7 +63,7 @@ class ThreadController(Controller):
     
     def __default__(self, page):
         if page == 'live':
-            response.headers['x-accel-redirect'] = '/_live?id={0}'.format(self.thread.id)
+            response.headers[b'x-accel-redirect'] = b'/_live?id={0}'.format(self.thread.id)
             return ""
         
         return 'brave.forums.template.thread', dict(page=int(page), forum=self.forum, thread=self.thread), dict(only='comments')
