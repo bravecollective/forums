@@ -51,7 +51,7 @@ class ThreadController(Controller):
                 )
             
             try:
-                r = requests.post('http://auth.bravecollective.net/_push?id={0}'.format(self.thread.id), data=json.dumps(payload))
+                r = requests.post('http://forum.bravecollective.net/_push?id={0}'.format(self.thread.id), data=json.dumps(payload))
                 if not r.status_code == requests.codes.ok:
                     log.error("Error posting push notification.")
             except:
@@ -61,7 +61,7 @@ class ThreadController(Controller):
         
         return 'brave.forums.template.thread', dict(page=1, forum=self.forum, thread=self.thread)
     
-    def __default__(self, page):
+    def __default__(self, page, id=None):
         if page == 'live':
             response.headers[b'x-accel-redirect'] = b'/_live?id={0}'.format(self.thread.id)
             return ""

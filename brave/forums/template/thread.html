@@ -49,7 +49,13 @@
             
             $(channel).on({
                     "channel.message": function(e, data, xhr) {
-                            console.log(data, xhr);
+                            var template = $('.comment:last').clone();
+                            $('.media-object img', template).attr('src', 'http://image.eveonline.com/Character/' + data.character.nid + '_64.jpg');
+                            $('.media-body > a', template).attr('href', '/profile/' + data.character.id);
+                            $('.media-body > a strong', template).text(data.character.name);
+                            $('.panel-heading', template).remove();
+                            $('.panel-body', template).html(data.message);
+                            template.appendTo($('.comment:last').parent());
                         },
                     "channel.death": function(e) {
                             $('.connection-state').removeClass('active');
@@ -60,15 +66,12 @@
             
             $('#toggle-live').click(function(){
                 var self = $(this);
-                console.log('here');
                 
                 if ( $('.connection-state').hasClass('active') ) {
-                    console.log("closing");
                     $('i.live').addClass('hidden');
                     $('i.disconnected').removeClass('hidden');
                     channel.live = false;
                 } else {
-                    console.log("opening");
                     $('i.live').removeClass('hidden');
                     $('i.disconnected').addClass('hidden');
                     channel.failures = 0;
