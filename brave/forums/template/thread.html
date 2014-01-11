@@ -55,6 +55,7 @@
                             $('.media-body > a strong', template).text(data.character.name);
                             $('.panel-heading', template).remove();
                             $('.panel-body', template).html(data.message);
+                            $('<div class="liner"></div>').insertAfter('.comment:last .media');
                             template.insertAfter('.comment:last');
                         },
                     "channel.death": function(e) {
