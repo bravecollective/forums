@@ -26,7 +26,8 @@
             });
             
             $('#comment-submit').on('click', function(){
-                $(this).addClass('disabled').attr('disabled', true);
+                var self = $(this);
+                self.addClass('disabled').attr('disabled', true);
                 
                 $.post($('#comment-panel').attr('action'), {message: $('#comment-message').val()}, function(result){
                     if ( ! result.success ) {
@@ -35,6 +36,7 @@
                     
                     // We would have had our own message pushed to us.  :3
                     $('#comment-message').val('');
+                    self.removeClass('disabled').attr('disabled', false);
                 });
                 
                 return false;
