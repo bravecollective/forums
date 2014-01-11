@@ -50,8 +50,8 @@ Channel.defaults = {
     
     accept: 'text/plain, application/json, text/html',
     type: 'auto',
-    retry: 1500, // retry after 15 seconds
-    timeout: 300000, // 5 minutes
+    retry: 15000, // retry after 15 seconds
+    timeout: 900000, // 5 minutes
 };
  
  
