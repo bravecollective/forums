@@ -50,8 +50,8 @@
             
             $(channel).on({
                     "channel.message": function(e, data, xhr) {
+                            if ( ! data.hasOwnProperty('index') ) return;
                             if ( $('#comment-' + data.index).exists() ) return;
-                            if ( data.index === undefined ) return;
                             
                             var template = $('.comment:last').clone();
                             $('.media-object img', template).attr('src', 'http://image.eveonline.com/Character/' + data.character.nid + '_64.jpg');
