@@ -23,24 +23,113 @@
     }
 }());
 
-$(function(){
+
+
+// A jQuery extension to handle Nginx HTTP Push Module (NHPM) communication.
+ 
+var Channel = function(options) {
+    this.settings = jQuery.extend({}, Channel.defaults, options);
     
-    // Add associative array seriailzation.
-    $.fn.serializeAssoc = function() {
-        var o = {};
-        var a = this.serializeArray();
-        $.each(a, function() {
-            if (o[this.name] !== undefined) {
-                if (!o[this.name].push) {
-                    o[this.name] = [o[this.name]];
-                }
-                o[this.name].push(this.value || '');
-            } else {
-                o[this.name] = this.value || '';
-            }
-        });
-        return o;
+    this.alive = true;
+    this.failures = 0;
+    
+    if ( this.settings.onMessage )
+        jQuery(this).bind('channel.message', this.settings.onMessage);
+    
+    if ( this.settings.onError )
+        jQuery(this).bind('channel.', this.settings.onMessage);
+    
+    this.listen();
+    
+    return this;
+};
+ 
+ 
+Channel.defaults = {
+    path: '/listen',
+    
+    accept: 'text/plain, application/json, text/html',
+    type: 'auto',
+    retry: 500, // retry after 5 seconds
+    timeout: 300000, // 5 minutes
+};
+ 
+ 
+Channel.prototype.listen = function() {
+    var self = this;
+    
+    function closure() {
+        jQuery.ajax(this.settings.path, {
+            accept: this.settings.accept,
+            cache: true,
+            dataType: this.settings.type,
+            global: false,
+            headers: {},
+            ifModified: true,
+            type: 'GET',
+            context: this,
+            timeout: this.settings.timeout,
+        }).done(this.success).fail(this.failure).complete(this.done);
+    }
+    
+    this.failures += 1;
+    
+    if ( this.failures > 3 ) {
+        jQuery(this).trigger('channel.death');
+        return;
+    }
+    
+    setTimeout(function(){closure.apply(self)}, this.failures == 1 ? 0 : this.settings.retry);
+}
+
+
+Channel.prototype.error = function(xhr, status) {
+    if ( status == 'abort' )
+        this.alive = false;
+    
+    else if ( status == 'error' || status == 'parsererror' )
+        this.failures++;
+    
+    if ( this.failures > 3 )
+        this.alive = false;
+    
+    console.log("Failure:", xhr, status);
+};
+ 
+ 
+Channel.prototype.success = function(data, status, xhr) {
+    // Reset failure count.
+    this.failures = 0;
+    
+    console.log("Success:", data, status, xhr);
+    $(this).trigger('channel.message', [data, xhr]);
+};
+ 
+ 
+Channel.prototype.done = function(xhr, status) {
+    console.log("Done:", status);
+    
+    // notmodified, error, timeout, abort, parsererror
+    if ( status != 'success' )
+        jQuery(this).trigger('channel.' + status, [xhr]);
+    
+    if ( this.alive )
+        this.listen()
+};
+ 
+ 
+(function($){
+    
+    $.channel = function(options) {
+        var channel = new Channel(options);
+        return channel;
     };
+    
+})(jQuery);
+
+
+
+$(function(){
     
     // Allow links to open modal dialogs pulled from server-side resources.
     // Also dynamically fires a callback for the relevant popup, if data-trigger is set.

@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from binascii import hexlify, unhexlify
 from hashlib import sha256
 from web.auth import authenticate, user
-from web.core import config, Controller, url, request
+from web.core import config, Controller, url, request, response
 from web.core.http import HTTPFound, HTTPNotFound
 from web.auth import authenticated
 from marrow.mailer import Mailer
@@ -39,11 +39,33 @@ class ThreadController(Controller):
                 ))
             self.thread.save()
             
+            # TODO: move this out for better performance.
+            import requests
+            import json
+            import bbcode
+            
+            payload = dict(
+                    character = dict(id=unicode(user.id), nid=user.character.id, name=user.character.name),
+                    when = dict(iso="", pretty=""),
+                    message = bbcode.render_html(message)
+                )
+            
+            try:
+                r = requests.post('http://auth.bravecollective.net/_push?id={0}'.format(self.thread.id), data=json.dumps(payload))
+                if not r.status_code == requests.codes.ok:
+                    log.error("Error posting push notification.")
+            except:
+                log.exception("Error posting push notification.")
+            
             return 'json:', dict(success=True)
         
         return 'brave.forums.template.thread', dict(page=1, forum=self.forum, thread=self.thread)
     
     def __default__(self, page):
+        if page == 'live':
+            response.headers['x-accel-redirect'] = '/_live?id={0}'.format(self.thread.id)
+            return ""
+        
         return 'brave.forums.template.thread', dict(page=int(page), forum=self.forum, thread=self.thread), dict(only='comments')
 
 
@@ -126,6 +148,18 @@ class RootController(Controller):
 
     def nolove(self, token):
         return 'brave.forums.template.whynolove', dict()
+    
+    def live(self):
+        """Per-user notification channel.
+        
+        TODO: Eventually MUX everything through here.  Need a dispatcher.
+        """
+        
+        if not authenticated:
+            raise HTTPNotFound()
+        
+        response.headers['x-accel-redirect'] = '/_live?id={0}'.format(user.id)
+        return ""
     
     def __lookup__(self, forum, *args, **kw):
         return ForumController(forum), args
