@@ -151,6 +151,50 @@ ul.nav-pills i.fa {
     z-index: 1;
 }
 
+/* START - Media Queries for .liner classes */
+
+@media (min-width:0px) and (max-width:767px) {
+   .comment > .liner{
+		display:none
+	}
+}
+
+@media (min-width: 768px){
+	.comment > .liner{
+		left: 147px;
+	}
+}
+
+@media (min-width: 992px){
+	.comment > .liner{
+		left: 201px;
+	}
+}
+
+@media (min-width: 1200px){
+	.comment > .liner{
+		left: 251px;
+	}
+}
+
+/* END - Media Queries for .liner classes */
+
+/* START - Media Queries for Hiding Icon Fonts in the comment pane at small screen sizes */
+
+@media (min-width: 768px){
+	#comment .panel i.fa{
+		display:none;
+	}
+}
+
+@media (min-width: 992px){
+	#comment .panel i.fa{
+		display:inline;
+	}
+}
+
+/* END - Media Queries for Hiding Icon Fonts in the comment pane at small screen sizes */
+
 .thread-actions {
     margin: 10px 0;
 }
@@ -177,5 +221,6 @@ div[id^="comment-"] {
 }
 
 #style-panel .content{
-	padding: 0; display: block;
+	padding: 0;
+	display: block !important;
 }
