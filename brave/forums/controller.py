@@ -148,7 +148,13 @@ class RootController(Controller):
     
     def preview(self, content):
         import bbcode
-        return bbcode.render_html(content)
+
+        # If no content has been submitted to preview, show an alert box instead
+        if content.strip() == '':
+            return 'brave.forums.template.thread', dict(), dict(only="no_preview"),
+        else:
+            return bbcode.render_html(content)
+
 
     def nolove(self, token):
         return 'brave.forums.template.whynolove', dict()
@@ -167,4 +173,3 @@ class RootController(Controller):
     
     def __lookup__(self, forum, *args, **kw):
         return ForumController(forum), args
-    
