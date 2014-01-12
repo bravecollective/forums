@@ -20,6 +20,10 @@ from brave.forums.model import Forum, Thread, Comment
 log = __import__('logging').getLogger(__name__)
 
 
+def get_channel(*tokens):
+    return '/_live?id={0}'.format(sha256('-'.join(tokens)))
+
+
 class ThreadController(Controller):
     def __init__(self, forum, id):
         self.forum = forum
@@ -55,7 +59,7 @@ class ThreadController(Controller):
                 ))
             
             try:
-                r = requests.post('http://forum.bravecollective.net/_push?id={0}'.format(self.thread.id), data=json.dumps(payload))
+                r = requests.post('http://forum.bravecollective.net/_push?id={0}'.format(get_channel(str(self.thread.id))), data=json.dumps(payload))
                 if not r.status_code == requests.codes.ok:
                     log.error("Error posting push notification.")
             except:
@@ -66,10 +70,6 @@ class ThreadController(Controller):
         return 'brave.forums.template.thread', dict(page=1, forum=self.forum, thread=self.thread)
     
     def __default__(self, page, id=None):
-        if page == 'live':
-            response.headers[b'x-accel-redirect'] = b'/_live?id={0}'.format(self.thread.id)
-            return ""
-        
         return 'brave.forums.template.thread', dict(page=int(page), forum=self.forum, thread=self.thread), dict(only='comments')
 
 
