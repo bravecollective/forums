@@ -92,7 +92,7 @@ class Forum(Document):
     name = StringField(db_field='n')
     summary = StringField(db_field='u')
     
-    # The tag needed to read (view) or wrie (post to) this forum.
+    # The tag needed to read (view) or write (post to) this forum.
     read = StringField(db_field='r')
     write = StringField(db_field='w')
     moderate = StringField(db_field='m')
