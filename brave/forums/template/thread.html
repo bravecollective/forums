@@ -32,16 +32,18 @@
             
             $('#comment-submit').on('click', function(){
                 var self = $(this);
-                self.addClass('disabled').attr('disabled', true);
+                self.addClass('disabled').prop('disabled', true);
                 
                 $.post($('#comment-panel').attr('action'), {message: $('#comment-message').val()}, function(result){
                     if ( ! result.success ) {
+                        alert(result.message);
+                        self.removeClass('disabled').prop('disabled', false);
                         return;
                     }
                     
-                    // We would have had our own message pushed to us.  :3
+                    // We would hopefully have had our own message pushed to us.  :3
                     $('#comment-message').val('');
-                    self.removeClass('disabled').attr('disabled', false);
+                    self.removeClass('disabled').prop('disabled', false);
                 });
                 
                 return false;
