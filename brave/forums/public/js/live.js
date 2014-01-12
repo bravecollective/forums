@@ -196,8 +196,8 @@ Notifications.prototype.trouble = function(xhr) {
 
 
 Notifications.prototype.on_message = function(e, data, xhr) {
-    console.log('Notifications.message', data.handler, data.payload);
-    $(this).trigger('notice.' + data.handler, [data.payload]);
+    console.log('Notifications.message', data.class, data.payload);
+    $(this).trigger('notice.' + data.class, [data.payload]);
 };
 
 
@@ -207,7 +207,7 @@ Notifications.prototype.on_message = function(e, data, xhr) {
 var Thread = function() {
     console.log('Thread.init');
 
-    this.channel = new Notifications(window.location + '/live');
+    this.channel = new Notifications($('body').data('thread-endpoint'));
     
     $(this.channel).on({
             "notice.locked": $.proxy(this, 'locked'),

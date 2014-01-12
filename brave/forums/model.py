@@ -38,6 +38,9 @@ class Ticket(Document):
     expires = DateTimeField(db_field='e')
     seen = DateTimeField(db_field='s')
     
+    def __repr__(self):
+        return "<Ticket {0.id} \"{0.character.name}\">".format(self)
+    
     @classmethod
     def authenticate(cls, identifier, password=None):
         """Validate the given identifier; password is ignored."""

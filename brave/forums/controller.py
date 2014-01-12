@@ -15,6 +15,7 @@ from ecdsa.curves import NIST256p
 from brave.core.api.client import API
 from brave.forums import util
 from brave.forums.model import Forum, Thread, Comment
+from brave.forums.live import Channel
 
 
 log = __import__('logging').getLogger(__name__)
@@ -27,8 +28,8 @@ def get_channel(*tokens):
 class ThreadController(Controller):
     def __init__(self, forum, id):
         self.forum = forum
-        Thread.objects(id=id).update_one(inc__stat__views=1)
         self.thread = Thread.objects.get(id=id)
+        self.channel = Channel(self.forum.id, self.thread.id)
         super(ThreadController, self).__init__()
     
     def index(self, page=1, message=None, upload=None, vote=None):
@@ -43,31 +44,22 @@ class ThreadController(Controller):
                 ))
             self.thread.save()
             
-            # TODO: move this out for better performance.
-            import requests
-            import json
-            import bbcode
-            
-            payload = dict(handler='comment', payload=dict(
-                    index = len(self.thread.comments) - 1,
+            payload = dict(
+                    index = self.thread.stat.comments,
                     character = dict(id=unicode(user.id), nid=user.character.id, name=user.character.name),
                     when = dict(
                             iso = self.thread.comments[-1].created.strftime('%Y-%m-%dT%H:%M:%S%z'),
                             pretty = self.thread.comments[-1].created.strftime('%B %e, %G at %H:%M:%S')
                         ),
                     message = bbcode.render_html(message)
-                ))
+                )
             
-            try:
-                r = requests.post('http://forum.bravecollective.net/_push?id={0}'.format(get_channel(str(self.thread.id))), data=json.dumps(payload))
-                if not r.status_code == requests.codes.ok:
-                    log.error("Error posting push notification.")
-            except:
-                log.exception("Error posting push notification.")
+            self.channel.send('commented', payload)
             
             return 'json:', dict(success=True)
         
-        return 'brave.forums.template.thread', dict(page=1, forum=self.forum, thread=self.thread)
+        Thread.objects(id=self.thread.id).update_one(inc__stat__views=1)
+        return 'brave.forums.template.thread', dict(page=1, forum=self.forum, thread=self.thread, endpoint=self.channel.receiver)
     
     def __default__(self, page, id=None):
         return 'brave.forums.template.thread', dict(page=int(page), forum=self.forum, thread=self.thread), dict(only='comments')
