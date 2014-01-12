@@ -71,4 +71,4 @@ class Channel(object):
 class UserChannel(Channel):
     @classmethod
     def hash(cls, tokens):
-        return Channel.hash(session.id, session['_creation_time'], repr(user._current_obj(), *tokens)
+        return Channel.hash(session.id, session['_creation_time'], repr(user._current_obj()), *tokens)
