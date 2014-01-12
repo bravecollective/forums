@@ -24,7 +24,7 @@ Channel.defaults = {
     path: '/listen',  // we default to the global per-user channel for convienence
     
     accept: 'text/plain, application/json, text/html',
-    type: undefined,  // usually we get json back, though sometimes we might simply stream HTML
+    type: 'json',  // usually we get json back, though sometimes we might simply stream HTML
     
     // these will need to be tweaked to balance performance and load
     
@@ -256,8 +256,7 @@ Thread.prototype.unlocked = function(data) {
 
 
 Thread.prototype.commented = function(e, data) {
-    console.log(data);
-    console.log("Thread.commented", data.character.name);
+    console.log("Thread.commented", data, data.character.name);
 
     if ( ! data.hasOwnProperty('index') ) return;
     if ( $('#comment-' + data.index).length ) return;
