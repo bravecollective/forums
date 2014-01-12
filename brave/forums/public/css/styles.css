@@ -167,3 +167,15 @@ div[id^="comment-"] {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
+
+.previewAlert{
+	margin-bottom: 0;
+}
+
+#style-panel{
+	padding: 0;
+}
+
+#style-panel .content{
+	padding: 0; display: block;
+}
