@@ -173,4 +173,3 @@ class RootController(Controller):
     
     def __lookup__(self, forum, *args, **kw):
         return ForumController(forum), args
-    
