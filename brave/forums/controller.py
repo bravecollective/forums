@@ -23,9 +23,6 @@ from brave.forums.live import Channel
 log = __import__('logging').getLogger(__name__)
 
 
-def get_channel(*tokens):
-    return '/_live?id={0}'.format(sha256('-'.join(tokens)))
-
 
 class ThreadController(Controller):
     def __init__(self, forum, id):
@@ -56,7 +53,7 @@ class ThreadController(Controller):
                     message = bbcode.render_html(message)
                 )
             
-            self.channel.send('commented', payload)
+            self.channel.send('comment', payload)
             
             return 'json:', dict(success=True)
         
