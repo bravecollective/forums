@@ -151,6 +151,34 @@ ul.nav-pills i.fa {
     z-index: 1;
 }
 
+/* START - Media Queries for .liner classes */
+
+@media (min-width:0px) and (max-width:767px) {
+   .comment > .liner {
+		display:none
+	}
+}
+
+@media (min-width: 768px){
+	.comment > .liner {
+		left: 147px;
+	}
+}
+
+@media (min-width: 992px){
+	.comment > .liner {
+		left: 201px;
+	}
+}
+
+@media (min-width: 1200px){
+	.comment > .liner {
+		left: 251px;
+	}
+}
+
+/* END - Media Queries for .liner classes */
+
 .thread-actions {
     margin: 10px 0;
 }
