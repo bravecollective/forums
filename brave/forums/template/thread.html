@@ -12,17 +12,13 @@
 <%block name="post">
     ${parent.post()}
     
-    <script src="/js/live.js">
-        $(function(){
-        
-            var thread = new Thread();
-            thread.toggle();
-        
-        });
-    </script>
+    <script src="/js/live.js"></script>
     
     <script type="text/javascript" charset="utf-8">
         $(function(){
+        
+            var thread = new Thread();
+            // thread.toggle();
             
             $('a#trigger-preview').on('show.bs.tab', function(e) {
                 $('#preview-panel .content').empty().hide();
@@ -108,10 +104,10 @@ id="comment-${i}">
             <li class="pull-right"><a href="#comment-panel" id="jump-to-comment"><i class="fa fa-arrow-circle-o-down fa-lg"></i> Comment</a></li>
             % endif
             <li><a href="/${forum.short}/"><i class="fa fa-arrow-circle-o-left fa-lg"></i> Back to <strong>${forum.name}</strong></a></li>
-            <li class="pull-right connection-state active"><a href="#" id="toggle-live">
-                <i class="fa fa-lg fa-refresh fa-spin live"></i>
+            <li class="pull-right connection-state"><a href="#" id="toggle-live">
+                <i class="fa fa-lg fa-refresh fa-spin live hidden"></i>
                 <i class="fa fa-lg fa-cog fa-spin connecting hidden"></i>
-                <i class="fa fa-lg fa-minus disconnected hidden"></i>
+                <i class="fa fa-lg fa-minus disconnected"></i>
                 Live
             </a></li>
         </ul>
