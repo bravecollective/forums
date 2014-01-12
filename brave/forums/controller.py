@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import bbcode
+
 from binascii import hexlify, unhexlify
 from hashlib import sha256
 from web.auth import authenticate, user
@@ -139,8 +141,6 @@ class RootController(Controller):
         raise HTTPFound(location='/')
     
     def preview(self, content):
-        import bbcode
-
         # If no content has been submitted to preview, show an alert box instead
         if content.strip() == '':
             return 'brave.forums.template.thread', dict(), dict(only="no_preview"),
