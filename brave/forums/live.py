@@ -41,15 +41,15 @@ class Channel(object):
     
     @property
     def url(self):
-        return b'{0}{1}'.format(self.url_base, sha256(self.id).hexdigest())
+        return b'{0}{1}'.format(self.url_base, self.id)
     
     @property
     def receiver(self):
-        return b'{0}{1}'.format(self.url, sha256(self.id).hexdigest())
+        return b'{0}{1}'.format(self.receiver_base, self.id)
     
     @classmethod
     def hash(cls, tokens):
-        return sha256(b"".join(str(i) for i in tokens)
+        return sha256(b"".join(str(i) for i in tokens)).hexdigest()
     
     def send(self, cls, content):
         payload = dict(
