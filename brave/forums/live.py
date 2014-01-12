@@ -51,9 +51,9 @@ class Channel(object):
     def hash(cls, tokens):
         return sha256(b"".join(str(i) for i in tokens)).hexdigest()
     
-    def send(self, cls, content):
+    def send(self, handler, content):
         payload = dict(
-                class = cls,
+                handler = handler,
                 payload = content,
             )
         
