@@ -128,11 +128,13 @@
     </div>
 </div>
 
-<%
+<%def name="no_preview">
+<div class="alert alert-danger">Nothing to Preview, Try Again!</div>
+</%def>
 
+<%
 comments = enumerate(thread.comments)
 i, comment = comments.next()
-
 %>
 
 ${render_comment(comment, thread.title, i == thread.stat.comments)}

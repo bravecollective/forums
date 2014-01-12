@@ -151,7 +151,7 @@ class RootController(Controller):
 
         # If no content has been submitted to preview, show an alert box instead
         if content.strip() == '':
-            return 'brave.forums.template.nocommentpreview', dict()
+            return 'brave.forums.template.thread', dict(), dict(only="no_preview"),
         else:
             return bbcode.render_html(content)
 
