@@ -177,5 +177,6 @@ div[id^="comment-"] {
 }
 
 #style-panel .content{
-	padding: 0; display: block;
+	padding: 0;
+	display: block !important;
 }
