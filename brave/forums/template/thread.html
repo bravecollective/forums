@@ -54,6 +54,8 @@
             $('#jump-to-comment').on('click', function(){
                 $('#comment-message').focus();
             });
+
+            $('.style-collapse').collapse();
         });
     </script>
 </%block>
@@ -95,7 +97,7 @@ id="comment-${i}">
 </%def>
 
 <%def name="no_preview()">
-    <div class="alert alert-danger">Nothing to Preview, Try Again!</div>
+    <div class="alert alert-danger previewAlert">Nothing to Preview, Try Again!</div>
 </%def>
 
 <div class="page-header">
@@ -183,8 +185,8 @@ ${render_comment(comment, None, i == thread.stat.comments)}
                     <div id="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
                     <div class="content"></div>
                 </div>
-                <div class="tab-pane fade" id="style-panel" style="padding: 0;">
-                    <div class="content" style="padding: 0;">
+                <div class="tab-pane fade" id="style-panel">
+                    <div class="content">
 
                         <div class="panel-group" id="style-accordion">
 
@@ -238,7 +240,7 @@ ${render_comment(comment, None, i == thread.stat.comments)}
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseTwo" class="panel-collapse collapse in">
+                                <div id="collapseTwo" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <table class="table table-condensed table-striped">
                                             <thead>
@@ -285,7 +287,7 @@ ${render_comment(comment, None, i == thread.stat.comments)}
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseThree" class="panel-collapse collapse in">
+                                <div id="collapseThree" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <table class="table table-condensed table-striped">
                                             <thead>
@@ -320,7 +322,7 @@ ${render_comment(comment, None, i == thread.stat.comments)}
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseFour" class="panel-collapse collapse in">
+                                <div id="collapseFour" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <table class="table table-condensed table-striped">
                                             <thead>
