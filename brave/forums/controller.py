@@ -44,7 +44,7 @@ class ThreadController(Controller):
             import json
             import bbcode
             
-            payload = dict(
+            payload = dict(handler='comment', payload=dict(
                     index = len(self.thread.comments) - 1,
                     character = dict(id=unicode(user.id), nid=user.character.id, name=user.character.name),
                     when = dict(
@@ -52,7 +52,7 @@ class ThreadController(Controller):
                             pretty = self.thread.comments[-1].created.strftime('%B %e, %G at %H:%M:%S')
                         ),
                     message = bbcode.render_html(message)
-                )
+                ))
             
             try:
                 r = requests.post('http://forum.bravecollective.net/_push?id={0}'.format(self.thread.id), data=json.dumps(payload))
