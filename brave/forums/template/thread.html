@@ -154,6 +154,7 @@ ${render_comment(comment, None, i == thread.stat.comments)}
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#comment-panel" data-toggle="tab"><i class="fa fa-pencil-square"></i> Write</a></li>
                     <li><a id="trigger-preview" href="#preview-panel" data-toggle="tab"><i class="fa fa-check-square"></i> Preview</a></li>
+                    <li><a id="trigger-preview" href="#style-panel" data-toggle="tab"><i class="fa fa-font"></i> Style Guide</a></li>
                 </ul>
                 <button id="comment-submit" type="button" class="btn navbar-btn btn-primary navbar-right"><i class="fa fa-fw fa-check"></i> Submit Comment</button>
             </nav>
@@ -165,6 +166,104 @@ ${render_comment(comment, None, i == thread.stat.comments)}
                 <div class="tab-pane fade" id="preview-panel">
                     <div id="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
                     <div class="content"></div>
+                </div>
+                <div class="tab-pane fade" id="style-panel">
+                    <div class="content">
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Text Formatting</div>
+
+  <!-- List group -->
+  <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <th>BB Code</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>This text is [b]bold![/b]</code></td>
+            <td>This text is <strong>hello world</strong></td>
+          </tr>
+          <tr>
+            <td><code>This text is [b]emphasised![/b]</code></td>
+            <td>This text is <em>emphasised!</em></td>
+          </tr>
+          <tr>
+            <td><code>This text is [u]underlined![/u]</code></td>
+            <td>This text is <u>underlined!</u></td>
+          </tr>
+          <tr>
+            <td><code>This text is [color=red]red![/color]</code></td>
+            <td>This text is <span style="color:red">red!</span></td>
+          </tr>
+        </tbody>
+  </table>
+</div>
+
+                        <h4>Text Formatting</h4>
+                        <dl class="dl-horizontal">
+                            <dt>Bold Text</dt>
+                            <dd>
+                                <code>[b]hello world[/b]</code> = <strong>hello world</strong>
+                            </dd>
+                            <dt>Italicised Text</dt>
+                            <dd>
+                                <code>[i]hello world[/i]</code> = <em>hello world</em>
+                            </dd>
+                            <dt>Underlined Text</dt>
+                            <dd>
+                                <code>[u]hello world[/u]</code> = <u>hello world</u>
+                            </dd>
+                            <dt>Colored Text</dt>
+                            <dd>
+                                <code>[color=red]hello world[/color]</code> = <span style="color:red;">hello world</span>
+                            </dd>
+                        </dl>
+
+                        <h4>List Formatting</h4>
+                        <dl class="dl-horizontal">
+                            <dt>Unordered List</dt>
+                            <dd>
+                                <code>[list]<br />[*]one<br />[*]two<br />[/list]<br /></code><br />
+                                    <ul><li>one</li><li>two</li></ul>
+                            </dd>
+                            <dt>Numbered List</dt>
+                            <dd>
+                                <code>[list=1]<br />[*]one]<br />[*]two]<br />[/list]<br /></code><br />
+                                    <ol style="list-style-type:decimal;"><li>one</li><li>two</li></ol>
+                            </dd>
+                        </dl>
+
+                        <h4>URL Formatting</h4>
+                        <dl class="dl-horizontal">
+                            <dt>Unordered List</dt>
+                            <dd>
+                                <code>[url]http://foo.com/s.php?some--data[/url]</code> = <a href="http://foo.com/s.php?some--data" onclick="return false;">http://foo.com/s.php?some--data</a>
+                            </dd>
+                            <dt>Numbered List</dt>
+                            <dd>
+                                <code>[url=apple.com]link[/url]</code> = <a href="http://apple.com" onclick="return false;">link</a>
+                            </dd>
+                        </dl>
+
+                        <h4>Block Formatting</h4>
+                        <dl class="dl-horizontal">
+                            <dt>Unordered List</dt>
+                            <dd>
+                                <code>[quote]<br />testing<br />strip<br />[/quote]</code><br />
+                                    <blockquote>testing<br />strip</blockquote>
+                            </dd>
+                            <dt>Numbered List</dt>
+                            <dd>
+                                <code>[code]<br />testing<br />strip<br />[/code]</code><br />
+                                    <code>testing<br />strip</code>
+                            </dd>
+                        </dl>
+
+                    </div>
                 </div>
             </div>
         </div>
