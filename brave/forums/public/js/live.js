@@ -30,8 +30,8 @@ Channel.defaults = {
     
     idle: 3600,  // stop trying after an hour of no activity  [TODO]
     retry: 5,  // initially retry every 5 seconds, but this increases each try up to the maximum
-    maximum: 60,  // don't wait longer than a minute betwen attempts to poll
-    timeout: 60,  // 10 minutes, if we can get away with it
+    maximum: 5,  // don't wait longer than a minute betwen attempts to poll
+    timeout: 600,  // 10 minutes, if we can get away with it
     failures: 5,  // maximum number of consecutive errors before giving up
 };
 
