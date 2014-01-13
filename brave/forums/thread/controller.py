@@ -60,7 +60,7 @@ class CommentIndex(HTTPMethod):
             self.thread.delete()
             return 'json:', dict(
                     success = True,
-                    location = url('/', short)
+                    location = url('/' + short)
                 )
         
         Thread.objects(comments__id=self.comment).update_one(inc__stat__comments=-1, pull__comments__id=self.comment)
