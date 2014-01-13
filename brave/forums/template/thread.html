@@ -15,7 +15,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
     ${parent.header()}
 </%block>
 
-<%block name="bodydata"> data-thread-endpoint="${endpoint}"</%block>
+<%block name="bodydata"> data-thread-endpoint="${endpoint}" data-base="${"/{0}/{1}".format(forum.short, thread.id)}"</%block>
 
 <%block name="post">
     ${parent.post()}
@@ -27,6 +27,76 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
         
             var thread = new Thread();
             thread.toggle();
+            
+            // TODO: Make these work for live-injected comments.
+            
+            function moveCaretToEnd(el) {
+                if (typeof el.selectionStart == "number") {
+                    el.selectionStart = el.selectionEnd = el.value.length;
+                } else if (typeof el.createTextRange != "undefined") {
+                    el.focus();
+                    var range = el.createTextRange();
+                    range.collapse(false);
+                    range.select();
+                }
+            }
+            
+            $('.comment .actions .quote').on('click', function(e){
+                var self = $(this),
+                    identifier = self.parents('.comment').attr('id'),
+                    target = $('body').data('base') + '/' + identifier,
+                    message = $('#comment-message');
+                
+                // TODO: Confirm this before enacting.  ;P
+                
+                $.get(target, function(result){
+                    if ( result.success ) {
+                        message.val(message.val() + "[quote=" + result.character + "]" + result.comment + "[/quote]\n\n");
+                        $('#jump-to-comment').click();
+                    }
+                });
+                
+                e.preventDefault();
+                return false;
+            });
+            
+            $('.comment .actions .delete').on('click', function(e){
+                var self = $(this),
+                    identifier = self.parents('.comment').attr('id'),
+                    target = $('body').data('base') + '/' + identifier;
+                
+                // TODO: Confirm this before enacting.  ;P
+                
+                $.get(target, {"_verb": "delete"}, function(result){
+                    if ( result.success ) {
+                        self.parents('.comment').remove();
+                    }
+                });
+                
+                e.preventDefault();
+                return false;
+            });
+            
+            $('.sjax').on('click', function(e){
+                var self = $(this),
+                    pill = self.parent(),
+                    target = self.attr('href');
+                
+                $.get(target, function(result){
+                    if ( result.success ) {
+                        if ( result.enabled ) {
+                            pill.addClass('active');
+                        } else {
+                            pill.removeClass('active');
+                        }
+                    }
+                });
+                
+                e.preventDefault();
+                return false;
+            });
+            
+            
             
             $('a#trigger-preview').on('show.bs.tab', function(e) {
                 $('#preview-panel .content').empty().hide();
@@ -58,7 +128,8 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
             });
             
             $('#jump-to-comment').on('click', function(){
-                $('#comment-message').focus();
+                var comment = $('#comment-message').focus();
+                moveCaretToEnd(comment[0]);
             });
 
             $('.style-collapse').collapse();
@@ -85,30 +156,29 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
             Live
         </a></li>
     % elif side == 'right':
+        % if web.user and 'forum.admin' in web.user.tags:
         <li${' class="active"' if thread.flag.locked else ''}><a href="${BASE}/lock" class="sjax"><i class="fa fa-lock fa-fw fa-lg"></i></a></li>
         <li${' class="active"' if thread.flag.sticky else ''}><a href="${BASE}/sticky" class="sjax"><i class="fa fa-thumb-tack fa-fw fa-lg"></i></a></li>
         <li${' class="active"' if thread.flag.hidden else ''}><a href="${BASE}/hide" class="sjax"><i class="fa fa-eye-slash fa-fw fa-lg"></i></a></li>
+        % endif
     % endif
 % else:  # Comment actions.
-    <li><a href="#" class="reply"><i class="fa fa-reply fa-fw fa-lg"></i></a></li>
+    <li><a href="#" class="quote"><i class="fa fa-reply fa-fw fa-lg"></i></a></li>
     % if web.user and comment.creator.id != web.user.id:
-    <li><a href="${BASE}/${i}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
+    <li><a href="${BASE}/${comment.id}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
     % endif
     % if web.user and ('forum.admin' in web.user.tags or comment.creator.id == web.user.id):
+    % if False:
     <li><a href="#" class="edit"><i class="fa fa-pencil fa-fw fa-lg"></i></a></li>
-    <li><a href="#" class="trash"><i class="fa fa-trash-o fa-fw fa-lg"></i></a></li>
+    % endif
+    <li><a href="#" class="delete"><i class="fa fa-trash-o fa-fw fa-lg"></i></a></li>
     % endif
 % endif
 </%def>
 
 
 <%def name="render_comment(comment, post_title=None, last=False, i=None)">
-<div class="row row-offcanvas row-offcanvas-left comment" \
-% if i:
-id="comment-${i}">
-% else:
->
-% endif
+<div class="row row-offcanvas row-offcanvas-left comment" id="${comment.id}">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
             <img src="http://image.eveonline.com/Character/${comment.creator.character.id}_64.jpg" class="img-thumbnail img-circle thumb-50">
@@ -221,172 +291,7 @@ ${render_comment(comment, None, i == thread.stat.comments)}
                 </div>
                 <div class="tab-pane fade" id="style-panel">
                     <div class="content">
-
-                        <div class="panel-group" id="style-accordion">
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#style-accordion" href="#collapseOne">
-                                            Text Formatting
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseOne" class="panel-collapse collapse in">
-                                    <div class="panel-body">
-                                        <table class="table table-condensed table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>BB Code</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>This text is <code>[b]</code>bold!<code>[/b]</code></td>
-                                                    <td>This text is <strong>bold!</strong></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>This text is <code>[i]</code>emphasised!<code>[/i]</code></td>
-                                                    <td>This text is <em>emphasised!</em></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>This text is <code>[u]</code>underlined!<code>[/u]</code></td>
-                                                    <td>This text is <u>underlined!</u></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>This text is <code>[color=red]</code>red!<code>[/color]</code></td>
-                                                    <td>This text is <span style="color:red">red!</span></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#style-accordion" href="#collapseTwo">
-                                            List Formatting
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseTwo" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <table class="table table-condensed table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>BB Code</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <code>[list]</code><br/><code>[*]</code>one<br/><code>[*]</code>two<br/><code>[/list]</code>
-                                                    </td>
-                                                    <td>
-                                                        <ul>
-                                                            <li>one</li>
-                                                            <li>two</li>
-                                                        </ul>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <code>[list=1]<br/><code>[*]</code>one</code><br/><code>[*]two]</code><br/><code>[/list]</code>
-                                                    </td>
-                                                    <td>
-                                                        <ol style="list-style-type:decimal;">
-                                                            <li>one</li>
-                                                            <li>two</li>
-                                                        </ol>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#style-accordion" href="#collapseThree">
-                                            URL Formatting
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseThree" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <table class="table table-condensed table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>BB Code</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <code>[url]</code>http://foo.com/s.php?some--data<code>[/url]</code>
-                                                    </td>
-                                                    <td>
-                                                        <a href="http://foo.com/s.php?some--data" onclick="return false;">http://foo.com/s.php?some--data</a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><code>[url=apple.com]</code>link<code>[/url]</code></td>
-                                                    <td><a href="http://apple.com" onclick="return false;">link</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#style-accordion" href="#collapseFour">
-                                            Block Formatting
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseFour" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <table class="table table-condensed table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>BB Code</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <code>[quote]</code><br/>testing<br/>strip<br/><code>[/quote]</code>
-                                                    </td>
-                                                    <td>
-                                                        <blockquote>testing<br/>strip</blockquote>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <code>[code]</code><br/>testing<br/>strip<br/><code>[/code]</code>
-                                                    </td>
-                                                    <td>
-                                                        <code>testing<br/>strip</code>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        <%include file="brave.forums.template.syntax"/>
                     </div>
                 </div>
             </div>

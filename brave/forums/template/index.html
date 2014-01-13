@@ -39,22 +39,22 @@
     <h4>${category_title}</h4>
     <ul class="list-group media-list clearfix">
         % for forum_item in forums_list:
-            <a href="/${forum.short}" class="list-group-item media thread">
+            <a href="/${forum_item.short}" class="list-group-item media thread">
 
-                <% threads_count = forum.threads.count() %>
+                <% threads_count = forum_item.threads.count() %>
                 <div class="pull-right media-object hidden-xs text-center">
                     <big>${threads_count}</big><br><small>thread${'s' if threads_count > 1 else ''}</small>
                 </div>
 
-                <% threads_count = forum.threads.count() %>
+                <% threads_count = forum_item.threads.count() %>
                 <div class="pull-right media-object hidden-xs text-center">
                     <big>${threads_count}</big><br><small>thread${'s' if threads_count > 1 else ''}</small>
                 </div>
 
                 <h4 class="list-group-item-heading">
-                    ${forum.name}
+                    ${forum_item.name}
                     <small>
-                        ${forum.summary}
+                        ${forum_item.summary}
                     </small>
                 </h4>
             </a>

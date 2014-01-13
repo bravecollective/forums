@@ -30,7 +30,7 @@ Channel.defaults = {
     
     idle: 3600,  // stop trying after an hour of no activity  [TODO]
     retry: 5,  // initially retry every 5 seconds, but this increases each try up to the maximum
-    maximum: 5,  // don't wait longer than a minute betwen attempts to poll
+    maximum: 60,  // don't wait longer than a minute betwen attempts to poll
     timeout: 600,  // 10 minutes, if we can get away with it
     failures: 5,  // maximum number of consecutive errors before giving up
 };
@@ -155,7 +155,7 @@ var Notifications = function(path) {
     console.log('Notifications.init');
 
     this.channel = new Channel({
-            path: $.extend({}, Notifications.defaults, {path: path}).path,  // I've been up for three days.
+            path: path,
         });
     
     $(this.channel).on({
@@ -213,6 +213,7 @@ var Thread = function() {
             "notice.locked": $.proxy(this, 'locked'),
             "notice.unlocked": $.proxy(this, 'unlocked'),
             "notice.comment": $.proxy(this, 'commented'),
+            "notice.stop": $.proxy(this, 'stop'),
             
             "starting": $.proxy(this, 'starting'),
             "stopping": $.proxy(this, 'starting'),
@@ -236,6 +237,11 @@ Thread.prototype.toggle = function(e) {
         this.channel.start();
     }
 };
+
+
+Thread.prototype.stop = function() {
+    this.channel.stop();
+}
 
 
 Thread.prototype.setState = function(level, state) {

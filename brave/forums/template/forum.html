@@ -93,176 +93,7 @@
                 </div>
                 <div class="tab-pane fade" id="style-panel" style="padding: 0;">
                     <div class="content" style="padding: 0;">
-
-                        <div class="panel-group" id="style-accordion">
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#style-accordion" href="#collapseOne">
-                                            Text Formatting
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseOne" class="panel-collapse collapse in">
-                                    <div class="panel-body">
-                                        <table class="table table-condensed table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>BB Code</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>This text is <code>[b]</code>bold!<code>[/b]</code></td>
-                                                    <td>This text is <strong>bold!</strong></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>This text is <code>[i]</code>emphasised!<code>[/i]</code></td>
-                                                    <td>This text is <em>emphasised!</em></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>This text is <code>[u]</code>underlined!<code>[/u]</code></td>
-                                                    <td>This text is <u>underlined!</u></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>This text is <code>[color=red]</code>red!<code>[/color]</code></td>
-                                                    <td>This text is <span style="color:red">red!</span></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#style-accordion" href="#collapseTwo">
-                                            List Formatting
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseTwo" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <table class="table table-condensed table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>BB Code</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <code>[list]</code><br/><code>[*]</code>one<br/><code>[*]</code>two<br/><code>[/list]</code>
-                                                    </td>
-                                                    <td>
-                                                        <ul>
-                                                            <li>one</li>
-                                                            <li>two</li>
-                                                        </ul>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <code>[list=1]<br/><code>[*]</code>one</code><br/><code>[*]two]</code><br/><code>[/list]</code>
-                                                    </td>
-                                                    <td>
-                                                        <ol style="list-style-type:decimal;">
-                                                            <li>one</li>
-                                                            <li>two</li>
-                                                        </ol>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#style-accordion" href="#collapseThree">
-                                            URL Formatting
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseThree" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <table class="table table-condensed table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>BB Code</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <code>[url]</code>http://foo.com/s.php?some--data<code>[/url]</code>
-                                                    </td>
-                                                    <td>
-                                                        <a href="http://foo.com/s.php?some--data" onclick="return false;">http://foo.com/s.php?some--data</a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <code>[url=apple.com]</code>link<code>[/url]</code>
-                                                    </td>
-                                                    <td>
-                                                        <a href="http://apple.com" onclick="return false;">link</a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#style-accordion" href="#collapseFour">
-                                            Block Formatting
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseFour" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <table class="table table-condensed table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>BB Code</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <code>[quote]</code><br/>testing<br/>strip<br/><code>[/quote]</code>
-                                                    </td>
-                                                    <td>
-                                                        <blockquote>testing<br/>strip</blockquote>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <code>[code]</code><br/>testing<br/>strip<br/><code>[/code]</code>
-                                                    </td>
-                                                    <td>
-                                                        <code>testing<br/>strip</code>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        <%include file="brave.forums.template.syntax"/>
                     </div>
                 </div>
             </div>
@@ -275,9 +106,7 @@
 </ul>
 % endif
 
-<h4>Discussion Threads</h4>
-
-<%def name="threads(forum, results, page=1, limit=15)">
+<%def name="threads(forum, results, page=1, limit=1500)">
 <ul class="list-group media-list clearfix">
     % if not results.skip((page-1) * limit).limit(limit).count():
     <li class="list-group-item">
@@ -285,7 +114,7 @@
     </li>
     % endif
     % for thread in results.skip((page-1)*limit).limit(limit):
-    <a href="/${forum.short}/${thread.id}" class="list-group-item media thread">
+    <a href="/${forum.short}/${thread.id}" class="list-group-item media thread${' dim' if thread.flag.hidden else ''}">
         <img src="http://image.eveonline.com/Character/${thread.comments[0].creator.character.id}_64.jpg" class="pull-left media-object thumb-44">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${thread.stat.views}</big><br><small>view${'' if thread.stat.views == 1 else 's'}</small>
@@ -320,4 +149,13 @@
 </ul>
 </%def>
 
-${threads(forum, forum.threads, page)}
+% if forum.threads.filter(flag__sticky=True).count():
+<h4>Sticky Threads</h4>
+
+${threads(forum, forum.threads.filter(flag__sticky=True))}
+% endif
+
+
+<h4>Discussion Threads</h4>
+
+${threads(forum, forum.threads.filter(flag__sticky=False), page)}

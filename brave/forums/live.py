@@ -4,22 +4,11 @@ from __future__ import unicode_literals
 
 import requests
 import json
-import bbcode
 
-from binascii import hexlify, unhexlify
 from hashlib import sha256
-from web.auth import authenticate, user
-from web.core import config, Controller, url, request, response
-from web.core.http import HTTPFound, HTTPNotFound
-from web.auth import authenticated
-from marrow.mailer import Mailer
-from ecdsa.keys import SigningKey, VerifyingKey
-from ecdsa.curves import NIST256p
-
+from web.auth import user
 
 from brave.core.api.client import API
-from brave.forums import util
-from brave.forums.model import Forum, Thread, Comment
 
 
 log = __import__('logging').getLogger(__name__)
@@ -34,7 +23,7 @@ class Channel(object):
     """
     
     url_base = b'http://forum.bravecollective.net/_push?id='
-    receiver_base = b'/_live?id='
+    receiver_base = b'/listen?id='
     
     def __init__(self, *tokens):
         self.id = self.hash(tokens)

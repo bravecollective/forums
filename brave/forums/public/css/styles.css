@@ -196,7 +196,7 @@ ul.nav-pills i.fa {
 /* END - Media Queries for Hiding Icon Fonts in the comment pane at small screen sizes */
 
 .thread-actions {
-    margin: 10px 0;
+    padding-bottom: 6px;
 }
 
 div[id^="comment-"] {
@@ -228,4 +228,36 @@ div[id^="comment-"] {
 .connection-state .live i{
 	top: -1px;
 	position: relative;
+}
+
+.comment .actions, .actions.right {
+    padding: 0;
+}
+
+.actions.left { text-align: right; }
+.actions.left .nav-pills { display: inline-block; text-align: right; }
+
+.comment .actions .nav-pills {
+    padding-top: 6px;
+}
+
+.comment .actions .nav-pills a, .actions.right .nav-pills a {
+    padding: 10px;
+}
+
+.comment .actions .nav-pills a i, .actions.right .nav-pills a i {
+    margin-right: 0;
+}
+
+.dim {
+    opacity: 0.5;
+    -webkit-transition: opacity .15s ease-in-out;
+    -moz-transition: opacity .15s ease-in-out;
+    -ms-transition: opacity .15s ease-in-out;
+    -o-transition: opacity .15s ease-in-out;
+    transition: opacity .15s ease-in-out;
+}
+
+.dim:hover, .dim:active {
+    opacity: 1;
 }
