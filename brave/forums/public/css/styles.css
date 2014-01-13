@@ -261,3 +261,18 @@ div[id^="comment-"] {
 .dim:hover, .dim:active {
     opacity: 1;
 }
+
+.likes {
+    font-size: 12px;
+    padding: 5px;
+}
+
+.like {
+    background-color: white;
+    display: inline-block;
+    padding: 3px 5px;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 3px;
+    -webkit-box-shadow: inset rgba(0, 0, 0, 0.0470588) 0px 1px 2px 0px;
+    font-weight: 500;
+}

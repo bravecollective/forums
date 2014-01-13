@@ -164,7 +164,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
     % endif
 % else:  # Comment actions.
     <li><a href="#" class="quote"><i class="fa fa-reply fa-fw fa-lg"></i></a></li>
-    % if web.user and comment.creator.id != web.user.id:
+    % if web.user and True or comment.creator.id != web.user.id:
     <li${' class="active"' if web.user.id in comment.vote_trail else ''}><a href="${BASE}/${comment.id}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
     % endif
     % if web.user and ('forum.admin' in web.user.tags or comment.creator.id == web.user.id):
@@ -186,7 +186,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
         <div class="media-body">
             <a href="/profile/${comment.creator.id}"><strong>${comment.creator.character.name}</strong></a>
             <br>
-            <small><strong>${comment.vote_count}</strong> ${'vote' if comment.vote_count == 1 else 'votes'}, <time class="relative" datetime="${comment.created |n,f.iso}">${comment.created |n,f.pretty}</time></small>
+            <small><time class="relative" datetime="${comment.created |n,f.iso}">${comment.created |n,f.pretty}</time></small>
         </div>
     </div>
     
@@ -204,6 +204,20 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
             <div class="panel-body">
                 ${comment.message | n, f.bb}
             </div>
+            % if comment.vote_count:
+            <div class="panel-footer likes">
+                <% from brave.forums.auth.model import Ticket %>
+                % for player in comment.vote_trail:
+                <%
+                t = Ticket.objects(id=player).only('character.name').first()
+                if not t:
+                    continue
+                %>
+                <span class="like">${t.character.name}</span>
+                % endfor
+                … ${'likes' if comment.vote_count == 1 else 'like'} this.
+            </div>
+            % endif
         </div>
     </div>
     
