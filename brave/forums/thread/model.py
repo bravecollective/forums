@@ -16,6 +16,9 @@ class Comment(EmbeddedDocument):
     id = ObjectIdField(db_field='i')
     message = StringField(db_field='m')
     
+    vote_count = IntField(db_field='vc', default=0)
+    vote_trail = ListField(db_field='vt', default=[])
+    
     creator = ReferenceField('Ticket')
     created = DateTimeField(db_field='dc', default=datetime.utcnow)
     modified = DateTimeField(db_field='dm')
