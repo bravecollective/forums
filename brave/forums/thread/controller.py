@@ -19,7 +19,8 @@ log = __import__('logging').getLogger(__name__)
 
 
 class CommentIndex(HTTPMethod):
-    def __init__(self, comment):
+    def __init__(self, thread, comment):
+        self.thread = thread
         self.comment = comment
         super(CommentIndex, self).__init__()
     
@@ -54,6 +55,14 @@ class CommentIndex(HTTPMethod):
         
         # TODO: Security!  Woo!  (Check admin or owner.)
         
+        if self.thread.comments[0].id == self.comment:
+            short = self.thread.forum.short
+            self.thread.delete()
+            return 'json:', dict(
+                    success = True,
+                    location = url('/', short)
+                )
+        
         Thread.objects(comments__id=self.comment).update_one(inc__stat__comments=-1, pull__comments__id=self.comment)
         
         return 'json:', dict(
@@ -62,9 +71,10 @@ class CommentIndex(HTTPMethod):
 
 
 class CommentController(Controller):
-    def __init__(self, comment):
+    def __init__(self, thread, comment):
+        self.thread = thread
         self.comment = comment
-        self.index = CommentIndex(comment)
+        self.index = CommentIndex(thread, comment)
         super(CommentController, self).__init__()
     
     def vote(self):
@@ -174,4 +184,4 @@ class ThreadController(Controller):
         except:
             raise HTTPNotFound()
         
-        return CommentController(comment), args
+        return CommentController(self.thread, comment), args
