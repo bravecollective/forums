@@ -38,7 +38,7 @@
 <%def name="category(category_title, forums_list)">
     <%def name="stat(singular, plural, count)">
         <div class="pull-right media-object hidden-xs text-center">
-            <big>${count}</big><br><small>${singular if count == 1 else plural}</small>
+            <big>${int(count)}</big><br><small>${singular if count == 1 else plural}</small>
         </div>
     </%def>
     
