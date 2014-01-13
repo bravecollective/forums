@@ -40,4 +40,4 @@ class Forum(Document):
     
     @classmethod
     def get(cls, short):
-        return cls.objects(short__in=short) if isinstance(short, (list, tuple)) else cls.obects.get(short=short)
+        return cls.objects(short__in=short) if isinstance(short, (list, tuple)) else cls.objects.get(short=short)
