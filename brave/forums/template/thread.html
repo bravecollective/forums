@@ -3,6 +3,12 @@
 <%inherit file="brave.forums.template.master"/>
 <%namespace name="f" file="brave.forums.template.filter"/>
 
+<%
+
+BASE = "/{0}/{1}".format(forum.short, thread.id)
+
+%>
+
 <%block name="title">${thread.title} — ${forum.name}</%block>
 
 <%block name="header">
@@ -60,6 +66,42 @@
     </script>
 </%block>
 
+<%def name="actions(side, comment=None, i=None)">
+% if comment is None:  # Global actions.
+    % if side == 'left':
+        <li><a href="/${forum.short}/"><i class="fa fa-arrow-circle-o-left fa-lg"></i> Back to <strong>${forum.name}</strong></a></li>
+    % elif side == 'middle':
+        % if thread.flag.locked:
+        <li class="disabled"><a href="#comment-panel" id="jump-to-comment"><i class="fa fa-arrow-circle-o-down fa-lg"></i> Comment</a></li>
+        <li class="disabled"><a href="#comment-panel" id="thread-locked" class="disabled"><i class="fa fa-lock fa-lg"></i> Thread Locked</a></li>
+        % else:
+        <li><a href="#comment-panel" id="jump-to-comment"><i class="fa fa-arrow-circle-o-down fa-lg"></i> Comment</a></li>
+        <li class="hidden disabled"><a href="#comment-panel" id="thread-locked" class="disabled"><i class="fa fa-lock fa-lg"></i> Thread Locked</a></li>
+        % endif
+        <li class="pull-right connection-state"><a href="#" id="toggle-live">
+            <i class="fa fa-lg fa-refresh fa-spin live hidden"></i>
+            <i class="fa fa-lg fa-cog fa-spin connecting hidden"></i>
+            <i class="fa fa-lg fa-minus disconnected"></i>
+            Live
+        </a></li>
+    % elif side == 'right':
+        <li${' class="active"' if thread.flag.locked else ''}><a href="${BASE}/lock" class="sjax"><i class="fa fa-lock fa-fw fa-lg"></i></a></li>
+        <li${' class="active"' if thread.flag.sticky else ''}><a href="${BASE}/sticky" class="sjax"><i class="fa fa-thumb-tack fa-fw fa-lg"></i></a></li>
+        <li${' class="active"' if thread.flag.hidden else ''}><a href="${BASE}/hide" class="sjax"><i class="fa fa-eye-slash fa-fw fa-lg"></i></a></li>
+    % endif
+% else:  # Comment actions.
+    <li><a href="#" class="reply"><i class="fa fa-reply fa-fw fa-lg"></i></a></li>
+    % if web.user and comment.creator.id != web.user.id:
+    <li><a href="${BASE}/${i}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
+    % endif
+    % if web.user and ('forum.admin' in web.user.tags or comment.creator.id == web.user.id):
+    <li><a href="#" class="edit"><i class="fa fa-pencil fa-fw fa-lg"></i></a></li>
+    <li><a href="#" class="trash"><i class="fa fa-trash-o fa-fw fa-lg"></i></a></li>
+    % endif
+% endif
+</%def>
+
+
 <%def name="render_comment(comment, post_title=None, last=False, i=None)">
 <div class="row row-offcanvas row-offcanvas-left comment" \
 % if i:
@@ -81,7 +123,7 @@ id="comment-${i}">
     <div class="liner"></div>
     % endif
     
-    <div class="col-xs-9 col-sm-9">
+    <div class="col-xs-7 col-sm-7">
         <div class="panel panel-default">
             % if post_title:
             <div class="panel-heading">
@@ -92,6 +134,12 @@ id="comment-${i}">
                 ${comment.message | n, f.bb}
             </div>
         </div>
+    </div>
+    
+    <div class="col-xs-2 col-sm-2 actions">
+        <ul class="nav nav-pills">
+            ${actions(None, comment, i)}
+        </ul>
     </div>
 </div>
 </%def>
@@ -105,23 +153,9 @@ id="comment-${i}">
 </div>
 
 <div class="row row-offcanvas row-offcanvas-left thread-actions">
-    <div class="col-xs-3 col-sm-3"></div>
-    <div class="col-xs-9 col-sm-9">
-        <ul class="nav nav-pills">
-            % if thread.flag.locked:
-            <li class="pull-right disabled"><a href="#comment-panel" class="disabled"><i class="fa fa-lock fa-lg"></i> Thread Locked</a></li>
-            % else:
-            <li class="pull-right"><a href="#comment-panel" id="jump-to-comment"><i class="fa fa-arrow-circle-o-down fa-lg"></i> Comment</a></li>
-            % endif
-            <li><a href="/${forum.short}/"><i class="fa fa-arrow-circle-o-left fa-lg"></i> Back to <strong>${forum.name}</strong></a></li>
-            <li class="pull-right connection-state"><a href="#" id="toggle-live">
-                <i class="fa fa-lg fa-refresh fa-spin live hidden"></i>
-                <i class="fa fa-lg fa-cog fa-spin connecting hidden"></i>
-                <i class="fa fa-lg fa-minus disconnected"></i>
-                Live
-            </a></li>
-        </ul>
-    </div>
+    <div class="col-xs-3 col-sm-3 actions left"><ul class="nav nav-pills">${actions('left')}</ul></div>
+    <div class="col-xs-7 col-sm-7 actions middle"><ul class="nav nav-pills">${actions('middle')}</ul></div>
+    <div class="col-xs-2 col-sm-2 actions right"><ul class="nav nav-pills">${actions('right')}</ul></div>
 </div>
 
 <%
