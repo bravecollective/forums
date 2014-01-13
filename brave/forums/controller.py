@@ -108,8 +108,18 @@ class RootController(Controller):
     
     def index(self):
         if authenticated:
-            return 'brave.forums.template.index', dict(announcements=Forum.objects.get(short='ann'))
-        
+
+            forum_categories = [
+                ("Announcements", Forum.objects(short__in=('ann',))),
+                ("Management", Forum.objects(short__in=('council', 'it'))),
+                ("General Discussions", Forum.objects(short__in=('p', 'a', 'c'))),
+                ("EVE Discussions", Forum.objects(short__in=('pvp', 'pve', 'm', 'i', 'd'))),
+                ("BRAVE Dojo", Forum.objects(short__in=('dg', 'ds'))),
+                ("Other", Forum.objects(short__in=('b', 'n', 'g', 'z'))),
+            ]
+            return 'brave.forums.template.index', dict(announcements=Forum.objects.get(short='ann'),
+                                                       forum_categories=forum_categories)
+
         return 'brave.forums.template.welcome', dict()
     
     def authorize(self):
