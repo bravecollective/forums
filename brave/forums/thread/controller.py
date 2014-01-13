@@ -78,7 +78,28 @@ class CommentController(Controller):
         super(CommentController, self).__init__()
     
     def vote(self):
-        pass
+        try:
+            comment = Thread._get_collection().find({'c': {'$elemMatch': {'i': self.comment}}}, {'c.$': 1}).next()
+        except StopIteration:
+            raise HTTPNotFound()
+        
+        try:
+            comment = comment['c'][0]
+        except:
+            raise HTTPNotFound()
+        
+        if user.id in comment.get('vt', []):
+            Thread.objects(comments__id=self.comment).update_one(inc__comments__S__vote_count=-1, pull__comments__S__vote_trail=user.id)
+            enabled = False
+            
+        else:
+            Thread.objects(comments__id=self.comment).update_one(inc__comments__S__vote_count=1, push__comments__S__vote_trail=user.id)
+            enabled = True
+        
+        return 'json:', dict(
+                success = True,
+                enabled = enabled
+            )
     
 
 
