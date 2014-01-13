@@ -224,3 +224,8 @@ div[id^="comment-"] {
 	padding: 0;
 	display: block !important;
 }
+
+.connection-state .live i{
+	top: -1px;
+	position: relative;
+}
