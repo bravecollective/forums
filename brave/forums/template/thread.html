@@ -206,16 +206,19 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
             </div>
             % if comment.vote_count:
             <div class="panel-footer likes">
+                <span class="fa-stack fa-fw fa-2x pull-right" style="margin-top: -5px; color: #aaa">
+                    <i class="fa fa-stack-1x fa-inverse fa-thumbs-up"></i>
+                    <i class="fa fa-stack-1x fa-thumbs-o-up"></i>
+                </span>
                 <% from brave.forums.auth.model import Ticket %>
                 % for player in comment.vote_trail:
                 <%
-                t = Ticket.objects(id=player).only('character.name').first()
+                t = Ticket.objects(id=player).only('character.name', 'character.id').first()
                 if not t:
                     continue
                 %>
-                <span class="like">${t.character.name}</span>
+                <img class="like" src="http://image.eveonline.com/Character/${comment.creator.character.id}_32.jpg" alt="${t.character.name}" title="${t.character.name}">
                 % endfor
-                … ${'likes' if comment.vote_count == 1 else 'like'} this.
             </div>
             % endif
         </div>
