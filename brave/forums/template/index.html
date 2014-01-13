@@ -36,7 +36,7 @@
 </ul>
 
 <%def name="category(category_title, forums_list)">
-    <%def name="stat(side, comment=None, i=None)">
+    <%def name="stat(singular, plural, count)">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${count}</big><br><small>${singular if count == 1 else plural}</small>
         </div>
@@ -49,7 +49,7 @@
 
                 ${stat('thread', 'threads', forum_item.threads.count())}
                 ${stat('comment', 'comments', forum_item.threads.sum('stat__comments'))}
-                ${stat('view', 'views',forum_item.threads.sum('stat__views'))}
+                ${stat('view', 'views', forum_item.threads.sum('stat__views'))}
 
                 <h4 class="list-group-item-heading">
                     ${forum_item.name}
