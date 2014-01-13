@@ -27,7 +27,6 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
     def index(self):
         if authenticated:
             forum_categories = [
-                    ("Announcements", Forum.get(('ann', ))),
                     ("Management", Forum.get(('council', 'it'))),
                     ("General Discussions", Forum.get(('p', 'a', 'c'))),
                     ("EVE Discussions", Forum.get(('pvp', 'pve', 'm', 'i', 'd'))),
