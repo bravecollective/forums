@@ -48,8 +48,8 @@
             <a href="/${forum_item.short}" class="list-group-item media thread">
 
                 ${stat('thread', 'threads', forum_item.threads.count())}
-                ${stat('comment', 'comments', forum_item.threads.sum('stat__comments'))}
-                ${stat('view', 'views', forum_item.threads.sum('stat__views'))}
+                ${stat('comment', 'comments', forum_item.threads.sum('stat.comments'))}
+                ${stat('view', 'views', forum_item.threads.sum('stat.views'))}
 
                 <h4 class="list-group-item-heading">
                     ${forum_item.name}
