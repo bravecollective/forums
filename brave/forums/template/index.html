@@ -1,6 +1,7 @@
 ## encoding: utf-8
 
 <%inherit file="brave.forums.template.master"/>
+<%namespace name="f" file="brave.forums.template.filter"/>
 <%namespace name="forum" file="brave.forums.template.forum"/>
 
 <%block name="title">Dashboard</%block>
@@ -46,7 +47,8 @@
     <ul class="list-group media-list clearfix">
         % for forum_item in forums_list:
             <a href="/${forum_item.short}" class="list-group-item media thread">
-
+                <i class="pull-left media-object fa fa-arrow-circle-o-right fa-3x dim"></i>
+                
                 ${stat('thread', 'threads', forum_item.threads.count())}
                 ${stat('comment', 'comments', forum_item.threads.sum('stat.comments'))}
                 ${stat('view', 'views', forum_item.threads.sum('stat.views'))}
@@ -57,6 +59,17 @@
                         ${forum_item.summary}
                     </small>
                 </h4>
+                
+                % if forum_item.threads.count():
+                <% latest = forum_item.threads.fields(slice__comments=[0,1]).first() %>
+                <div class="list-group-item-text">
+                    Last thread “${latest.title}” written by ${latest.comments[0].creator.character.name} <time class="relative" datetime="${latest.comments[0].created |n,f.iso}">${latest.comments[0].created |n,f.pretty}</time>.
+                </div>
+                % else:
+                <div class="list-group-item-text">
+                    No recorded activity.
+                </div>
+                % endif
             </a>
         % endfor
     </ul>
