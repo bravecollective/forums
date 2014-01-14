@@ -6,7 +6,7 @@ from datetime import datetime
 
 from web.core import config
 from mongoengine import Document, EmbeddedDocument, StringField, DateTimeField, IntField, EmbeddedDocumentField, ListField
-from brave.core.api.client import API
+from brave.api.client import API
 
 
 log = __import__('logging').getLogger(__name__)

@@ -8,7 +8,7 @@ import json
 from hashlib import sha256
 from web.auth import user
 
-from brave.core.api.client import API
+from brave.api.client import API
 
 
 log = __import__('logging').getLogger(__name__)
