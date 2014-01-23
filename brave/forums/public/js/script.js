@@ -28,6 +28,22 @@
 
 $(function(){
     
+    // Retina-ize the EVE images.
+    if ( window.devicePixelRatio >= 2 ) {
+        console.log("retina");
+        
+        $('img[src*="//image.eveonline.com/"]').each(function(index, element) {
+            var self = $(element),
+                current = self.attr('src'),
+                size = current.match(/_(\d+)\.\w{3,4}/);
+
+            if ( ! size ) return;
+            size = parseInt(size[1]);
+
+            self.attr('src', self.attr('src').replace(/(.+_)(\d+)(\.\w{3,4})$/, "$1" + (size*2) + "$3"));
+        });
+    }
+    
     // Allow links to open modal dialogs pulled from server-side resources.
     // Also dynamically fires a callback for the relevant popup, if data-trigger is set.
     $('body').on('click', 'a[rel=modal]', function(e){
