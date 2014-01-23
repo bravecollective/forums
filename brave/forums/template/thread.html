@@ -217,7 +217,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 if not t:
                     continue
                 %>
-                <img class="like" src="//image.eveonline.com/Character/${t.character.id}_32.jpg" alt="${t.character.name}" title="${t.character.name}">
+                <img class="like" src="//image.eveonline.com/Character/${t.character.id}_32.jpg" alt="${t.character.name}" title="${t.character.name}" rel="tooltip" data-placement="bottom">
                 % endfor
             </div>
             % endif

@@ -265,6 +265,8 @@ div[id^="comment-"] {
 .likes {
     font-size: 12px;
     padding: 5px;
+    width: 24px;
+    height: 24px;
 }
 
 .like {
