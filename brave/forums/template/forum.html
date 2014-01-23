@@ -56,7 +56,7 @@
 <div class="row row-offcanvas row-offcanvas-left" id="discuss">
     <div class="col-xs-3 col-sm-3 text-right media thumb-64">
         <div class="pull-right media-object text-center">
-            <img src="http://image.eveonline.com/Character/${web.user.character.id}_64.jpg" class="img-thumbnail img-circle">
+            <img src="//image.eveonline.com/Character/${web.user.character.id}_64.jpg" class="img-thumbnail img-circle">
         </div>
         <div class="media-body">
             <a href="/profile/${web.user.id}"><strong>${web.user.character.name}</strong></a><br>
@@ -115,7 +115,7 @@
     % endif
     % for thread in results.skip((page-1)*limit).limit(limit):
     <a href="/${forum.short}/${thread.id}" class="list-group-item media thread${' dim' if thread.flag.hidden else ''}">
-        <img src="http://image.eveonline.com/Character/${thread.comments[0].creator.character.id}_64.jpg" class="pull-left media-object thumb-44">
+        <img src="//image.eveonline.com/Character/${thread.comments[0].creator.character.id}_64.jpg" class="pull-left media-object thumb-44">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${thread.stat.views}</big><br><small>view${'' if thread.stat.views == 1 else 's'}</small>
         </div>

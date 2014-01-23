@@ -181,7 +181,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
 <div class="row row-offcanvas row-offcanvas-left comment" id="${comment.id}">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
-            <img src="http://image.eveonline.com/Character/${comment.creator.character.id}_64.jpg" class="img-thumbnail img-circle thumb-50">
+            <img src="//image.eveonline.com/Character/${comment.creator.character.id}_64.jpg" class="img-thumbnail img-circle thumb-50">
         </div>
         <div class="media-body">
             <a href="/profile/${comment.creator.id}"><strong>${comment.creator.character.name}</strong></a>
@@ -217,7 +217,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 if not t:
                     continue
                 %>
-                <img class="like" src="http://image.eveonline.com/Character/${t.character.id}_32.jpg" alt="${t.character.name}" title="${t.character.name}">
+                <img class="like" src="//image.eveonline.com/Character/${t.character.id}_32.jpg" alt="${t.character.name}" title="${t.character.name}">
                 % endfor
             </div>
             % endif
@@ -263,7 +263,7 @@ ${render_comment(comment, None, i == thread.stat.comments)}
 <div class="row row-offcanvas row-offcanvas-left" id="comment">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
-            <img src="http://image.eveonline.com/Character/${web.user.character.id}_64.jpg" class="img-thumbnail img-circle thumb-64">
+            <img src="//image.eveonline.com/Character/${web.user.character.id}_64.jpg" class="img-thumbnail img-circle thumb-64">
         </div>
         <div class="media-body author">
             <a href="/profile/${web.user.id}"><strong>${web.user.character.name}</strong></a><br>
