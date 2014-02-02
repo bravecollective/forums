@@ -115,6 +115,11 @@ class ThreadIndex(HTTPMethod):
         return 'brave.forums.template.thread', dict(page=page, forum=self.forum, thread=thread, endpoint=self.thread.channel.receiver)
     
     def post(self, message, upload=None, vote=None):
+        if self.forum.moderate in user.tags:
+            pass
+        elif self.forum.write and self.forum.write not in user.tags:
+            return 'json:', dict(success=False, message="Not allowed.")
+        
         if not message or not message.strip():
             return 'json:', dict(success=False, message="Empty message.")
         
@@ -161,6 +166,11 @@ class ThreadController(Controller):
     
     @classmethod
     def _create(cls, forum, title, message):
+        if self.forum.moderate in user.tags:
+            pass
+        elif self.forum.write and self.forum.write not in user.tags:
+            return dict(success=False, message="Not allowed.")
+        
         thread = Thread(forum=forum, title=title, comments=[
                 Comment(
                     id = ObjectId(),
@@ -170,10 +180,11 @@ class ThreadController(Controller):
             ])
         thread.save()
         
-        return True
+        return dict(success=True)
     
     def lock(self):
-        # TODO: Security!
+        if not (user.admin or self.forum.moderate in user.tags):
+            return dict(success=False, enabled=self.thread.flag.locked, message="Not allowed.")
         
         thread = self.thread
         thread.flag.locked = not thread.flag.locked
@@ -182,7 +193,8 @@ class ThreadController(Controller):
         return 'json:', dict(success=True, enabled=thread.flag.locked)
     
     def sticky(self):
-        # TODO: Security!
+        if not (user.admin or self.forum.moderate in user.tags):
+            return dict(success=False, enabled=self.thread.flag.sticky, message="Not allowed.")
         
         thread = self.thread
         thread.flag.sticky = not thread.flag.sticky
@@ -191,7 +203,8 @@ class ThreadController(Controller):
         return 'json:', dict(success=True, enabled=thread.flag.sticky)
     
     def hide(self):
-        # TODO: Security!
+        if not (user.admin or self.forum.moderate in user.tags):
+            return dict(success=False, enabled=self.thread.flag.hidden, message="Not allowed.")
         
         thread = self.thread
         thread.flag.hidden = not thread.flag.hidden

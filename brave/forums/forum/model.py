@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-from mongoengine import Document, StringField, ListField
+from mongoengine import Document, StringField, ListField, Q
 
 from web.auth import user
 
@@ -33,11 +33,26 @@ class Forum(Document):
         
         query = Thread.objects(forum=self)
         
-        if 'forum.admin' not in user.tags:
-            query = query.filter(flag__hidden=False)
+        if user.admin:
+            return query
         
-        return query
+        return query.filter(flag__hidden=False)
     
     @classmethod
-    def get(cls, short):
-        return cls.objects(short__in=short) if isinstance(short, (list, tuple)) else cls.objects.get(short=short)
+    def get(cls, *short):
+        query = cls.objects(short__in=short)
+        
+        if not user._current_obj():
+            return query.filter(read=None)
+        
+        if user.admin:
+            return query
+        
+        tags = user.tags
+        
+        # Limit to forums the user has some form of access to.
+        query.filter(
+                Q(read=None) | Q(read__in=tags) | Q(write__in=tags) | Q(moderate__in=tags)
+            )
+        
+        return query

@@ -10,19 +10,20 @@
     <h1>Home <small>A somewhat useful dashboard of supposedly relevant things.</small></h1>
 </div>
 
-% if web.user and True or not announcements.read or announcements.read in web.user.tags:
-    <ul class="nav nav-pills pull-right">
-        <li><a href="/ann/"><i class="fa fa-arrow-circle-o-right fa-lg"></i>View All Announcements</a></li>
-    </ul>
+% if announcements:
+<ul class="nav nav-pills pull-right">
+    <li><a href="/ann/"><i class="fa fa-arrow-circle-o-right fa-lg"></i>View All Announcements</a></li>
+</ul>
 
-    <h4>Latest Announcement Threads</h4>
+<h4>Latest Announcement Threads</h4>
 
-    ${forum.threads(announcements, announcements.threads, 1, 3)}
-
-    % for title, forums in forum_categories:
-        ${category(title, forums)}
-    % endfor
+${forum.threads(announcements, announcements.threads, 1, 3)}
 % endif
+
+% for title, forums in forum_categories:
+    <% if not forums.count(): continue %>
+    ${category(title, forums)}
+% endfor
 
 <ul class="nav nav-pills pull-right">
     <li><a href="#"><i class="fa fa-cogs fa-lg"></i>Subscription Preferences</a></li>
@@ -35,6 +36,7 @@
         <h5>Sorry, boss, but subscriptions have yet to be implemented.</h5>
     </li>
 </ul>
+
 
 <%def name="category(category_title, forums_list)">
     <%def name="stat(singular, plural, count)">

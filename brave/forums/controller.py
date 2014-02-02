@@ -2,8 +2,10 @@
 
 from __future__ import unicode_literals
 
+import sys
 import bbcode
 
+from traceback import extract_tb, extract_stack, format_list
 from web.core import request
 from web.auth import authenticated, user
 from web.core import Controller, url
@@ -18,7 +20,6 @@ from brave.forums.forum.controller import ForumController
 log = __import__('logging').getLogger(__name__)
 
 
-
 class RootController(Controller, StartupMixIn, AuthenticationMixIn):
     def die(self):
         """Simply explode.  Useful to get the interactive debugger up."""
@@ -27,15 +28,15 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
     def index(self):
         if authenticated:
             forum_categories = [
-                    ("Management", Forum.get(('council', 'it'))),
-                    ("General Discussions", Forum.get(('p', 'a', 'c'))),
-                    ("EVE Discussions", Forum.get(('pvp', 'pve', 'm', 'i', 'd'))),
-                    ("BRAVE Dojo", Forum.get(('dg', 'ds'))),
-                    ("Other", Forum.get(('b', 'n', 'g', 'z'))),
+                    ("Management", Forum.get('council', 'it')),
+                    ("General Discussions", Forum.get('p', 'a', 'c')),
+                    ("EVE Discussions", Forum.get('pvp', 'pve', 'm', 'i', 'd')),
+                    ("BRAVE Dojo", Forum.get('dg', 'ds')),
+                    ("Other", Forum.get('b', 'n', 'g', 'z')),
                 ]
             
             return 'brave.forums.template.index', dict(
-                    announcements = Forum.get('ann'),
+                    announcements = Forum.get('ann').first(),
                     forum_categories = forum_categories
                 )
 

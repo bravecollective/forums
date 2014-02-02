@@ -30,27 +30,31 @@ class ForumIndex(HTTPMethod):
         return 'brave.forums.template.forum', dict(page=page, forum=self.forum)
     
     def post(self, title, message, upload=None, vote=None):
-        result = ThreadController._create(self.forum, title, message)
-        return 'json:', dict(success=result)
+        return 'json:', ThreadController._create(self.forum, title, message)
 
 
 class ForumController(Controller):
     def __init__(self, short):
         try:
-            self.forum = Forum.objects.get(short=short)
+            f = self.forum = Forum.objects.get(short=short)
         except Forum.DoesNotExist:
+            raise HTTPNotFound()
+        
+        tags = user.tags
+        
+        # Weird structure here.
+        if f.moderate and f.moderate in tags:
+            pass
+        elif f.write and f.write in tags:
+            pass
+        elif not f.read or f.read in tags:
+            pass
+        else:
             raise HTTPNotFound()
         
         self.index = ForumIndex(self.forum)
         
         super(ForumController, self).__init__()
-    
-    def lock(self):
-        pass
-    
-    def hide(self):
-        pass
-    
     
     def __lookup__(self, thread, *args, **kw):
         request.path_info_pop()
