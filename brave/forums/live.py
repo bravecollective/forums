@@ -22,7 +22,7 @@ class Channel(object):
     Channel IDs are SHA256 hashes comprised of the browser session ID, user ID (if applicable), and a nonce.
     """
     
-    url_base = b'http://forum.bravecollective.net/_push?id='
+    url_base = b'https://forums.bravecollective.net/_push?id='
     receiver_base = b'/listen?id='
     
     def __init__(self, *tokens):
