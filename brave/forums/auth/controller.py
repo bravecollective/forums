@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-from web.auth import authenticate
+from web.auth import authenticate, deauthenticate
 from web.core import config, url
 from web.core.http import HTTPFound
 
@@ -41,3 +41,7 @@ class AuthenticationMixIn(object):
     
     def nolove(self, token):
         return 'brave.forums.template.whynolove', dict()
+    
+    def goodbye(self):
+        deauthenticate(True)
+        raise HTTPFound(location='/')
