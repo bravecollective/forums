@@ -41,6 +41,10 @@ class Ticket(Document):
     def __repr__(self):
         return "<Ticket {0.id} \"{0.character.name}\">".format(self)
     
+    @property
+    def admin(self):
+        return 'admin' in self.tags or 'forum.admin' in self.tags
+    
     @classmethod
     def authenticate(cls, identifier, password=None):
         """Validate the given identifier; password is ignored."""
