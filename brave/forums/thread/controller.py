@@ -127,27 +127,33 @@ class ThreadIndex(HTTPMethod):
         
         thread = self.thread.thread
         
+        comment = Comment(
+                id = comment_id,
+                message = message,
+                creator = user._current_obj(),
+            )
+        
         # Atomic operations, bitches!
         Thread.objects(id=thread.id).update_one(
                 inc__stat__comments = 1,
                 set__modified = datetime.utcnow(),
-                push__comments = Comment(
-                        id = comment_id,
-                        message = message,
-                        creator = user._current_obj(),
-                    )
+                push__comments = comment
             )
         
         thread.reload()
         
+        from web.core.templating import render
+        mimetype, output = render('brave.forums.template.thread', dict(
+                page = 1,
+                forum = self.forum,
+                thread = thread,
+                endpoint = self.thread.channel.receiver,
+                comment = comment
+            ), only='render_push')
+        
         payload = dict(
                 identifier = str(comment_id),
-                character = dict(id=unicode(user.id), nid=user.character.id, name=user.character.name),
-                when = dict(
-                        iso = comment_id.generation_time.strftime('%Y-%m-%dT%H:%M:%S%z'),
-                        pretty = comment_id.generation_time.strftime('%B %e, %G at %H:%M:%S')
-                    ),
-                message = bbcode.render_html(message)
+                comment = output
             )
         
         self.thread.channel.send('comment', payload)

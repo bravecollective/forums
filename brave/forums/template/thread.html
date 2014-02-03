@@ -179,6 +179,11 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
 </%def>
 
 
+<%def name="render_push()">
+${render_comment(comment)}
+</%def>
+
+
 <%def name="render_comment(comment, post_title=None, last=False, i=None)">
 <div class="row row-offcanvas row-offcanvas-left comment" id="${comment.id}">
     <div class="col-xs-3 col-sm-3 text-right media">

@@ -262,22 +262,12 @@ Thread.prototype.unlocked = function(data) {
 
 
 Thread.prototype.commented = function(e, data) {
-    console.log("Thread.commented", data, data.character.name);
+    console.log("Thread.commented", data);
 
-    if ( ! data.hasOwnProperty('index') ) return;
-    if ( $('#comment-' + data.index).length ) return;
+    if ( ! data.hasOwnProperty('comment') ) return;
+    if ( $('#' + data.identifier).length ) return;
                             
-    var template = $('.comment:last').clone();
-    
-    $('.media-object img', template).attr('src', 'http://image.eveonline.com/Character/' + data.character.nid + '_64.jpg');
-    $('.media-object time', template).attr('datetime', data.when.iso).text(data.when.pretty);
-    $('.media-body > a', template).attr('href', '/profile/' + data.character.id);
-    $('.media-body > a strong', template).text(data.character.name);
-    $('.panel-heading', template).remove();
-    $('.panel-body', template).html(data.message);
-    $('<div class="liner"></div>').insertAfter('.comment:last .media');
-    
-    template.insertAfter('.comment:last');
+    $(data.comment).insertAfter('.comment:last');
 };
 
 
