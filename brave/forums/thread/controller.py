@@ -36,7 +36,8 @@ class CommentIndex(HTTPMethod):
                 forum = self.thread.forum,
                 thread = self.thread,
                 endpoint = '',
-                comment = comment
+                comment = comment,
+                BASE = "/{0}/{1}".format(self.thread.forum.short, self.thread.id)
             ), dict(only='render_push')
     
     def post(self, message):
