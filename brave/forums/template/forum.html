@@ -52,7 +52,7 @@
     <h1>${forum.name} <small>${forum.summary}</small></h1>
 </div>
 
-% if web.user:  # todo: check security
+% if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
 <div class="row row-offcanvas row-offcanvas-left" id="discuss">
     <div class="col-xs-3 col-sm-3 text-right media thumb-64">
         <div class="pull-right media-object text-center">
