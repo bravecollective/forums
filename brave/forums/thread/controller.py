@@ -19,13 +19,14 @@ log = __import__('logging').getLogger(__name__)
 
 
 class CommentIndex(HTTPMethod):
-    def __init__(self, thread, comment):
+    def __init__(self, thread, comment, format=None):
         self.thread = thread
         self.comment = comment
+        self.format = format or 'json'
         super(CommentIndex, self).__init__()
     
     def get(self):
-        if request.format == 'html':
+        if self.format == 'html':
             # This is hideously bad, but MongoEngine has yet to support .only('comments__S')
             for comment in self.thread.comments:
                 if comment.id == self.comment: break
@@ -84,10 +85,10 @@ class CommentIndex(HTTPMethod):
 
 
 class CommentController(Controller):
-    def __init__(self, thread, comment):
+    def __init__(self, thread, comment, format):
         self.thread = thread
         self.comment = comment
-        self.index = CommentIndex(thread, comment)
+        self.index = CommentIndex(thread, comment, format)
         super(CommentController, self).__init__()
     
     def vote(self):
@@ -164,7 +165,10 @@ class ThreadIndex(HTTPMethod):
 class ThreadController(Controller):
     def __init__(self, forum, id):
         self.forum = forum
-        self.thread = Thread.objects.get(id=id)
+        try:
+            self.thread = Thread.objects.get(id=id)
+        except Thread.DoesNotExist:
+            raise HTTPNotFound()
         self.channel = Channel(self.forum.id, self.thread.id)
         self.index = ThreadIndex(forum, self)
         super(ThreadController, self).__init__()
@@ -218,11 +222,12 @@ class ThreadController(Controller):
         return 'json:', dict(success=True, enabled=thread.flag.hidden)
     
     def __lookup__(self, comment, *args, **data):
-        comment, _, _ = comment.partition('.')
+        comment, _, format = comment.partition('.')
+        request.path_info_pop()  # We consume a single path element.
         
         try:
             comment = ObjectId(comment)
         except:
             raise HTTPNotFound()
         
-        return CommentController(self.thread, comment), args
+        return CommentController(self.thread, comment, format), args

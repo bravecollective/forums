@@ -113,6 +113,8 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 self.addClass('disabled').prop('disabled', true);
                 
                 $.post($('#comment-panel').attr('action'), {message: $('#comment-message').val()}, function(result){
+                    console.log(result);
+                    
                     if ( ! result.success ) {
                         alert(result.message);
                         self.removeClass('disabled').prop('disabled', false);
