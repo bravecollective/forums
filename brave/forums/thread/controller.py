@@ -25,23 +25,19 @@ class CommentIndex(HTTPMethod):
         super(CommentIndex, self).__init__()
     
     def get(self):
-        # We fall back to raw pymongo in order to be as efficient as possible.
-        
-        try:
-            comment = Thread._get_collection().find({'c': {'$elemMatch': {'i': self.comment}}}, {'c.$': 1}).next()
-        except StopIteration:
-            raise HTTPNotFound()
-        
-        try:
-            comment = comment['c'][0]
-        except:
+        # This is hideously bad, but MongoEngine has yet to support .only('comments__S')
+        for comment in self.thread.comments:
+            if comment.id == self.comment: break
+        else:
             raise HTTPNotFound()
 
-        return 'json:', dict(
-                success = True,
-                character = Ticket.objects(id=comment['creator']).only('character__id').first().character.id,
-                comment = comment['m']
-            )
+        return 'brave.forums.template.thread', dict(
+                page = 1,
+                forum = self.thread.forum,
+                thread = self.thread,
+                endpoint = '',
+                comment = comment
+            ), dict(only='render_push')
     
     def post(self, message):
         """Update the comment."""
@@ -142,23 +138,7 @@ class ThreadIndex(HTTPMethod):
         
         thread.reload()
         
-        from web.core.templating import render
-        mimetype, output = render('brave.forums.template.thread', dict(
-                page = 1,
-                forum = self.forum,
-                thread = thread,
-                endpoint = self.thread.channel.receiver,
-                comment = comment
-            ), only='render_push')
-        
-        payload = dict(
-                identifier = str(comment_id),
-                comment = output.encode('utf8')
-            )
-        
-        log.debug("Pushing %s", __import__('pprint').pformat(payload))
-        
-        self.thread.channel.send('comment', payload)
+        self.thread.channel.send('comment', str(comment_id))
         
         return 'json:', dict(success=True)
 

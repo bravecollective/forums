@@ -46,9 +46,11 @@ class Channel(object):
                 payload = content,
             )
         
+        log.debug("push %s\n%s", self.url, json.dumps(payload))
+        
         try:
             r = requests.post(self.url, data=json.dumps(payload), verify=False)
-            if not r.status_code == requests.codes.ok:
+            if not r.status_code < 300:
                 log.error("Error %d posting push notification.", r.status_code)
                 return False
         except:

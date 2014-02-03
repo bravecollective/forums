@@ -261,13 +261,15 @@ Thread.prototype.unlocked = function(data) {
 };
 
 
-Thread.prototype.commented = function(e, data) {
-    console.log("Thread.commented", data);
+Thread.prototype.commented = function(e, identifier) {
+    console.log("Thread.commented", identifier);
 
-    if ( ! data.hasOwnProperty('comment') ) return;
-    if ( $('#' + data.identifier).length ) return;
-                            
-    $(data.comment).insertAfter('.comment:last');
+    if ( $('#' + identifier).length ) return;
+    
+    $.get(window.location + '/' + identifier, function(result) {
+        $(result).insertAfter('.comment:last');
+        $('time.relative').timeago();
+    });
 };
 
 

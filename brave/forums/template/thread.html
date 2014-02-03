@@ -41,7 +41,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 }
             }
             
-            $('.comment .actions .quote').on('click', function(e){
+            $('body').on('click', '.comment .actions .quote', function(e){
                 var self = $(this),
                     identifier = self.parents('.comment').attr('id'),
                     target = $('body').data('base') + '/' + identifier,
@@ -60,7 +60,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 return false;
             });
             
-            $('.comment .actions .delete').on('click', function(e){
+            $('body').on('click', '.comment .actions .delete', function(e){
                 var self = $(this),
                     identifier = self.parents('.comment').attr('id'),
                     target = $('body').data('base') + '/' + identifier;
@@ -77,7 +77,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 return false;
             });
             
-            $('.sjax').on('click', function(e){
+            $('body').on('click', '.sjax', function(e){
                 var self = $(this),
                     pill = self.parent(),
                     target = self.attr('href');
