@@ -25,20 +25,36 @@ class CommentIndex(HTTPMethod):
         super(CommentIndex, self).__init__()
     
     def get(self):
-        # This is hideously bad, but MongoEngine has yet to support .only('comments__S')
-        for comment in self.thread.comments:
-            if comment.id == self.comment: break
-        else:
+        if request.format == 'html':
+            # This is hideously bad, but MongoEngine has yet to support .only('comments__S')
+            for comment in self.thread.comments:
+                if comment.id == self.comment: break
+            else:
+                raise HTTPNotFound()
+    
+            return 'brave.forums.template.thread', dict(
+                    page = 1,
+                    forum = self.thread.forum,
+                    thread = self.thread,
+                    endpoint = '',
+                    comment = comment
+                ), dict(only='render_push')
+        
+        try:
+            comment = Thread._get_collection().find({'c': {'$elemMatch': {'i': self.comment}}}, {'c.$': 1}).next()
+        except StopIteration:
+            raise HTTPNotFound()
+        
+        try:
+            comment = comment['c'][0]
+        except:
             raise HTTPNotFound()
 
-        return 'brave.forums.template.thread', dict(
-                page = 1,
-                forum = self.thread.forum,
-                thread = self.thread,
-                endpoint = '',
-                comment = comment,
-                BASE = "/{0}/{1}".format(self.thread.forum.short, self.thread.id)
-            ), dict(only='render_push')
+        return 'json:', dict(
+                success = True,
+                character = Ticket.objects(id=comment['creator']).only('character__id').first().character.id,
+                comment = comment['m']
+            )
     
     def post(self, message):
         """Update the comment."""
@@ -202,6 +218,8 @@ class ThreadController(Controller):
         return 'json:', dict(success=True, enabled=thread.flag.hidden)
     
     def __lookup__(self, comment, *args, **data):
+        comment, _, _ = comment.partition('.')
+        
         try:
             comment = ObjectId(comment)
         except:
