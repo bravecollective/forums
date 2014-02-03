@@ -47,7 +47,7 @@ class Channel(object):
             )
         
         try:
-            r = requests.post(self.url, data=json.dumps(payload))
+            r = requests.post(self.url, data=json.dumps(payload), verify=False)
             if not r.status_code == requests.codes.ok:
                 log.error("Error %d posting push notification.", r.status_code)
                 return False
