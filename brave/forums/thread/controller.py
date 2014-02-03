@@ -153,8 +153,10 @@ class ThreadIndex(HTTPMethod):
         
         payload = dict(
                 identifier = str(comment_id),
-                comment = output
+                comment = output.encode('utf8')
             )
+        
+        log.debug("Pushing %s", __import__('pprint').pformat(payload))
         
         self.thread.channel.send('comment', payload)
         
