@@ -266,7 +266,7 @@ Thread.prototype.commented = function(e, identifier) {
 
     if ( $('#' + identifier).length ) return;
     
-    $.get(window.location + '/' + identifier, function(result) {
+    $.get(window.location + '/' + identifier + '.html', function(result) {
         $(result).insertAfter('.comment:last');
         $('time.relative').timeago();
     });
