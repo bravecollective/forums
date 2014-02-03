@@ -166,9 +166,9 @@ class ThreadController(Controller):
     
     @classmethod
     def _create(cls, forum, title, message):
-        if self.forum.moderate in user.tags:
+        if forum.moderate in user.tags:
             pass
-        elif self.forum.write and self.forum.write not in user.tags:
+        elif not user.admin and forum.write and forum.write not in user.tags:
             return dict(success=False, message="Not allowed.")
         
         thread = Thread(forum=forum, title=title, comments=[
