@@ -22,6 +22,11 @@
             });
             
             $('#comment-submit').on('click', function(){
+                if($('#thread-title').val() == ""){
+                    alert("You must give your thread a title!")
+                    $('#thread-title').focus();
+                    return false;
+                }
                 $(this).addClass('disabled').attr('disabled', true);
                 
                 $.post($('#comment-panel').attr('action'), {title: $('#thread-title').val(), message: $('#comment-message').val()}, function(result){
@@ -84,7 +89,7 @@
 
             <div class="tab-content">
                 <form class="tab-pane fade in active panel-body" id="comment-panel" action="/${forum.short}/" method="post">
-                    <input id="thread-title" class="form-control" placeholder="Enter a title for your discussion." autofocus>
+                    <input id="thread-title" class="form-control" placeholder="Enter a title for your discussion." required autofocus>
                     <textarea id="comment-message" class="form-control" placeholder="Leave a comment." rows="5"></textarea>
                 </form>
                 <div class="tab-pane fade" id="preview-panel">
