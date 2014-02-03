@@ -40,7 +40,7 @@ class ForumController(Controller):
         except Forum.DoesNotExist:
             raise HTTPNotFound()
         
-        tags = user.tags
+        tags = user.tags if user else ()
         
         # Weird structure here.
         if f.moderate and f.moderate in tags:
