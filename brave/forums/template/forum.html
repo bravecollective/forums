@@ -138,6 +138,11 @@
             <big>${thread.stat.uploads}</big><br><small>upload${'' if thread.stat.uploads == 1 else 's'}</small>
         </div>
         % endif
+        % if thread.stat.votes:
+        <div class="pull-right media-object hidden-xs text-center">
+            <big>${thread.stat.votes}</big><br><small>vote${'' if thread.stat.uploads == 1 else 's'}</small>
+        </div>
+        % endif
         <h4 class="list-group-item-heading">
             ${thread.title}
             <small>
