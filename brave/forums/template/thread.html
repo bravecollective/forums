@@ -243,9 +243,7 @@ ${render_comment(comment)}
     <div class="alert alert-danger previewAlert">Nothing to Preview, Try Again!</div>
 </%def>
 
-<div class="page-header">
-    <h1><a href="/${forum.short}/">${forum.name}</a> <small>${forum.summary}</small></h1>
-</div>
+<%f:page title="${forum.name}" minor="${forum.summary}" />
 
 <div class="row row-offcanvas row-offcanvas-left thread-actions">
     <div class="col-xs-3 col-sm-3 actions left"><ul class="nav nav-pills">${actions('left')}</ul></div>

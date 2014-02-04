@@ -5,25 +5,34 @@
 <%namespace name="forum" file="brave.forums.template.forum"/>
 
 <%block name="title">Dashboard</%block>
+<%f:page title="Dashboard" minor="of somewhat useful and supposedly relevant things." />
 
-<div class="page-header">
-    <h1>Home <small>A somewhat useful dashboard of supposedly relevant things.</small></h1>
-</div>
-
-% if announcements:
+% if announcements and announcements.count():
 <ul class="nav nav-pills pull-right">
     <li><a href="/ann/"><i class="fa fa-arrow-circle-o-right fa-lg"></i>View All Announcements</a></li>
 </ul>
 
 <h4>Latest Announcement Threads</h4>
-
-${forum.threads(announcements, announcements.threads, 1, 3)}
+<%forum:threads results="${announcements}" limit="3" />
 % endif
+
+
+<h4>Your Active Discussions</h4>
+<%forum:threads results="${activity}" limit="5" />
+
 
 % for title, forums in forum_categories:
     <% if not forums.count(): continue %>
     ${category(title, forums)}
 % endfor
+
+
+<h4>Latest Discussions</h4>
+<%forum:threads results="${latest}" limit="5" />
+
+<h4>Top Voted Discussions <small>active in the last seven days.</small></h4>
+<%forum:threads results="${voted}" limit="5" />
+
 
 <ul class="nav nav-pills pull-right">
     <li><a href="#"><i class="fa fa-cogs fa-lg"></i>Subscription Preferences</a></li>

@@ -40,7 +40,7 @@ class Forum(Document):
     
     @classmethod
     def get(cls, *short):
-        query = cls.objects(short__in=short)
+        query = cls.objects(short__in=short) if short else cls.objects
         
         if not user._current_obj():
             return query.filter(read=None)

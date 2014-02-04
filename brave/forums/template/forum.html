@@ -48,9 +48,7 @@
     </script>
 </%block>
 
-<div class="page-header">
-    <h1>${forum.name} <small>${forum.summary}</small></h1>
-</div>
+<%f:page title="${forum.name}" minor="${forum.summary}" />
 
 % if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
 <div class="row row-offcanvas row-offcanvas-left" id="discuss">
@@ -106,15 +104,16 @@
 </ul>
 % endif
 
-<%def name="threads(forum, results, page=1, limit=1500)">
+<%def name="threads(forum=None, results=None, page=1, limit=1500)">
 <ul class="list-group media-list clearfix">
+    <% page = int(page); limit = int(limit) %>
     % if not results.skip((page-1) * limit).limit(limit).count():
     <li class="list-group-item">
         <h4>No threads found.</h4>
     </li>
     % endif
     % for thread in results.skip((page-1)*limit).limit(limit):
-    <a href="/${forum.short}/${thread.id}" class="list-group-item media thread${' dim' if thread.flag.hidden else ''}">
+    <a href="/${thread.forum.short}/${thread.id}" class="list-group-item media thread${' dim' if thread.flag.hidden else ''}">
         <img src="//image.eveonline.com/Character/${thread.comments[0].creator.character.id}_64.jpg" class="pull-left media-object thumb-44">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${thread.stat.views}</big><br><small>view${'' if thread.stat.views == 1 else 's'}</small>

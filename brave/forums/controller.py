@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import sys
 import bbcode
 
+from datetime import datetime, timedelta
 from traceback import extract_tb, extract_stack, format_list
 from web.core import request
 from web.auth import authenticated, user
@@ -13,6 +14,7 @@ from web.core import Controller, url
 from brave.forums.util import StartupMixIn
 from brave.forums.live import Channel
 from brave.forums.forum.model import Forum
+from brave.forums.thread.model import Thread
 from brave.forums.auth.controller import AuthenticationMixIn
 from brave.forums.forum.controller import ForumController
 
@@ -35,9 +37,27 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
                     ("Other", Forum.get('b', 'n', 'g', 'z')),
                 ]
             
+            allowed = Forum.get().scalar('id')
+            announcements = Forum.get('ann').first()
+            
             return 'brave.forums.template.index', dict(
-                    announcements = Forum.get('ann').first(),
-                    forum_categories = forum_categories
+                    forum_categories = forum_categories,
+                    
+                    announcements = announcements.threads if announcements else None,
+                    
+                    activity = Thread.objects(
+                            forum__in = allowed,
+                            modified__gt = datetime.utcnow() - timedelta(days=30),
+                            comments__creator = user._current_obj()
+                        ).order_by('-modified'),
+                    
+                    latest = Thread.objects(forum__in=allowed).order_by('-id'),
+                    
+                    voted = Thread.objects(
+                            forum__in = allowed,
+                            modified__gt = datetime.utcnow() - timedelta(days=7),
+                            stat__votes__gt = 0
+                        ).order_by('-stat__votes'),
                 )
 
         return 'brave.forums.template.welcome', dict()
