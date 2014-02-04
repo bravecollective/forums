@@ -253,8 +253,8 @@ ${render_comment(comment)}
     <div class="col-xs-2 col-sm-2 actions right"><ul class="nav nav-pills">${actions('right')}</ul></div>
 </div>
 
-% for comment in thread.comments:
-${render_comment(comment, None)}
+% for i, comment in enumerate(thread.comments):
+${render_comment(comment, None if i else thread.title)}
 % endfor
 
 % if web.user and not thread.flag.locked and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
