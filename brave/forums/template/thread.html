@@ -205,13 +205,13 @@ ${render_comment(comment)}
     
     <div class="col-xs-7 col-sm-7">
         <div class="panel panel-default">
-            % if post_title:
+            % if post_title and comment.message and comment.message.strip():
             <div class="panel-heading">
                 <h3 class="panel-title">${post_title}</h3>
             </div>
             % endif
             <div class="panel-body">
-                ${comment.message | n, f.bb}
+                ${(comment.message if comment.message and comment.message.strip() else post_title) | n, f.bb}
             </div>
             % if comment.vote_count:
             <div class="panel-footer likes">
