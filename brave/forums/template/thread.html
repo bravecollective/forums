@@ -169,7 +169,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
 % else:  # Comment actions.
     <li><a href="#" class="quote"><i class="fa fa-reply fa-fw fa-lg"></i></a></li>
     % if web.user and comment.creator.id != web.user.id:
-    <li${' class="active"' if web.user.id in comment.vote_trail else ''}><a href="${BASE}/${comment.id}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
+    <li${' class="active"' if web.user and web.user.id in comment.vote_trail else ''}><a href="${BASE}/${comment.id}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
     % endif
     % if web.user and (web.user.admin or forum.moderate in web.user.tags or comment.creator.id == web.user.id):
     % if False:
@@ -253,17 +253,8 @@ ${render_comment(comment)}
     <div class="col-xs-2 col-sm-2 actions right"><ul class="nav nav-pills">${actions('right')}</ul></div>
 </div>
 
-<%
-
-comments = enumerate(thread.comments)
-i, comment = comments.next()
-
-%>
-
-${render_comment(comment, thread.title, i == thread.stat.comments)}
-
-% for i, comment in comments:
-${render_comment(comment, None, i == thread.stat.comments)}
+% for comment in thread.comments:
+${render_comment(comment, None)}
 % endfor
 
 % if web.user and not thread.flag.locked and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):

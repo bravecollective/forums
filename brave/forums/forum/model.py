@@ -31,9 +31,10 @@ class Forum(Document):
     def threads(self):
         from brave.forums.thread.model import Thread
         
+        u = user._current_obj()
         query = Thread.objects(forum=self)
         
-        if user.admin:
+        if u and u.admin:
             return query
         
         return query.filter(flag__hidden=False)
