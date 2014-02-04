@@ -55,6 +55,7 @@ class Channel(object):
                 return False
         except:
             log.exception("Error posting push notification.")
+            return False
         
         return True
 

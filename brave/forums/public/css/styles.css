@@ -106,7 +106,8 @@ ul.nav-pills i.fa {
 
 #thread-title {
     border-width: 0;
-    padding: 25px 15px;
+    padding: 15px;
+    height: auto;
     font-size: 16px;
     line-height: 1.4em;
     border-radius: 0;
