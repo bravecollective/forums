@@ -1,0 +1,57 @@
+## encoding: utf-8
+
+<%inherit file="brave.forums.template.master"/>
+<%namespace name="f" file="brave.forums.template.filter"/>
+<%namespace name="forum" file="brave.forums.template.forum"/>
+
+<%block name="title">Traceback</%block>
+
+<style>
+    .panel > .fixed { border: 0; margin: 0; padding: 10px 15px; background-color: transparent; color: inherit; border-radius: 0; line-height: 1.2; }
+    .lg { font-size: 16px; }
+     pre.well { padding: 10px 15px; }
+     .nav-sm > li > a { padding: 5px 10px; font-size: 12px; margin-top: -2px; line-height: 1.2; }
+     .page-header h1 { margin-bottom: 0; } 
+</style>
+
+<div class="page-header">
+    <h1>Internal Server Error</h1>
+    <ul class="nav nav-pills pull-right" style="margin-top: -40px; margin-bottom: 0;">
+        <li class="active"><a href="#trace" data-toggle="tab"><i class="fa fa-lg fa-fw fa-exclamation-circle"></i> Traceback</a></li>
+        <li><a href="#data" data-toggle="tab"><i class="fa fa-lg fa-fw fa-info-circle"></i> Data</a></li>
+        <li><a href="#logs" data-toggle="tab"><i class="fa fa-lg fa-fw fa-clock-o"></i> Logs</a></li>
+        <li><a href="#shell" data-toggle="tab"><i class="fa fa-lg fa-fw fa-terminal"></i> Shell</a></li>
+    </ul>
+</div>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="trace">
+
+        <div class="panel panel-default">
+            <pre class="fixed lg">${exception}</pre>
+            <div class="panel-footer">
+                <tt>${request.method} <a href="${request.path_url}" target="_blank">${request.path_url}</a></tt>
+            </div>
+        </div>
+        
+        <h4>Stack Trace</h4>
+        
+        <!--<pre>${__import__('pprint').pformat(traceback2)}</pre>-->
+        
+        <div class="row">
+            <div class="actions left"></div>
+            <div class="">
+                <div class="panel">
+                </div>
+            </div>
+            <div class="actions right"></div>
+        </div>
+  
+    </div>
+    <div class="tab-pane" id="data">
+    
+    </div>
+    <div class="tab-pane" id="shell">
+    
+    </div>
+</div>

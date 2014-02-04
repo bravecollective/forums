@@ -1,0 +1,20 @@
+## encoding: utf-8
+
+<%inherit file="brave.forums.template.master"/>
+<%namespace name="f" file="brave.forums.template.filter"/>
+<%namespace name="forum" file="brave.forums.template.forum"/>
+
+<%block name="title">Administration</%block>
+<%f:page title="${title}" minor="Actions restricted to administrative users." />
+
+<h4>Most Recent</h4>
+<%forum:threads results="${latest}" limit="5" />
+
+<h4>Most Voted</h4>
+<%forum:threads results="${voted}" limit="5" />
+
+<h4>Most Commented</h4>
+<%forum:threads results="${commented}" limit="5" />
+
+<h4>Most Viewed</h4>
+<%forum:threads results="${visible}" limit="5" />

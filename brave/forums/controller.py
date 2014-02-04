@@ -16,12 +16,15 @@ from brave.forums.forum.model import Forum
 from brave.forums.thread.model import Thread
 from brave.forums.auth.controller import AuthenticationMixIn
 from brave.forums.forum.controller import ForumController
+from brave.forums.admin.controller import AdministrationController
 
 
 log = __import__('logging').getLogger(__name__)
 
 
 class RootController(Controller, StartupMixIn, AuthenticationMixIn):
+    admin = AdministrationController()
+    
     def die(self):
         """Simply explode.  Useful to get the interactive debugger up."""
         1/0
@@ -87,3 +90,36 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
     def __lookup__(self, forum, *args, **kw):
         request.path_info_pop()
         return ForumController(forum), args
+
+
+
+
+
+    def trace(self):
+        exception = None
+        trace = None
+        
+        try:
+            1/0
+        except Exception as e:
+            exception = e
+            trace = extract_stack()
+        
+        data = dict(
+                foo = "Bar",
+                baz = "Diz",
+                daz = dict(
+                        sub = 2,
+                        mul = 4,
+                        div = 8,
+                    ),
+                forums = Forum.objects.all()
+            )
+        
+        return 'brave.forums.template.traceback', dict(
+                request = request,
+                exception = e,
+                traceback = trace,
+                traceback2 = format_list(trace),
+                data = data
+            )

@@ -1,0 +1,100 @@
+## encoding: utf-8
+
+<%inherit file="brave.forums.template.master"/>
+<%namespace name="f" file="brave.forums.template.filter"/>
+
+<%block name="title">${web.request.controller.__metadata__.get('plural', "{0} Objects".format(web.request.controller.__model__.__name__))}</%block>
+<%f:page title="${title}" minor="${web.request.controller.__metadata__.get('subtitle')}" />
+
+<style>
+    .panel-title { display: inline-block; }
+    .panel-heading { position: relative; }
+    .panel-heading form {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        height: 100%;
+        padding-top: 5px;
+        padding-right: 5px;
+    }
+    
+    //.panel-heading form input.limit, form.paging input.page { text-align: right; width: 25px; border-right-width: 0; box-shadow: none; padding: 4px 6px 4px 6px; font-weight: bold; padding-right: 0.5ex; line-height: 16px; }
+    //.panel-heading form .uneditable-input { width: auto; border-left-width: 0; background-color: white; box-shadow: none; padding: 3px 6px 5px 0; }
+    
+    #quick-search { width: 100px; transition: all 0.25s !important; -webkit-transition: all 0.25s !important; }
+    #quick-search:active { width: 150px; }
+    #quick-search:focus { width: 150px; }
+    
+    .fa.fa-wm { color: transparent; text-shadow: 0 -1px 0px rgba(0,0,0,0.125), 0 1px 0px rgba(255,255,255,0.5); }
+    
+    .panel-generic .panel-heading { position: relative; overflow: hidden; padding: 0; }
+    .panel-generic .panel-heading .panel-title { margin: 0 0 0 50px; padding-top: 8px; padding-bottom: 9px; padding-left: 10px; font-size: 18px; font-weight: 200; line-height: 18px; border-left: 2px groove rgba(255,255,255,0.35); }
+    .panel-generic .panel-heading .panel-icon { position: absolute; left: 7px; top: 4px; line-height: 26px; }
+    .panel-generic .panel-heading .panel-icon.fa-bars { line-height: 28px; }
+    .panel-generic .panel-heading .panel-busy { position:  absolute; left: 7px; top: 3px; text-shadow: 0 0 3px white; }
+</style>
+
+<div class="row-fluid">
+    
+    <div class="panel panel-default panel-generic">
+        <div class="panel-heading">
+            <i class="panel-icon fa fa-fw fa-2x fa-wm fa-${controller.__metadata__.get('icon') or 'bars'}"></i>
+            <i class="panel-busy fa fa-spin fa-fw fa-2x fa-spinner hide"></i>
+            
+            <h2 class="panel-title">
+                ${controller.__metadata__.get('plural', "{0} Objects".format(controller.__model__.__name__))}
+            </h2>
+            
+            <form class="form-inline" role="form">
+                % if True or web.request.controller.__indexes__:
+                <div class="form-group">
+                    <label for="quick-search"><span class="sr-only">Quick Search</span><i class="fa fa-wm fa-lg fa-search"></i></label>
+                    <input class="" id="quick-search" type="search" name="s" placeholder="${_("Search")}">
+                </div>
+                % endif
+            </form>
+
+<%doc>
+            <form class="form-inline" role="form">
+                % if True or web.request.controller.__indexes__:
+                <div class="form-group">
+                    <label class="sr-only" for="quick-search">Quick Search</label>
+                    <input class="" id="quick-search" type="search" name="s" placeholder="${_("Search")}">
+                </div>
+                % endif
+                
+                <div class="form-group" style="width: 100px;">
+                    <label class="sr-only" for="">Limit per Page</label>
+                    <div class="input-group">
+                        <input id="pagination-limit" class="limit" type="text" name="l" value="${limit}" style="width: 100%;">
+                        <label for="pagination-limit" class="uneditable-input input-group-addon"> ${_("/ page")}</label>
+                    </div>
+                </div>
+            </form>
+            
+                ><div class="input-prepend input-append">
+                    <button class="btn page-first" type="button" disabled><i class="icon icon-double-angle-left"></i></button>
+                    <button class="btn page-prev" type="button" disabled><i class="icon icon-angle-left"></i></button>
+                    <input class="page" type="text" name="p" value="${page}">
+                    <span class="uneditable-input">${_("of {0}").format(pages)}</span>
+                    <button class="btn page-next" type="button" disabled><i class="icon icon-angle-right"></i></button>
+                    <button class="btn page-last" type="button" disabled><i class="icon icon-double-angle-right"></i></button>
+                </div>
+            </form>
+</%doc>
+
+
+        </div>
+        
+        <div class="panel-body">
+        </div>
+        
+        <table class="table table-hover">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    
+</div>
