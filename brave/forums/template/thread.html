@@ -195,7 +195,7 @@ ${render_comment(comment)}
         <div class="media-body">
             <a href="/profile/${comment.creator.id}"><strong>${comment.creator.character.name}</strong></a>
             <br>
-            <small><time class="relative" datetime="${comment.created |n,f.iso}">${comment.created |n,f.pretty}</time></small>
+            <small><a href="#${comment.id}"><time class="relative" datetime="${comment.created |n,f.iso}">${comment.created |n,f.pretty}</time></a></small>
         </div>
     </div>
     
