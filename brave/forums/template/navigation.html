@@ -1,5 +1,5 @@
 ## encoding: utf-8
-<% theme = web.user.theme if web.user else session.get('theme') %>
+<% theme = web.user.theme if web.user else web.session.get('theme') %>
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
