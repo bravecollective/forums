@@ -1,5 +1,4 @@
 ## encoding: utf-8
-<% theme = web.user.theme if web.user else None %>
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -81,10 +80,10 @@
                         <li class="divider"></li>
                     </%doc>
                         <li class="dropdown-header">Core Themes</li>
-                        <li><a href="#" data-theme="default"><i class="fa fa${'-dot' if not theme else ''}-circle-o fa-fw"></i>Default (Bright)</a></li>
+                        <li><a href="#" data-theme="default"><i class="fa fa${'-dot' if not web.user.theme else ''}-circle-o fa-fw"></i>Default (Bright)</a></li>
                         <li class="divider"></li>
                         <li class="dropdown-header">User Themes</li>
-                        <li><a href="#" data-theme="nj-dark"><i class="fa fa${'-dot' if theme == 'nj-dark' else ''}-circle-o fa-fw"></i>Nicen Jehr (Dark)</a></li>
+                        <li><a href="#" data-theme="nj-dark"><i class="fa fa${'-dot' if web.user.theme == 'nj-dark' else ''}-circle-o fa-fw"></i>Nicen Jehr (Dark)</a></li>
                     </ul>
                 </li>\
 <li class="dropdown" style="display: inline-block">

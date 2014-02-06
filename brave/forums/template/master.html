@@ -1,5 +1,4 @@
 ## encoding: utf-8
-<% theme = web.user.theme if web.user else None %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -24,7 +23,7 @@
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
         <link href="/css/styles.css" rel="stylesheet">
         
-        % if theme:
+        % if web.user and web.user.theme:
         <link href="/css/theme-${web.user.theme}.css" rel="stylesheet" id="theme">
         % endif
         
