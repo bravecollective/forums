@@ -72,7 +72,7 @@
                 </h4>
                 
                 % if forum_item.threads.count():
-                <% latest = forum_item.threads.fields(slice__comments=[0,1]).first() %>
+                <% latest = forum_item.threads.first() %>
                 <div class="list-group-item-text">
                     Last comment <time class="relative" datetime="${latest.comments[-1].created |n,f.iso}">${latest.comments[-1].created |n,f.pretty}</time> in ${latest.comments[0].creator.character.name}&apos;s thread “${latest.title}”.
                 </div>
