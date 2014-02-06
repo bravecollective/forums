@@ -7,9 +7,8 @@ import bbcode
 
 from datetime import datetime, timedelta
 from traceback import extract_tb, extract_stack, format_list
-from web.core import request
 from web.auth import authenticated, user
-from web.core import Controller, url
+from web.core import Controller, url, request, session
 
 from brave.forums.util import StartupMixIn
 from brave.forums.live import Channel
@@ -71,6 +70,19 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
             return 'brave.forums.template.thread', dict(), dict(only="no_preview"),
         else:
             return bbcode.render_html(content)
+    
+    def theme(self, theme):
+        u = user._current_obj()
+        
+        if not u:
+            session['theme'] = theme if theme != 'default' else None
+            session.save()
+            return 'json:', dict(success=True)
+        
+        u.theme = theme if theme != 'default' else None
+        u.save()
+        
+        return 'json:', dict(success=True)
     
     def __lookup__(self, forum, *args, **kw):
         request.path_info_pop()

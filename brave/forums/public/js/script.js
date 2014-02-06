@@ -280,4 +280,30 @@ $(function(){
 
     });
     
+    // Handle theme changes.
+    $('a[data-theme]').click(function(e){
+        e.preventDefault();
+        
+        var self = $(this),
+            selection = self.data('theme');
+        
+        switch ( selection ) {
+            case 'default':
+                $('link#theme').remove();
+                break;
+            
+            case 'custom':
+                break;
+            
+            default:
+                $('link#theme').remove();
+                $('<link href="/css/theme-' + selection + '.css" rel="stylesheet" id="theme">').appendTo('head');
+        }
+        
+        $('.nav.alice a[data-theme] i').removeClass('fa-dot-circle-o').addClass('fa-circle-o');
+        $('.nav.alice a[data-theme="' + selection + '"] i').removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+        
+        $.post('/theme', {theme: selection});
+    });
+    
 });

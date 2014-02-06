@@ -1,0 +1,90 @@
+html, body, #wrap {
+  background-color: #333333;
+  color: #888888;
+}
+  
+.jumbotron {
+  background-color: #dddddd;
+}
+  
+.page-header{
+  border-bottom: 1px solid #428BCA;
+}
+  
+.list-group-item {
+  background-color: #dddddd;
+  border: 1px solid #888888;
+}
+  
+.panel-default {
+  background-color: #333333;
+  color: #222222;
+}
+  
+  
+.panel-default > .panel-heading {
+  background-image: none;
+  background-color: #444444;
+  color: #dddddd;
+}
+  
+.panel-body {
+  background-color: #dddddd;
+}
+  
+.panel-footer {
+  background-color: #888888;
+}
+  
+.like, .panel-default {
+  border-color: #333333;
+}
+  
+blockquote {
+  border-left: 5px solid #888888;
+}
+  
+.img-thumbnail {
+  background-color: #aaaaaa;
+  border: 1px solid #aaaaaa;
+}
+  
+.comment > .liner {
+  background-color: #aaaaaa;
+}
+  
+  
+#comment-message {
+  background-color: #dddddd;
+  color: #222222;
+}
+  
+#comment .navbar-brand, #comment .navbar-nav, #comment .navbar-default{
+  background-image: none;
+  box-shadow: none;
+  background-color: #444444;
+  color: #dddddd;
+}
+  
+#comment .navbar-nav > .active > a {
+  background-image: none;
+  background-color: #428BCA;
+  color: #dddddd;
+}
+  
+#comment .navbar-nav > li > a {
+  background-color: #444444;
+  color: #dddddd;
+}
+  
+#comment .navbar-nav > li > a:hover {
+  color: #ffffff;
+}
+  
+#preview-panel {
+  background-color: #dddddd;
+}
+
+.nav.alice .dropdown-header { padding-left: 29px; }
+.nav.alice a[data-theme] { padding-left: 8px; }
+.nav.alice a[data-theme] i { margin-right: 3px; }

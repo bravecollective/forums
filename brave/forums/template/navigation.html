@@ -1,4 +1,5 @@
 ## encoding: utf-8
+<% theme = web.user.theme if web.user else session.get('theme') %>
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -17,7 +18,7 @@
                 <li><a href="/p/">Public Forum</a></li>
                 % else:
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Official <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Official <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="/ann/">Announcements</a></li>
                         <li class="divider"></li>
@@ -31,7 +32,7 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">General</li>
                         <li><a href="/p/">Public</a></li>
@@ -46,7 +47,7 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Topic <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Topic <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">BRAVE Dojo</li>
                         <li><a href="/dg/">Guides</a></li>
@@ -69,19 +70,34 @@
                 <input id="rgsearch" type="search" class="form-control" placeholder="Global search.">
             </form>
             % endif
-        
-            % if web.user:
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> ${web.user.character.name} <b class="caret"></b></a>
+            
+            <ul class="nav navbar-nav navbar-right alice">
+                <li class="dropdown" style="display: inline-block">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-adjust"></i> <i class="fa fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                    <%doc>
+                        <li><a href="#" data-theme="custom"><i class="fa fa-circle-o fa-fw"></i>Custom Style</a></li>
+                        <li class="divider"></li>
+                    </%doc>
+                        <li class="dropdown-header">Core Themes</li>
+                        <li><a href="#" data-theme="default"><i class="fa fa${'-dot' if not theme else ''}-circle-o fa-fw"></i>Default (Bright)</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">User Themes</li>
+                        <li><a href="#" data-theme="nj-dark"><i class="fa fa${'-dot' if theme == 'nj-dark' else ''}-circle-o fa-fw"></i>Nicen Jehr (Dark)</a></li>
+                    </ul>
+                </li>\
+                % if web.user:
+<li class="dropdown" style="display: inline-block">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> ${web.user.character.name} <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Preferences</a></li>
                         <li class="divider"></li>
                         <li><a href="/goodbye">Sign Out</a></li>
                     </ul>
                 </li>
+                % endif
             </ul>
-            % else:
+            % if not web.user:
             <a href="/authorize/" class="btn btn-default navbar-btn navbar-right"><i class="fa fa-sign-in"></i> Authenticate</a>
             % endif
         </div>

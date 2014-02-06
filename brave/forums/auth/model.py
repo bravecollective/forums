@@ -35,6 +35,8 @@ class Ticket(Document):
     alliance = EmbeddedDocumentField(Entity, db_field='a', default=lambda: Entity())
     tags = ListField(StringField(), db_field='g', default=list)
     
+    theme = StringField(db_field='h')
+    
     expires = DateTimeField(db_field='e')
     seen = DateTimeField(db_field='s')
     

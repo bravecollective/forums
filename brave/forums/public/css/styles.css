@@ -278,3 +278,7 @@ div[id^="comment-"] {
     box-shadow: inset rgba(0, 0, 0, 0.0470588) 0px 1px 2px 0px;
     font-weight: 500;
 }
+
+.nav.alice .dropdown-header { padding-left: 29px; }
+.nav.alice a[data-theme] { padding-left: 8px; }
+.nav.alice a[data-theme] i { margin-right: 3px; }
