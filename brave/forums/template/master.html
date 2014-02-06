@@ -1,5 +1,5 @@
 ## encoding: utf-8
-<% theme = web.user.theme if web.user else web.session.get('theme') %>
+<% theme = web.user.theme if web.user else None %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
