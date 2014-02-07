@@ -23,7 +23,7 @@ class AuthenticationMixIn(object):
         
         api = API(config['api.endpoint'], config['api.identity'], config['api.private'], config['api.public'])
         
-        success = str(url.complete('/authorized', redirect=redirect))
+        success = str(url.complete('/authorized', params=dict(redirect=redirect)))
         failure = str(url.complete('/nolove'))
         
         result = api.core.authorize(success=success, failure=failure)
