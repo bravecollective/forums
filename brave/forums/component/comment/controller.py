@@ -22,6 +22,7 @@ class CommentIndex(HTTPMethod):
     def __init__(self, thread, comment, format=None):
         self.thread = thread
         self.comment = comment
+        self.channel = Channel(thread.forum.id, thread.id)
         self.format = format or 'json'
         super(CommentIndex, self).__init__()
     
@@ -60,6 +61,8 @@ class CommentIndex(HTTPMethod):
     def post(self, message):
         """Update the comment."""
         
+        self.channel.send('replace', str(self.comment))
+        
         return 'json:', dict(
                 success = True
             )
@@ -67,17 +70,22 @@ class CommentIndex(HTTPMethod):
     def delete(self):
         """Delete the comment."""
         
-        # TODO: Security!  Woo!  (Check admin or owner.)
+        forum = self.thread.forum
+        
+        if 'admin' not in user.tags or (forum.moderate and forum.moderate not in user.tags)
+        
         
         if self.thread.comments[0].id == self.comment:
             short = self.thread.forum.short
             self.thread.delete()
+            self.channel.send('gone', str(thread.id))
             return 'json:', dict(
                     success = True,
                     location = url('/' + short)
                 )
         
         Thread.objects(comments__id=self.comment).update_one(inc__stat__comments=-1, pull__comments__id=self.comment)
+        self.channel.send('replace', str(thread.id))
         
         return 'json:', dict(
                 success = True
@@ -189,6 +197,9 @@ class ThreadController(Controller):
             ])
         thread.save()
         
+        chan = Channel(self.forum.id)
+        chan.send('thread', str(thread.id))
+        
         return dict(success=True)
     
     def lock(self):
@@ -198,6 +209,8 @@ class ThreadController(Controller):
         thread = self.thread
         thread.flag.locked = not thread.flag.locked
         thread.save()
+        
+        self.channel.send('lock' if thread.flag.locked else 'unlock', str(thread.id))
         
         return 'json:', dict(success=True, enabled=thread.flag.locked)
     
