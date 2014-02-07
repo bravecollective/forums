@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from urllib import unquote
 
 from web.auth import authenticate, deauthenticate
-from web.core import config, url
+from web.core import config, url, request
 from web.core.http import HTTPFound
 
 from brave.api.client import API
