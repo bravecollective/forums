@@ -31,6 +31,9 @@
                 
                 $.post($('#comment-panel').attr('action'), {title: $('#thread-title').val(), message: $('#comment-message').val()}, function(result){
                     if ( ! result.success ) {
+                        if(result.message){
+                          alert(result.message)
+                        }
                         return;
                     }
                     
