@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+from urllib import unquote
+
 from web.auth import authenticate, deauthenticate
 from web.core import config, url
 from web.core.http import HTTPFound
@@ -41,7 +43,7 @@ class AuthenticationMixIn(object):
         
         authenticate(token)
         
-        raise HTTPFound(location=redirect or '/')
+        raise HTTPFound(location=unquote(redirect).decode('utf8') if redirect else '/')
     
     def nolove(self, token):
         return 'brave.forums.template.whynolove', dict()
