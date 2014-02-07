@@ -6,7 +6,7 @@ import bbcode
 
 from web.auth import user
 from web.core import Controller, HTTPMethod, url, request
-from web.core.http import HTTPNotFound
+from web.core.http import HTTPNotFound, HTTPForbidden
 
 from brave.forums.thread.controller import ThreadController
 from brave.forums.forum.model import Forum
@@ -50,7 +50,7 @@ class ForumController(Controller):
         elif not f.read or f.read in tags:
             pass
         else:
-            raise HTTPNotFound()
+            raise HTTPForbidden()
         
         self.index = ForumIndex(self.forum)
         
