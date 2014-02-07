@@ -42,14 +42,19 @@ class ForumController(Controller):
         
         tags = user.tags if user else ()
         
+        log.debug("%s %s %s %s %s vs %s", f.id, f.short, f.read, f.write, f.moderate, ",".join(tags))
+        
         # Weird structure here.
         if f.moderate and f.moderate in tags:
-            pass
+            log.debug("granting access to moderator")
         elif f.write and f.write in tags:
-            pass
+            log.debug("granting access to authorized poster")
         elif not f.read or f.read in tags:
-            pass
+            log.debug("granting access to authorized viewer")
         else:
+            log.debug("conditions failed")
+            if user:
+                raise HTTPNotFound()
             raise HTTPForbidden()
         
         self.index = ForumIndex(self.forum)
