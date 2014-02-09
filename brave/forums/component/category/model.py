@@ -6,11 +6,11 @@ Sample population:
 
 me = Character.objects.get(character__name='Draleth')
 
-Category( index=0, title="Management", members=['council', 'it']).save()
-Category( index=5, title="General Discussions", members=['p', 'a', 'c']).save()
-Category(index=10, title="EVE Discussions", members=['pvp', 'pve', 'm', 'i', 'd']).save()
-Category(index=15, title="BRAVE Dojo", members=['dg', 'ds']).save()
-Category(index=20, title="Other", members=['b', 'n', 'g', 'z']).save()
+Category( id=0, title="Management", members=['council', 'it']).save()
+Category( id=5, title="General Discussions", members=['p', 'a', 'c']).save()
+Category(id=10, title="EVE Discussions", members=['pvp', 'pve', 'm', 'i', 'd']).save()
+Category(id=15, title="BRAVE Dojo", members=['dg', 'ds']).save()
+Category(id=20, title="Other", members=['b', 'n', 'g', 'z']).save()
 
 """
 
