@@ -33,7 +33,8 @@ class CommentIndex(HTTPMethod):
                     page = 1,
                     forum = self.thread.forum,
                     thread = self.thread,
-                    comment = self.comment
+                    comment = self.comment,
+                    BASE = "/{0}/{1}".format(self.thread.forum.short, self.thread.id)
                 )
         
         return 'json:', dict(
