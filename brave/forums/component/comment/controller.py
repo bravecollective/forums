@@ -38,8 +38,8 @@ class CommentIndex(HTTPMethod):
         
         return 'json:', dict(
                 success = True,
-                character = comment.creator.character.id,
-                comment = comment.message
+                character = self.comment.creator.character.id,
+                comment = self.comment.message
             )
     
     def post(self, message):
