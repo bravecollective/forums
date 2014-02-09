@@ -84,8 +84,8 @@ class ThreadController(Controller):
         thread.flag.sticky = not thread.flag.sticky
         thread.save()
         
-        self.forum.channel.send('sticky' if thread.flag.locked else 'unsticky', str(thread.id))
-        self.thread.channel.send('sticky' if thread.flag.locked else 'unsticky', str(thread.id))
+        self.forum.channel.send('sticky' if thread.flag.sticky else 'unsticky', str(thread.id))
+        self.thread.channel.send('sticky' if thread.flag.sticky else 'unsticky', str(thread.id))
         
         return 'json:', dict(success=True, enabled=thread.flag.sticky)
     
@@ -97,7 +97,7 @@ class ThreadController(Controller):
         thread.flag.hidden = not thread.flag.hidden
         thread.save()
         
-        self.forum.channel.send('sticky' if thread.flag.locked else 'unsticky', str(thread.id))
-        self.thread.channel.send('sticky' if thread.flag.locked else 'unsticky', str(thread.id))
+        self.forum.channel.send('hidden' if thread.flag.hidden else 'visible', str(thread.id))
+        self.thread.channel.send('hidden' if thread.flag.hidden else 'visible', str(thread.id))
         
         return 'json:', dict(success=True, enabled=thread.flag.hidden)

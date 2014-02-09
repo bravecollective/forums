@@ -212,7 +212,14 @@ var Thread = function() {
     $(this.channel).on({
             "notice.locked": $.proxy(this, 'locked'),
             "notice.unlocked": $.proxy(this, 'unlocked'),
+            "notice.sticky": $.proxy(this, 'sticky'),
+            "notice.unsticky": $.proxy(this, 'unsticky'),
+            "notice.hidden": $.proxy(this, 'hidden'),
+            "notice.visible": $.proxy(this, 'visible'),
+            
             "notice.comment": $.proxy(this, 'commented'),
+            "notice.refresh": $.proxy(this, 'refresh'),
+            "notice.remove": $.proxy(this, 'removed'),
             "notice.stop": $.proxy(this, 'stop'),
             
             "starting": $.proxy(this, 'starting'),
@@ -251,13 +258,31 @@ Thread.prototype.setState = function(level, state) {
 };
 
 
+
+
 Thread.prototype.locked = function(data) {
     console.log("Thread.locked");
 };
 
-
 Thread.prototype.unlocked = function(data) {
     console.log("Thread.unlocked");
+};
+
+Thread.prototype.sticky = function(data) {
+    console.log("Thread.sticky");
+};
+
+Thread.prototype.unsticky = function(data) {
+    console.log("Thread.unsticky");
+};
+
+Thread.prototype.hidden = function(data) {
+    console.log("Thread.hidden");
+};
+
+
+Thread.prototype.visible = function(data) {
+    console.log("Thread.visible");
 };
 
 
@@ -271,6 +296,27 @@ Thread.prototype.commented = function(e, identifier) {
         $('time.relative').timeago();
     });
 };
+
+Thread.prototype.refresh = function(e, identifier) {
+    console.log("Thread.commented", identifier);
+
+    if ( ! $('#' + identifier).length ) return;
+    
+    $.get(window.location + '/' + identifier + '.html', function(result) {
+        $('#' + identifier).replaceWith(result);
+        $('time.relative').timeago();
+    });
+};
+
+Thread.prototype.remove = function(e, identifier) {
+    console.log("Thread.commented", identifier);
+
+    if ( ! $('#' + identifier).length ) return;
+    $('#' + identifier).remove();
+};
+
+
+
 
 
 Thread.prototype.starting = function(e) {
