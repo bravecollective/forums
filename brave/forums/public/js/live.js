@@ -298,7 +298,7 @@ Thread.prototype.commented = function(e, identifier) {
 };
 
 Thread.prototype.refresh = function(e, identifier) {
-    console.log("Thread.commented", identifier);
+    console.log("Thread.refresh", identifier);
 
     if ( ! $('#' + identifier).length ) return;
     
@@ -309,12 +309,11 @@ Thread.prototype.refresh = function(e, identifier) {
 };
 
 Thread.prototype.remove = function(e, identifier) {
-    console.log("Thread.commented", identifier);
+    console.log("Thread.remove", identifier);
 
     if ( ! $('#' + identifier).length ) return;
     $('#' + identifier).remove();
 };
-
 
 
 
