@@ -18,7 +18,7 @@ sending_pool = ScalingPoolExecutor(5, 10, 60)
 
 
 def _deliver(url, data):
-    data = json.dumps(payload)
+    data = json.dumps(data)
     log.debug("push %s\n%s", url, data)
     
     try:
