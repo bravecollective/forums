@@ -19,7 +19,7 @@ class Entity(EmbeddedDocument):
     name = StringField(db_field='n')
 
 
-class Ticket(Document):
+class Character(Document):
     meta = dict(
             collection = 'Tickets',
             allow_inheritance = False,

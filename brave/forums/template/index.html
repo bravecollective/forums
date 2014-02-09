@@ -7,23 +7,23 @@
 <%block name="title">Dashboard</%block>
 <%f:page title="Dashboard" minor="of somewhat useful and supposedly relevant things." />
 
-% if announcements and announcements.count():
+% if announcements and announcements.threads.count():
 <ul class="nav nav-pills pull-right">
     <li><a href="/ann/"><i class="fa fa-arrow-circle-o-right fa-lg"></i>View All Announcements</a></li>
 </ul>
 
 <h4>Latest Announcement Threads</h4>
-<%forum:threads results="${announcements}" limit="3" />
+<%forum:threads results="${announcements.threads}" limit="3" />
 % endif
-
 
 <h4>Your Active Discussions</h4>
 <%forum:threads results="${activity}" limit="5" />
 
 
-% for title, forums in forum_categories:
-    <% if not forums.count(): continue %>
-    ${category(title, forums)}
+
+% for category in categories:
+    <% if not category.forums.count(): continue %>
+    ${render_category(category.title, category.forums)}
 % endfor
 
 
@@ -47,7 +47,7 @@
 </ul>
 
 
-<%def name="category(category_title, forums_list)">
+<%def name="render_category(category_title, forums_list)">
     <%def name="stat(singular, plural, count)">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${int(count)}</big><br><small>${singular if count == 1 else plural}</small>
@@ -74,7 +74,7 @@
                 % if forum_item.threads.count():
                 <% latest = forum_item.threads.first() %>
                 <div class="list-group-item-text">
-                    Last comment <time class="relative" datetime="${latest.comments[-1].created |n,f.iso}">${latest.comments[-1].created |n,f.pretty}</time> in ${latest.comments[0].creator.character.name}&apos;s thread “${latest.title}”.
+                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in ${latest.oldest().creator.character.name}&apos;s thread “${latest.title}”.
                 </div>
                 % else:
                 <div class="list-group-item-text">

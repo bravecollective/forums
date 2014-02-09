@@ -5,85 +5,77 @@ from __future__ import unicode_literals
 import sys
 import bbcode
 
-from datetime import datetime, timedelta
-from traceback import extract_tb, extract_stack, format_list
-from web.auth import authenticated, user
-from web.core import Controller, url, request, session
+from web.auth import user, anonymous, authenticated
+from web.core import Controller, session
 
-from brave.forums.util import StartupMixIn
-from brave.forums.live import Channel
-from brave.forums.forum.model import Forum
-from brave.forums.thread.model import Thread
 from brave.forums.auth.controller import AuthenticationMixIn
-from brave.forums.forum.controller import ForumController
+from brave.forums.component.category.model import Category
+from brave.forums.component.forum.controller import ForumController
+from brave.forums.component.forum.model import Forum
+from brave.forums.component.thread.model import Thread
+
+from brave.forums.util import StartupMixIn, resume, only, require, debugging
+from brave.forums.util.live import Channel
 
 
 log = __import__('logging').getLogger(__name__)
 
 
 class RootController(Controller, StartupMixIn, AuthenticationMixIn):
-    def die(self):
-        """Simply explode.  Useful to get the interactive debugger up."""
-        1/0
+    def __lookup__(self, forum, *args, **kw):
+        """Internal redirect if the first path element doesn't match a method at this level.
+        
+        Path elements are passed positionally, GET/POST as keyword arguments.
+        Must return a new controller instance and the remaining path elements to process.
+        Yes, these remaining path elements don't need to be the ones that came in originally!
+        """
+        return resume(ForumController, forum, args)
     
+    @require(anonymous)
     def index(self):
-        if authenticated:
-            forum_categories = [
-                    ("Management", Forum.get('council', 'it')),
-                    ("General Discussions", Forum.get('p', 'a', 'c')),
-                    ("EVE Discussions", Forum.get('pvp', 'pve', 'm', 'i', 'd')),
-                    ("BRAVE Dojo", Forum.get('dg', 'ds')),
-                    ("Other", Forum.get('b', 'n', 'g', 'z')),
-                ]
-            
-            allowed = Forum.get().scalar('id')
-            announcements = Forum.get('ann').first()
-            
-            return 'brave.forums.template.index', dict(
-                    forum_categories = forum_categories,
-                    
-                    announcements = announcements.threads if announcements else None,
-                    
-                    activity = Thread.objects(
-                            forum__in = allowed,
-                            modified__gt = datetime.utcnow() - timedelta(days=30),
-                            comments__creator = user._current_obj()
-                        ).order_by('-modified'),
-                    
-                    latest = Thread.objects(forum__in=allowed).order_by('-id'),
-                    
-                    voted = Thread.objects(
-                            forum__in = allowed,
-                            modified__gt = datetime.utcnow() - timedelta(days=7),
-                            stat__votes__gt = 0
-                        ).order_by('-stat__votes'),
-                )
-
+        """Anonymous welcome splash page."""
         return 'brave.forums.template.welcome', dict()
     
+    @index.otherwise
+    def index(self):
+        """Authenticated forum dashboard."""
+        
+        allowed = list(Forum.get().scalar('id'))
+        
+        return 'brave.forums.template.index', dict(
+                categories = Category.objects.only('title', 'members'),
+                announcements = Forum.get('ann').first(),
+                activity = Thread.objects.get_active(allowed, user.id, 30),
+                latest = Thread.objects.get_active(allowed).order_by('-id'),
+                voted = Thread.objects.get_active(allowed, days=7, stat__votes__gt=0).order_by('-stat__votes')
+            )
+    
     def listen(self, id):
+        """Default push notification handler if not running under Nginx."""
         return 'json:', dict(handler="stop", payload=None)
     
+    @require(authenticated)
     def preview(self, content):
+        """Handle BBCode preview functionality."""
+        
         # If no content has been submitted to preview, show an alert box instead
         if content.strip() == '':
-            return 'brave.forums.template.thread', dict(), dict(only="no_preview"),
+            return only('brave.forums.template.thread', 'no_preview')
         else:
             return bbcode.render_html(content)
     
+    @require(authenticated)
     def theme(self, theme):
-        u = user._current_obj()
+        """Change the theme registered against the current user."""
         
-        if not u:
-            session['theme'] = theme if theme != 'default' else None
-            session.save()
-            return 'json:', dict(success=True)
+        u = user._current_obj()
         
         u.theme = theme if theme != 'default' else None
         u.save()
         
         return 'json:', dict(success=True)
     
-    def __lookup__(self, forum, *args, **kw):
-        request.path_info_pop()
-        return ForumController(forum), args
+    @require(debugging)
+    def die(self):
+        """Simply explode.  Useful to get the interactive debugger up."""
+        1/0

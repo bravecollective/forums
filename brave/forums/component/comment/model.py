@@ -4,10 +4,23 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 
-from mongoengine import Document, EmbeddedDocument, ObjectIdField, StringField, DateTimeField, ReferenceField, IntField, EmbeddedDocumentField, ListField, BooleanField
+from mongoengine import EmbeddedDocument, ObjectIdField, StringField, DateTimeField, ReferenceField, IntField, EmbeddedDocumentField, ListField, BooleanField
 
 
 log = __import__('logging').getLogger(__name__)
+
+
+# TODO: migration to delete the 'dc' key from all comments
+
+
+class Voting(EmbeddedDocument):
+    meta = dict(allow_inheritance=False)
+    
+    count = IntField(db_field='c', default=0)
+    who = ListField(ObjectIdField(), db_field='w', default=[])
+    
+    def __repr__(self):
+        return 'Voting({0})'.format(self.count)
 
 
 class Comment(EmbeddedDocument):
@@ -16,50 +29,18 @@ class Comment(EmbeddedDocument):
     id = ObjectIdField(db_field='i')
     message = StringField(db_field='m')
     
+    # TODO: migrate existing vote information into Voting instances
+    vote = EmbeddedDocumentField(Voting, default=Voting)
     vote_count = IntField(db_field='vc', default=0)
     vote_trail = ListField(ObjectIdField(), db_field='vt', default=[])
     
-    creator = ReferenceField('Ticket')
+    creator = ReferenceField('Character')
+    
+    created = property(lambda self: self.id.generation_time)
     created = DateTimeField(db_field='dc', default=datetime.utcnow)
     modified = DateTimeField(db_field='dm')
     
     upload = None  # TODO: some day we'll allow file uploads
-
-
-class ThreadFlags(EmbeddedDocument):
-    meta = dict(allow_inheritance=False)
     
-    locked = BooleanField(db_field='l', default=False)
-    sticky = BooleanField(db_field='s', default=False)
-    hidden = BooleanField(db_field='h', default=False)
-    uploads = BooleanField(db_field='u', default=False)
-
-
-class ThreadStats(EmbeddedDocument):
-    meta = dict(allow_inheritance=False)
-    
-    comments = IntField(db_field='c', default=0)
-    uploads = IntField(db_field='u', default=0)
-    votes = IntField(db_field='v', default=0)
-    views = IntField(db_field='i', default=0)
-
-
-class Thread(Document):
-    meta = dict(
-            collection = 'Threads',
-            allow_inheritance = False,
-            indexes = [
-                    'modified', ('forum', 'flag.hidden'),
-                ],
-            ordering = ['-modified']
-        )
-    
-    forum = ReferenceField('Forum', required=True)
-    
-    title = StringField(db_field='t')
-    comments = ListField(EmbeddedDocumentField(Comment), db_field='c', default=list)
-    
-    flag = EmbeddedDocumentField(ThreadFlags, db_field='f', default=lambda: ThreadFlags())
-    stat = EmbeddedDocumentField(ThreadStats, db_field='s', default=lambda: ThreadStats())
-    
-    modified = DateTimeField(db_field='m', default=datetime.utcnow)
+    def __repr__(self):
+        return 'Comment({0.id} "{0.creator.character.name}")'.format(self)

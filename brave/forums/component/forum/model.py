@@ -2,9 +2,13 @@
 
 from __future__ import unicode_literals
 
-from mongoengine import Document, StringField, ListField, Q
-
+from operator import __or__
 from web.auth import user
+from mongoengine import Q, Document, StringField, EmbeddedDocumentField, DateTimeField
+
+from brave.forums.model import Statistics
+from brave.forums.util.live import Channel
+from brave.forums.component.thread.model import Thread
 
 
 log = __import__('logging').getLogger(__name__)
@@ -18,7 +22,7 @@ class Forum(Document):
                 ],
         )
     
-    short = StringField(db_field='s')
+    short = StringField(db_field='s')  # , primary_key=True) TODO: Migrate this into _id.
     name = StringField(db_field='n')
     summary = StringField(db_field='u')
     
@@ -27,10 +31,21 @@ class Forum(Document):
     write = StringField(db_field='w')
     moderate = StringField(db_field='m')
     
+    stat = EmbeddedDocumentField(Statistics, db_field='t', default=Statistics)
+    modified = DateTimeField(db_field='o')
+    
+    def __repr__(self):
+        return 'Forum({0.short} "{0.name}" r={0.read} w={0.write} m={0.moderate})'.format(self)
+    
+    @property
+    def channel(self):
+        if not hasattr(self, '_channel'):
+            self._channel = Channel(self.id)
+        
+        return self._channel
+    
     @property
     def threads(self):
-        from brave.forums.thread.model import Thread
-        
         u = user._current_obj()
         query = Thread.objects(forum=self)
         
@@ -43,17 +58,23 @@ class Forum(Document):
     def get(cls, *short):
         query = cls.objects(short__in=short) if short else cls.objects
         
-        if not user._current_obj():
-            return query.filter(read=None)
+        u = user._current_obj()
+        if u and u.admin: return query
         
-        if user.admin:
-            return query
+        components = [Q(read=None)]
+        if not u or not u.tags: return query.filter(*components)
         
-        tags = user.tags
+        components.append(Q(read__in=u.tags))
+        components.append(Q(write__in=u.tags))
+        components.append(Q(moderate__in=u.tags))
         
         # Limit to forums the user has some form of access to.
-        query.filter(
-                Q(read=None) | Q(read__in=tags) | Q(write__in=tags) | Q(moderate__in=tags)
-            )
+        return query.filter(reduce(__or__, components))
+    
+    def create_thread(self, user, title, message):
+        thread = Thread(forum=self, title=title).save()
+        thread.add_comment(user, message)
         
-        return query
+        self.channel.send('thread', str(thread.id))
+        
+        return thread

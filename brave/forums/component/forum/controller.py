@@ -2,18 +2,16 @@
 
 from __future__ import unicode_literals
 
-import bbcode
-
 from web.auth import user
 from web.core import Controller, HTTPMethod, url, request
 from web.core.http import HTTPNotFound, HTTPForbidden
 
-from brave.forums.thread.controller import ThreadController
-from brave.forums.forum.model import Forum
+from brave.forums.component.forum.model import Forum
+from brave.forums.component.thread.controller import ThreadController
+from brave.forums.util import resume, only
 
 
 log = __import__('logging').getLogger(__name__)
-
 
 
 class ForumIndex(HTTPMethod):
@@ -23,14 +21,24 @@ class ForumIndex(HTTPMethod):
     
     def get(self, page=1):
         page = int(page)
+        data = dict(page=page, forum=self.forum)
         
         if request.is_xhr:
-            return 'brave.forums.template.forum', dict(page=page, forum=self.forum), dict(only='threads')
+            return only('brave.forums.template.forum', 'threads', **data)
         
-        return 'brave.forums.template.forum', dict(page=page, forum=self.forum)
+        return 'brave.forums.template.forum', data
     
     def post(self, title, message, upload=None, vote=None):
-        return 'json:', ThreadController._create(self.forum, title, message)
+        if not user.admin and self.forum.write and self.forum.write not in user.tags:
+            log.debug("deny post to %r: w=%r t=%r", self.forum, self.forum.write, user.tags)
+            raise HTTPNotFound()
+        
+        if not title.strip() or not message.strip():
+            return 'json:', dict(success=False, message="Must supply both a title and a message for a new thread.")
+        
+        self.forum.create_thread(user._current_obj(), title, message)
+        
+        return 'json:', dict(success=True)
 
 
 class ForumController(Controller):
@@ -42,9 +50,9 @@ class ForumController(Controller):
         
         tags = user.tags if user else ()
         
-        log.debug("%s %s %s %s %s vs %s", f.id, f.short, f.read, f.write, f.moderate, ",".join(tags))
+        log.debug("%r vs %s", f, ",".join(tags))
         
-        # Weird structure here.
+        # Weird structure here, but we want to redirect under some circumstances.
         if f.moderate and f.moderate in tags:
             log.debug("granting access to moderator")
         elif f.write and f.write in tags:
@@ -57,10 +65,10 @@ class ForumController(Controller):
                 raise HTTPNotFound()
             raise HTTPForbidden()
         
-        self.index = ForumIndex(self.forum)
+        self.index = ForumIndex(f)
         
         super(ForumController, self).__init__()
     
     def __lookup__(self, thread, *args, **kw):
-        request.path_info_pop()
-        return ThreadController(self.forum, thread), args
+        log.debug("Continuing from %r to thread %s.", self.forum, thread)
+        return resume(ThreadController, thread, args, self.forum)

@@ -14,7 +14,6 @@ from brave.api.client import API
 log = __import__('logging').getLogger(__name__)
 
 
-
 class AuthenticationMixIn(object):
     def authorize(self, redirect=None):
         # Perform the initial API call and direct the user.
@@ -33,21 +32,32 @@ class AuthenticationMixIn(object):
         raise HTTPFound(location=result.location)
     
     def authorized(self, token, redirect=None):
-        # Capture the returned token and use it to look up the user details.
-        # If we don't have this character, create them.
-        # Store the token against this user account.
-        # Note that our own 'sessions' may not last beyond the UTC date returned as 'expires'.
-        # (Though they can be shorter!)
+        """Callback from Core indicating successful authentication/authorization.
         
-        # We request an authenticated session from the server.
-        
+        We pass through to the method defined in the INI file, usually:
+            brave.forums.auth.model:Character.authenticate
+        """
         authenticate(token)
-        
         raise HTTPFound(location=unquote(redirect).decode('utf8') if redirect else '/')
     
     def nolove(self, token):
+        """User declined the authorization attempt."""
         return 'brave.forums.template.whynolove', dict()
     
     def goodbye(self):
+        """User is done for this session."""
         deauthenticate(True)
         raise HTTPFound(location='/')
+    
+    def switch(self):
+        """User wishes the re-authorize this application with a different character."""
+        deauthenticate(True)
+        
+        api = API(config['api.endpoint'], config['api.identity'], config['api.private'], config['api.public'])
+        
+        success = str(url.complete('/authorized', params=dict(redirect=request.referrer)))
+        failure = str(url.complete('/nolove'))
+        
+        result = api.core.authorize(success=success, failure=failure)
+        
+        raise HTTPFound(location=result.location)

@@ -15,7 +15,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
     ${parent.header()}
 </%block>
 
-<%block name="bodydata"> data-thread-endpoint="${endpoint}" data-base="${"/{0}/{1}".format(forum.short, thread.id)}"</%block>
+<%block name="bodydata"> data-thread-endpoint="${thread.channel.receiver}" data-base="${"/{0}/{1}".format(forum.short, thread.id)}"</%block>
 
 <%block name="post">
     ${parent.post()}
@@ -219,10 +219,10 @@ ${render_comment(comment)}
                     <i class="fa fa-stack-1x fa-inverse fa-thumbs-up"></i>
                     <i class="fa fa-stack-1x fa-thumbs-o-up"></i>
                 </span>
-                <% from brave.forums.auth.model import Ticket %>
+                <% from brave.forums.auth.model import Character %>
                 % for player in comment.vote_trail:
                 <%
-                t = Ticket.objects(id=player).only('character.name', 'character.id').first()
+                t = Character.objects(id=player).only('character.name', 'character.id').first()
                 if not t:
                     continue
                 %>
@@ -253,7 +253,7 @@ ${render_comment(comment)}
     <div class="col-xs-2 col-sm-2 actions right"><ul class="nav nav-pills">${actions('right')}</ul></div>
 </div>
 
-% for i, comment in enumerate(thread.comments):
+% for i, comment in enumerate(thread.reload().comments):
 ${render_comment(comment, None if i else thread.title)}
 % endfor
 

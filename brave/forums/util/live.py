@@ -7,12 +7,27 @@ import json
 
 from hashlib import sha256
 from web.auth import user
+from marrow.util.futures import ScalingPoolExecutor
 
 from brave.api.client import API
 
 
 log = __import__('logging').getLogger(__name__)
 
+sending_pool = ScalingPoolExecutor(5, 10, 60)
+
+
+def _deliver(url, data):
+    data = json.dumps(payload)
+    log.debug("push %s\n%s", url, data)
+    
+    try:
+        r = requests.post(url, data=data, verify=False)
+        if not r.status_code < 300:
+            log.error("Error %d posting push notification.", r.status_code)
+    except:
+        log.exception("Error posting push notification.")
+    
 
 class Channel(object):
     """A realtime broadcast channel for broadcast messaging.
@@ -46,16 +61,7 @@ class Channel(object):
                 payload = content,
             )
         
-        log.debug("push %s\n%s", self.url, json.dumps(payload))
-        
-        try:
-            r = requests.post(self.url, data=json.dumps(payload), verify=False)
-            if not r.status_code < 300:
-                log.error("Error %d posting push notification.", r.status_code)
-                return False
-        except:
-            log.exception("Error posting push notification.")
-            return False
+        sending_pool.submit(_deliver, self.url, payload)
         
         return True
 

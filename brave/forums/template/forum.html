@@ -120,9 +120,9 @@
         <h4>No threads found.</h4>
     </li>
     % endif
-    % for thread in results.skip((page-1)*limit).limit(limit):
+    % for thread in results.skip((page-1) * limit).limit(limit):
     <a href="/${thread.forum.short}/${thread.id}" class="list-group-item media thread${' dim' if thread.flag.hidden else ''}">
-        <img src="//image.eveonline.com/Character/${thread.comments[0].creator.character.id}_64.jpg" class="pull-left media-object thumb-44">
+        <img src="//image.eveonline.com/Character/${thread.oldest().creator.character.id}_64.jpg" class="pull-left media-object thumb-44">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${thread.stat.views}</big><br><small>view${'' if thread.stat.views == 1 else 's'}</small>
         </div>
@@ -149,12 +149,12 @@
         <h4 class="list-group-item-heading">
             ${thread.title}
             <small>
-                by ${thread.comments[0].creator.character.name}
-                <time class="relative" datetime="${thread.comments[0].created |n,f.iso}">on ${thread.comments[0].created |n,f.pretty}</time>
+                by ${thread.oldest().creator.character.name}
+                <time class="relative" datetime="${thread.oldest().created |n,f.iso}">on ${thread.oldest().created |n,f.pretty}</time>
             </small>
         </h4>
         <div class="list-group-item-text">
-            Last comment by ${thread.comments[-1].creator.character.name} <time class="relative" datetime="${thread.comments[-1].created |n,f.iso}">on ${thread.comments[-1].created |n,f.pretty}</time>.
+            Last comment by ${thread.latest().creator.character.name} <time class="relative" datetime="${thread.latest().created |n,f.iso}">on ${thread.latest().created |n,f.pretty}</time>.
         </div>
     </a>
     % endfor

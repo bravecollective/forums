@@ -3,15 +3,31 @@
 from __future__ import unicode_literals
 
 from sys import exit
+
 from binascii import unhexlify
 from hashlib import sha256
-from web.core import config
-from marrow.mailer import Mailer
 from ecdsa.keys import SigningKey, VerifyingKey
 from ecdsa.curves import NIST256p
 
+from web.auth import always, Predicate
+from web.core import config, request
+from marrow.mailer import Mailer
+from marrow.util.convert import boolean
+
 
 log = __import__('logging').getLogger(__name__)
+
+
+
+def only(template, segment, **data):
+    return template, data, dict(only=segment)
+
+
+class DebuggingPredicate(Predicate):
+    def __nonzero__(self):
+        return boolean(config.get('debug', False))
+
+debugging = DebuggingPredicate()
 
 
 class StartupMixIn(object):
@@ -24,10 +40,11 @@ class StartupMixIn(object):
         
         # Load our keys into a usable form.
         try:
+            config['api.identity']
             config['api.private'] = SigningKey.from_string(unhexlify(config['api.private']), curve=NIST256p, hashfunc=sha256)
             config['api.public'] = VerifyingKey.from_string(unhexlify(config['api.public']), curve=NIST256p, hashfunc=sha256)
         except:
-            log.critical("Core Service API identity, public, or private key missing.")
+            log.critical("Core Service API identity, public, or private key missing or invalid.")
             
             private = SigningKey.generate(NIST256p, hashfunc=sha256)
             
@@ -38,3 +55,47 @@ class StartupMixIn(object):
             exit(-1)
         
         super(StartupMixIn, self).__init__()
+
+
+def resume(Handler, element, remaining, *args, **kw):
+    request.path_info_pop()
+    
+    if '.' in element:
+        element, _, request.format = element.rpartition('.')
+    else:
+        request.format = None
+    
+    return Handler(element, *args, **kw), remaining
+
+
+def require(*predicates):
+    def conditional(*args, **kw):
+        for predicates, handler in conditional.handlers:
+            if not all(predicates):
+                continue
+            
+            return handler(*args, **kw)
+            
+        else:
+            raise HTTPNotFound
+    
+    def require(*predicates):
+        def decorator(fn):
+            conditional.append((predicates, fn))
+            return conditional
+        
+        return decorator
+    
+    def otherwise(fn):
+        conditional.handlers.append(((always, ), fn))
+        return conditional
+    
+    conditional.handlers = []
+    conditional.require = require
+    conditional.otherwise = otherwise
+    
+    def decorator(fn):
+        conditional.handlers.append((predicates, fn))
+        return conditional
+    
+    return decorator

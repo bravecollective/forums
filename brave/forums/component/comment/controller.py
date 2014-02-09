@@ -10,9 +10,11 @@ from web.core.http import HTTPNotFound
 from bson import ObjectId
 from datetime import datetime
 
-from brave.forums.live import Channel
-from brave.forums.auth.model import Ticket
-from brave.forums.thread.model import Thread, Comment
+from brave.forums.auth.model import Character
+from brave.forums.component.thread.model import Thread
+from brave.forums.component.comment.model import Comment
+from brave.forums.util.live import Channel
+from brave.forums.util import resume, only
 
 
 log = __import__('logging').getLogger(__name__)
@@ -22,225 +24,85 @@ class CommentIndex(HTTPMethod):
     def __init__(self, thread, comment, format=None):
         self.thread = thread
         self.comment = comment
-        self.channel = Channel(thread.forum.id, thread.id)
         self.format = format or 'json'
         super(CommentIndex, self).__init__()
     
     def get(self):
         if self.format == 'html':
-            # This is hideously bad, but MongoEngine has yet to support .only('comments__S')
-            for comment in self.thread.comments:
-                if comment.id == self.comment: break
-            else:
-                raise HTTPNotFound()
-    
-            return 'brave.forums.template.thread', dict(
+            return only('brave.forums.template.thread', 'render_push',
                     page = 1,
                     forum = self.thread.forum,
                     thread = self.thread,
-                    endpoint = '',
-                    comment = comment
-                ), dict(only='render_push')
+                    comment = self.comment
+                )
         
-        try:
-            comment = Thread._get_collection().find({'c': {'$elemMatch': {'i': self.comment}}}, {'c.$': 1}).next()
-        except StopIteration:
-            raise HTTPNotFound()
-        
-        try:
-            comment = comment['c'][0]
-        except:
-            raise HTTPNotFound()
-
         return 'json:', dict(
                 success = True,
-                character = Ticket.objects(id=comment['creator']).only('character__id').first().character.id,
-                comment = comment['m']
+                character = comment.creator.character.id,
+                comment = comment.message
             )
     
     def post(self, message):
         """Update the comment."""
         
-        self.channel.send('replace', str(self.comment))
+        self.thread.channel.send('refresh', str(self.comment.id))
         
-        return 'json:', dict(
-                success = True
-            )
+        return 'json:', dict(success=True)
     
     def delete(self):
         """Delete the comment."""
         
         forum = self.thread.forum
         
-        if 'admin' not in user.tags or (forum.moderate and forum.moderate not in user.tags)
+        # TODO: Security
+        # if 'admin' not in user.tags or (forum.moderate and forum.moderate not in user.tags)
         
-        
-        if self.thread.comments[0].id == self.comment:
-            short = self.thread.forum.short
+        if self.comment.id == self.thread.oldest().id:
+            forum.channel.send('gone', str(self.thread.id))
+            self.thread.channel.send('gone', url('/' + forum.short))
             self.thread.delete()
-            self.channel.send('gone', str(thread.id))
-            return 'json:', dict(
-                    success = True,
-                    location = url('/' + short)
-                )
-        
-        Thread.objects(comments__id=self.comment).update_one(inc__stat__comments=-1, pull__comments__id=self.comment)
-        self.channel.send('replace', str(thread.id))
-        
-        return 'json:', dict(
-                success = True
-            )
-
-
-class CommentController(Controller):
-    def __init__(self, thread, comment, format):
-        self.thread = thread
-        self.comment = comment
-        self.index = CommentIndex(thread, comment, format)
-        super(CommentController, self).__init__()
-    
-    def vote(self):
-        try:
-            comment = Thread._get_collection().find({'c': {'$elemMatch': {'i': self.comment}}}, {'c.$': 1}).next()
-        except StopIteration:
-            raise HTTPNotFound()
-        
-        try:
-            comment = comment['c'][0]
-        except:
-            raise HTTPNotFound()
-        
-        if user.id in comment.get('vt', []):
-            Thread.objects(comments__id=self.comment).update_one(inc__comments__S__vote_count=-1, pull__comments__S__vote_trail=user.id, inc__stat__votes=-1)
-            enabled = False
             
-        else:
-            Thread.objects(comments__id=self.comment).update_one(inc__comments__S__vote_count=1, push__comments__S__vote_trail=user.id, inc__stat__votes=1)
-            enabled = True
+            return 'json:', dict(success=True)
         
-        return 'json:', dict(
-                success = True,
-                enabled = enabled
-            )
-    
-
-
-class ThreadIndex(HTTPMethod):
-    def __init__(self, forum, thread):
-        self.forum = forum
-        self.thread = thread
-        super(ThreadIndex, self).__init__()
-    
-    def get(self, page=1):
-        thread = self.thread.thread
-        Thread.objects(id=thread.id).update_one(inc__stat__views=1)
-        return 'brave.forums.template.thread', dict(page=page, forum=self.forum, thread=thread, endpoint=self.thread.channel.receiver)
-    
-    def post(self, message, upload=None, vote=None):
-        if self.forum.moderate in user.tags:
-            pass
-        elif not user.admin and self.forum.write and self.forum.write not in user.tags:
-            return 'json:', dict(success=False, message="Not allowed.")
-        
-        if not message or not message.strip():
-            return 'json:', dict(success=False, message="Empty message.")
-        
-        comment_id = ObjectId()
-        
-        thread = self.thread.thread
-        
-        comment = Comment(
-                id = comment_id,
-                message = message,
-                creator = user._current_obj(),
-            )
-        
-        # Atomic operations, bitches!
-        Thread.objects(id=thread.id).update_one(
-                inc__stat__comments = 1,
-                set__modified = datetime.utcnow(),
-                push__comments = comment
-            )
-        
-        thread.reload()
-        
-        self.thread.channel.send('comment', str(comment_id))
+        self.thread.update_comment(self.comment.id, dict(dec__stat__comments=1, pull__comments__id=self.comment.id))
+        self.thread.channel.send('remove', str(self.thread.id))
         
         return 'json:', dict(success=True)
 
 
-
-class ThreadController(Controller):
-    def __init__(self, forum, id):
-        self.forum = forum
-        try:
-            self.thread = Thread.objects.get(id=id)
-        except Thread.DoesNotExist:
-            raise HTTPNotFound()
-        self.channel = Channel(self.forum.id, self.thread.id)
-        self.index = ThreadIndex(forum, self)
-        super(ThreadController, self).__init__()
-    
-    @classmethod
-    def _create(cls, forum, title, message):
-        if forum.moderate in user.tags:
-            pass
-        elif not user.admin and forum.write and forum.write not in user.tags:
-            return dict(success=False, message="Not allowed.")
-        
-        thread = Thread(forum=forum, title=title, comments=[
-                Comment(
-                    id = ObjectId(),
-                    message = message,
-                    creator = user._current_obj(),
-                )
-            ])
-        thread.save()
-        
-        chan = Channel(self.forum.id)
-        chan.send('thread', str(thread.id))
-        
-        return dict(success=True)
-    
-    def lock(self):
-        if not (user.admin or self.forum.moderate in user.tags):
-            return dict(success=False, enabled=self.thread.flag.locked, message="Not allowed.")
-        
-        thread = self.thread
-        thread.flag.locked = not thread.flag.locked
-        thread.save()
-        
-        self.channel.send('lock' if thread.flag.locked else 'unlock', str(thread.id))
-        
-        return 'json:', dict(success=True, enabled=thread.flag.locked)
-    
-    def sticky(self):
-        if not (user.admin or self.forum.moderate in user.tags):
-            return dict(success=False, enabled=self.thread.flag.sticky, message="Not allowed.")
-        
-        thread = self.thread
-        thread.flag.sticky = not thread.flag.sticky
-        thread.save()
-        
-        return 'json:', dict(success=True, enabled=thread.flag.sticky)
-    
-    def hide(self):
-        if not (user.admin or self.forum.moderate in user.tags):
-            return dict(success=False, enabled=self.thread.flag.hidden, message="Not allowed.")
-        
-        thread = self.thread
-        thread.flag.hidden = not thread.flag.hidden
-        thread.save()
-        
-        return 'json:', dict(success=True, enabled=thread.flag.hidden)
-    
-    def __lookup__(self, comment, *args, **data):
-        comment, _, format = comment.partition('.')
-        request.path_info_pop()  # We consume a single path element.
-        
+class CommentController(Controller):
+    def __init__(self, comment, format, thread):
         try:
             comment = ObjectId(comment)
         except:
             raise HTTPNotFound()
         
-        return CommentController(self.thread, comment, format), args
+        self.thread = thread
+        comment = self.comment = thread.get_comment(comment)
+        if not self.comment:
+            raise HTTPNotFound()
+        
+        self.index = CommentIndex(thread, comment, format)
+        super(CommentController, self).__init__()
+    
+    def vote(self):
+        if user.id in self.comment.vote_trail:
+            enabled = False
+            success = self.thread.update_comment(self.comment.id, dict(dec__stat__votes=1),
+                    dec__vote_count = 1,
+                    pull__vote_trail = user.id
+                )
+        
+        else:
+            enabled = True
+            success = self.thread.update_comment(self.comment.id, dict(inc__stat__votes=1),
+                    inc__vote_count = 1,
+                    push__vote_trail = user.id
+                )
+        
+        self.thread.channel.send('refresh', self.comment.id)
+        
+        return 'json:', dict(
+                success = bool(success),
+                enabled = enabled if success else not enabled
+            )
