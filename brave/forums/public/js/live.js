@@ -218,7 +218,7 @@ var Thread = function() {
             "notice.visible": $.proxy(this, 'visible'),
             
             "notice.comment": $.proxy(this, 'commented'),
-            "notice.refresh": $.proxy(this, 'refresh'),
+            "notice.refresh": $.proxy(this, 'refreshed'),
             "notice.remove": $.proxy(this, 'removed'),
             "notice.stop": $.proxy(this, 'stop'),
             
@@ -297,7 +297,7 @@ Thread.prototype.commented = function(e, identifier) {
     });
 };
 
-Thread.prototype.refresh = function(e, identifier) {
+Thread.prototype.refreshed = function(e, identifier) {
     console.log("Thread.refresh", identifier);
 
     if ( ! $('#' + identifier).length ) return;
@@ -308,7 +308,7 @@ Thread.prototype.refresh = function(e, identifier) {
     });
 };
 
-Thread.prototype.remove = function(e, identifier) {
+Thread.prototype.removed = function(e, identifier) {
     console.log("Thread.remove", identifier);
 
     if ( ! $('#' + identifier).length ) return;
