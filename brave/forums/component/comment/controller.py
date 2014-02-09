@@ -66,7 +66,7 @@ class CommentIndex(HTTPMethod):
             return 'json:', dict(success=True)
         
         self.thread.update_comment(self.comment.id, dict(dec__stat__comments=1, pull__comments__id=self.comment.id))
-        self.thread.channel.send('remove', str(self.thread.id))
+        self.thread.channel.send('remove', str(self.comment.id))
         
         return 'json:', dict(success=True)
 
