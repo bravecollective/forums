@@ -29,9 +29,13 @@ class ThreadIndex(HTTPMethod):
         return 'brave.forums.template.thread', dict(page=page, forum=self.forum, thread=self.thread)
     
     def post(self, message, upload=None, vote=None):
-        if self.forum.moderate in user.tags:
+        forum = self.forum
+        
+        if forum.moderate in user.tags:
             pass
-        elif not user.admin and self.forum.write and self.forum.write not in user.tags:
+        elif user.admin or forum.read and forum.read in user.tags:
+            pass
+        elif forum.write and forum.write not in user.tags:
             return 'json:', dict(success=False, message="Not allowed.")
         
         if not message or not message.strip():
