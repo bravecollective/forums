@@ -2,8 +2,10 @@
 
 <%!
 
-import bbcode
 import json
+
+from brave.forums.util.tags import SemanticTagParser
+parser = SemanticTagParser()
 
 %>
 
@@ -11,7 +13,7 @@ import json
 
 <%def name="pretty(date)">${date.strftime('%B %e, %G at %H:%M:%S') if date else 'Never'}</%def>
 
-<%def name="bb(source)">${bbcode.render_html(source)|n}</%def>
+<%def name="bb(source)">${parser.format(source)|n}</%def>
 
 <%def name="json(src)">${json.dumps(src)}</%def>
 

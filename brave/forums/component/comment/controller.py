@@ -2,8 +2,6 @@
 
 from __future__ import unicode_literals
 
-import bbcode
-
 from web.auth import user
 from web.core import Controller, HTTPMethod, url, request
 from web.core.http import HTTPNotFound
