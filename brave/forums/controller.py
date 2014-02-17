@@ -16,7 +16,7 @@ from brave.forums.component.thread.model import Thread
 
 from brave.forums.util import StartupMixIn, resume, only, require, debugging
 from brave.forums.util.live import Channel
-
+from brave.forums.util.tags import SemanticTagParser
 
 log = __import__('logging').getLogger(__name__)
 
@@ -62,7 +62,8 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
         if content.strip() == '':
             return only('brave.forums.template.thread', 'no_preview')
         else:
-            return bbcode.render_html(content)
+            parser = SemanticTagParser();
+            return parser.format(content)
     
     @require(authenticated)
     def theme(self, theme):
