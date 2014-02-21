@@ -24,48 +24,52 @@ class CommentIndex(HTTPMethod):
         self.comment = comment
         self.format = format or 'json'
         super(CommentIndex, self).__init__()
-    
+
     def get(self):
         if self.format == 'html':
             return only('brave.forums.template.thread', 'render_push',
-                    page = 1,
-                    forum = self.thread.forum,
-                    thread = self.thread,
-                    comment = self.comment,
-                    BASE = "/{0}/{1}".format(self.thread.forum.short, self.thread.id)
-                )
-        
+                        page = 1,
+                        forum = self.thread.forum,
+                        thread = self.thread,
+                        comment = self.comment,
+                        BASE = "/{0}/{1}".format(self.thread.forum.short, self.thread.id)
+                        )
+
         return 'json:', dict(
-                success = True,
-                character = self.comment.creator.character.id,
-                comment = self.comment.message
+            success = True,
+            character = self.comment.creator.character.id,
+            comment = self.comment.message
             )
-    
+
     def post(self, message):
         """Update the comment."""
-        
+
         self.thread.channel.send('refresh', str(self.comment.id))
-        
+
         return 'json:', dict(success=True)
-    
+
     def delete(self):
         """Delete the comment."""
-        
+
         forum = self.thread.forum
-        
+
         # TODO: Security
         # if 'admin' not in user.tags or (forum.moderate and forum.moderate not in user.tags)
-        
+
         if self.comment.id == self.thread.oldest().id:
             forum.channel.send('gone', str(self.thread.id))
             self.thread.channel.send('gone', url('/' + forum.short))
             self.thread.delete()
-            
+
             return 'json:', dict(success=True)
-        
-        self.thread.update_comment(self.comment.id, dict(dec__stat__comments=1, pull__comments__id=self.comment.id))
+
+        self.thread.update_comment(self.comment.id,
+                                   dict(
+                dec__stat__comments=1,
+                pull__comments__id=self.comment.id)
+                                   )
         self.thread.channel.send('remove', str(self.comment.id))
-        
+
         return 'json:', dict(success=True)
 
 
@@ -75,33 +79,35 @@ class CommentController(Controller):
             comment = ObjectId(comment)
         except:
             raise HTTPNotFound()
-        
+
         self.thread = thread
         comment = self.comment = thread.get_comment(comment)
         if not self.comment:
             raise HTTPNotFound()
-        
+
         self.index = CommentIndex(thread, comment, format)
         super(CommentController, self).__init__()
-    
+
     def vote(self):
         if user.id in self.comment.vote_trail:
             enabled = False
-            success = self.thread.update_comment(self.comment.id, dict(dec__stat__votes=1),
-                    dec__vote_count = 1,
-                    pull__vote_trail = user.id
+            success = self.thread.update_comment(self.comment.id,
+                                                 dict(dec__stat__votes=1),
+                                                 dec__vote_count = 1,
+                                                 pull__vote_trail = user.id
                 )
-        
+
         else:
             enabled = True
-            success = self.thread.update_comment(self.comment.id, dict(inc__stat__votes=1),
-                    inc__vote_count = 1,
-                    push__vote_trail = user.id
-                )
-        
+            success = self.thread.update_comment(self.comment.id,
+                                                 dict(inc__stat__votes=1),
+                                                 inc__vote_count = 1,
+                                                 push__vote_trail = user.id
+                                                 )
+
         self.thread.channel.send('refresh', self.comment.id)
-        
+
         return 'json:', dict(
-                success = bool(success),
-                enabled = enabled if success else not enabled
+            success = bool(success),
+            enabled = enabled if success else not enabled
             )
