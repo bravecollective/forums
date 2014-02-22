@@ -95,7 +95,7 @@ class CommentController(Controller):
                                                  dict(dec__stat__votes=1),
                                                  dec__vote_count = 1,
                                                  pull__vote_trail = user.id
-                )
+                                                 )
 
         else:
             enabled = True
@@ -111,3 +111,17 @@ class CommentController(Controller):
             success = bool(success),
             enabled = enabled if success else not enabled
             )
+
+    def edit(self, new_text):
+        if comment.creator == user._current_obj()
+            enabled = True
+            success = self.thread.update_comment(self.comment.id,
+                                                 set__message = new_text,
+                                                 set__modified = datetime.utcnow()
+                                                 )
+        else:
+            enabled = False
+            success = False
+        return 'json:', dict(success = bool(success),
+                             enabled = bool(enabled)
+                             )
