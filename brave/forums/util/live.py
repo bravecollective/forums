@@ -7,6 +7,7 @@ import json
 
 from hashlib import sha256
 from web.auth import user
+from web.core import config
 from marrow.util.futures import ScalingPoolExecutor
 
 from brave.api.client import API
@@ -37,7 +38,7 @@ class Channel(object):
     Channel IDs are SHA256 hashes comprised of the browser session ID, user ID (if applicable), and a nonce.
     """
     
-    url_base = b'https://forums.bravecollective.net/_push?id='
+    url_base = b'{0}/_push?id='.format(config['notify.server'])
     receiver_base = b'/listen?id='
     
     def __init__(self, *tokens):
