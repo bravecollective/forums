@@ -95,6 +95,18 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 e.preventDefault();
                 return false;
             });
+
+            $('body').on('click', '.spoiler-container .target', function(e){
+                var self = $(this),
+                    target = self.parent();
+                if (target.hasClass('unhidden')) {
+                    target.removeClass('unhidden');
+                } else {
+                    target.addClass('unhidden');
+                }
+                e.preventDefault();
+                return false;
+            });
             
             
             
