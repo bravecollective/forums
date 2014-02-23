@@ -130,6 +130,10 @@ ul.nav-pills i.fa {
     margin-top: 0;
 }
 
+.unread {
+    background-color: rgba(66, 139, 202, 0.15);
+}
+
 .comment {
     position: relative;
 }

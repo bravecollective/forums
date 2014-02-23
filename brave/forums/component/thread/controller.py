@@ -9,6 +9,7 @@ from web.auth import user
 from web.core import Controller, HTTPMethod, url, request
 from web.core.http import HTTPNotFound
 
+from brave.forums.auth.model import Character
 from brave.forums.component.thread.model import Thread
 from brave.forums.component.comment.controller import CommentController
 from brave.forums.component.comment.model import Comment
@@ -26,6 +27,9 @@ class ThreadIndex(HTTPMethod):
     
     def get(self, page=1):
         Thread.objects(id=self.thread.id).update_one(inc__stat__views=1)
+
+        user.mark_thread_read(self.thread)
+
         return 'brave.forums.template.thread', dict(page=page, forum=self.forum, thread=self.thread)
     
     def post(self, message, upload=None, vote=None):

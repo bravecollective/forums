@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 
 from web.core import config
-from mongoengine import Document, EmbeddedDocument, StringField, DateTimeField, IntField, EmbeddedDocumentField, ListField
+from mongoengine import Document, EmbeddedDocument, StringField, DateTimeField, IntField, EmbeddedDocumentField, ListField, MapField
 from brave.api.client import API
 
 
@@ -40,6 +40,16 @@ class Character(Document):
     expires = DateTimeField(db_field='e')
     seen = DateTimeField(db_field='s')
     
+    # { forum1: {
+    #       'read': forum1_read_ts,
+    #   },
+    #   forum2: {
+    #       'read': forum2_read_ts,
+    #       thread2: thread2_read_ts,
+    #   }
+    # }
+    read = MapField(MapField(DateTimeField()), db_field='r', default=dict)
+
     def __repr__(self):
         return "<Ticket {0.id} \"{0.character.name}\">".format(self)
     
@@ -87,3 +97,42 @@ class Character(Document):
             user.update(set__seen=datetime.utcnow())
         
         return user
+
+    def mark_thread_read(self, thread, time=None):
+        if time is None:
+            time = datetime.utcnow()
+        update_op = 'set__read__'+str(thread.forum.id)+'__'+str(thread.id)
+        Character.objects(id=self.id).update_one(**{update_op: datetime.utcnow()})
+
+    def mark_forum_read(self, forum, time=None):
+        if time is None:
+            time = datetime.utcnow()
+        update_op = 'set__read__'+str(forum.id)
+        Character.objects(id=self.id).update_one(**{update_op: {'read': datetime.utcnow()}})
+
+    def is_thread_read(self, thread):
+        if str(thread.forum.id) not in self.read:
+            return False
+        d = self.read[str(thread.forum.id)]
+        return ('read' in d and d['read'] > thread.modified or
+                str(thread.id) in d and d[str(thread.id)] > thread.modified)
+
+    def is_forum_read(self, forum):
+        if str(forum.id) not in self.read:
+            return False
+        d = self.read[str(forum.id)]
+
+        last_modified = forum.threads[0].modified
+        for thread in forum.threads:
+            modified = thread.modified
+            last_modified = max(last_modified, modified)
+            if 'read' in d and d['read'] >= modified:
+                # all unchecked threads were modified earlier than this one
+                break
+            if str(thread.id) not in d or d[str(thread.id)] < modified:
+                return False
+
+        # All threads were read; mark the whole forum read so we don't need to
+        # scan so many threads next time.
+        self.mark_forum_read(forum, last_modified)
+        return True

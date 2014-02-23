@@ -51,6 +51,19 @@
                 $('#thread-title').focus();
             });
 
+            $('#mark-read').on('click', function(){
+                $.post($('#mark-read').attr('data-action'), {}, function(result){
+                    if ( ! result.success ) {
+                        if(result.message){
+                          alert(result.message)
+                        }
+                        return;
+                    }
+                    window.location = window.location;
+                });
+                return false;
+            });
+
             $('.style-collapse').collapse();
         });
     </script>
@@ -108,6 +121,7 @@
 </div>
 
 <ul class="nav nav-pills pull-right">
+    <li><a href="#" id="mark-read" data-action="/${forum.short}/read/"><i class="fa fa-lg"></i>Mark forum read</a></li>
     <li><a href="#" id="new-discussion"><i class="fa fa-comments fa-lg"></i>Start Discussion</a></li>
 </ul>
 % endif
@@ -121,7 +135,7 @@
     </li>
     % endif
     % for thread in results.skip((page-1) * limit).limit(limit):
-    <a href="/${thread.forum.short}/${thread.id}" class="list-group-item media thread${' dim' if thread.flag.hidden else ''}">
+    <a href="/${thread.forum.short}/${thread.id}" class="list-group-item media thread${' dim' if thread.flag.hidden else ''} ${'unread' if web.user and not web.user.is_thread_read(thread) else ''}">
         <img src="//image.eveonline.com/Character/${thread.oldest().creator.character.id}_64.jpg" class="pull-left media-object thumb-44">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${thread.stat.views}</big><br><small>view${'' if thread.stat.views == 1 else 's'}</small>

@@ -68,6 +68,10 @@ class ForumController(Controller):
         self.index = ForumIndex(f)
         
         super(ForumController, self).__init__()
+
+    def read(self):
+        user.mark_forum_read(self.forum)
+        return "json:", dict(success=True)
     
     def __lookup__(self, thread, *args, **kw):
         log.debug("Continuing from %r to thread %s.", self.forum, thread)
