@@ -118,9 +118,7 @@ class Character(Document):
                 str(thread.id) in d and d[str(thread.id)] > thread.modified)
 
     def is_forum_read(self, forum):
-        print "checking readness"
         if str(forum.id) not in self.read:
-            print "nothing in forum seen"
             return False
         d = self.read[str(forum.id)]
 
@@ -130,12 +128,9 @@ class Character(Document):
             last_modified = max(last_modified, modified)
             if 'read' in d and d['read'] >= modified:
                 # all unchecked threads were modified earlier than this one
-                print "bailing early"
                 break
             if str(thread.id) not in d or d[str(thread.id)] < modified:
-                print "found unseen thread! ", thread.id
                 return False
-        print "all ok"
 
         # All threads were read; mark the whole forum read so we don't need to
         # scan so many threads next time.
