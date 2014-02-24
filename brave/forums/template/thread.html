@@ -98,11 +98,15 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
 
             $('body').on('click', '.spoiler-container .target', function(e){
                 var self = $(this),
-                    target = self.parent();
-                if (target.hasClass('unhidden')) {
-                    target.removeClass('unhidden');
+                    container = self.parent();
+                if (container.hasClass('unhidden')) {
+                    self.removeClass('fa-plus-square');
+                    self.addClass('fa-minus-square');
+                    container.removeClass('unhidden');
                 } else {
-                    target.addClass('unhidden');
+                    self.addClass('fa-plus-square');
+                    self.removeClass('fa-minus-square');
+                    container.addClass('unhidden');
                 }
                 e.preventDefault();
                 return false;

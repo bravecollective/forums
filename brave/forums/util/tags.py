@@ -43,5 +43,9 @@ class SemanticTagParser(object):
         return "<pre>tag name=%s\nvalue=%s\noptions=%s\nparent=%s\ncontext=%s</pre>" % ( tag_name, value, options, parent, context )
 
     def format_spoilers(self, tag_name, value, options, parent, context):
-        return ("<div class='spoiler-container'><a href='#' class='target fa fa-fw'><span class='content-location'></span></a><span class='description'>%s</span><div class='spoilers'>%s</div></div>" % 
+        return ("<div class='spoiler-container'>"
+                    "<a href='#' class='target fa fa-plus-square fa-fw fa-lg'></a>"
+                    "<span class='description'>%s</span>"
+                    "<div class='spoilers'>%s</div>"
+                "</div>" %
                 (options[tag_name], value))
