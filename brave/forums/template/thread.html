@@ -100,12 +100,12 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 var self = $(this),
                     container = self.parent();
                 if (container.hasClass('unhidden')) {
-                    self.removeClass('fa-plus-square');
-                    self.addClass('fa-minus-square');
+                    self.removeClass('fa-minus-square');
+                    self.addClass('fa-plus-square');
                     container.removeClass('unhidden');
                 } else {
-                    self.addClass('fa-plus-square');
-                    self.removeClass('fa-minus-square');
+                    self.removeClass('fa-plus-square');
+                    self.addClass('fa-minus-square');
                     container.addClass('unhidden');
                 }
                 e.preventDefault();
