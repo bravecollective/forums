@@ -156,6 +156,29 @@ ul.nav-pills i.fa {
     z-index: 1;
 }
 
+.spoiler-container {
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 2px;
+}
+
+.spoiler-container .target {
+    display: inline-block;
+}
+
+.spoiler-container .target:hover, .spoiler-container .target:focus {
+    text-decoration: none;
+}
+
+.spoiler-container .spoilers {
+    display: none;
+    border-top: 1px solid;
+}
+
+.spoiler-container.unhidden .spoilers {
+    display: block;
+}
+
 /* START - Media Queries for .liner classes */
 
 @media (min-width:0px) and (max-width:767px) {
