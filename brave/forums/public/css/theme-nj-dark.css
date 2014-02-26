@@ -15,6 +15,10 @@ html, body, #wrap {
   background-color: #dddddd;
   border: 1px solid #888888;
 }
+
+.unread {
+  background-color: rgba(208, 226, 242, 1);
+}
   
 .panel-default {
   background-color: #333333;
