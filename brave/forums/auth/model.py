@@ -118,6 +118,8 @@ class Character(Document):
                 str(thread.id) in d and d[str(thread.id)] > thread.modified)
 
     def is_forum_read(self, forum):
+        if not forum.threads:
+            return True
         if str(forum.id) not in self.read:
             return False
         d = self.read[str(forum.id)]
