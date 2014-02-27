@@ -277,6 +277,10 @@ div[id^="comment-"] {
     margin-right: 0;
 }
 
+.error-message {
+    color: red;
+}
+
 .dim {
     opacity: 0.5;
     -webkit-transition: opacity .15s ease-in-out;
