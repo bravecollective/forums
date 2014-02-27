@@ -21,13 +21,11 @@ class SemanticTagParser(object):
             'Alliance'  : self.format_evewho,
             'DebugTag' : self.format_logging
         }
-        self.block_available_tags = {
-            'Spoilers' : self.format_spoilers,
-        }
         for tag, parser in self.standalone_available_tags.iteritems():
             self.parser.add_formatter(tag, parser, standalone = True)
-        for tag, parser in self.block_available_tags.iteritems():
-            self.parser.add_formatter(tag, parser, standalone = False)
+        self.parser.add_formatter('Spoiler', self.format_spoilers,
+                                  standalone = False,
+                                  strip = True)
 
     def format(self, text):
         try:
