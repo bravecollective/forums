@@ -12,6 +12,11 @@ from brave.api.client import API
 log = __import__('logging').getLogger(__name__)
 
 
+def log_date_condition(message, *args):
+    args = [arg.strftime("%Y/%m/%d-%H:%m:%S") if isinstance(arg, datetime) else arg for arg in args]
+    log.debug(message, *args)
+
+
 class Entity(EmbeddedDocument):
     meta = dict(allow_inheritance=False)
     
@@ -40,14 +45,8 @@ class Character(Document):
     expires = DateTimeField(db_field='e')
     seen = DateTimeField(db_field='s')
     
-    # { forum1: {
-    #       'read': forum1_read_ts,
-    #   },
-    #   forum2: {
-    #       'read': forum2_read_ts,
-    #       thread2: thread2_read_ts,
-    #   }
-    # }
+    # Map Forum IDs to mappings of Thread IDs to "last viewed" DateTimes.
+    # Child mappings may contain a "read" key indicating the last time the forum was marked as read.
     read = MapField(MapField(DateTimeField()), db_field='r', default=dict)
     
     def __repr__(self):
