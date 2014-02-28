@@ -161,14 +161,14 @@ class Character(Document):
         
         read = read.read[forum_id]
         forum_read = read.get('read', None)
-        modified = forum.threads.scalar('modified').first()
+        newest_modified = forum.threads.scalar('modified').first()
         
-        if 'read' in read and read['read'] >= modified:
+        if forum_read and forum_read >= newest_modified:
             log_date_condition("forum %s read %s >= %s",
-                forum_id, read['read'], modified)
+                forum_id, forum_read, newest_modified)
             return True
         
-        # This is potentailly HIDEOUSLY EXPENSIVE, so we restrict the fields being returned.
+        # This is potentially HIDEOUSLY EXPENSIVE, so we restrict the fields being returned.
         for thread_id, modified in forum.threads.scalar('id', 'modified'):
             thread_id = unicode(thread_id)
             
@@ -187,5 +187,5 @@ class Character(Document):
         log.info("forum %s cleanup %s", forum_id, modified.strftime("%Y/%m/%d-%H:%m:%S"))
         
         # All threads were read or examined; mark the forum read so we don't need to scan so many threads next time.
-        self.mark_forum_read(forum, modified)
+        self.mark_forum_read(forum, newest_modified)
         return True
