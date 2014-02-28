@@ -156,6 +156,29 @@ ul.nav-pills i.fa {
     z-index: 1;
 }
 
+.spoiler-container {
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 2px;
+}
+
+.spoiler-container .target {
+    display: inline-block;
+}
+
+.spoiler-container .target:hover, .spoiler-container .target:focus {
+    text-decoration: none;
+}
+
+.spoiler-container .spoilers {
+    display: none;
+    border-top: 1px solid;
+}
+
+.spoiler-container.unhidden .spoilers {
+    display: block;
+}
+
 /* START - Media Queries for .liner classes */
 
 @media (min-width:0px) and (max-width:767px) {
@@ -254,6 +277,10 @@ div[id^="comment-"] {
     margin-right: 0;
 }
 
+.error-message {
+    color: red;
+}
+
 .dim {
     opacity: 0.5;
     -webkit-transition: opacity .15s ease-in-out;
@@ -286,3 +313,10 @@ div[id^="comment-"] {
 .nav.alice .dropdown-header { padding-left: 29px; }
 .nav.alice a[data-theme] { padding-left: 8px; }
 .nav.alice a[data-theme] i { margin-right: 3px; }
+
+.infini { text-align: center; margin-bottom: 20px; }
+.infini i.fa-spin { visibility: hidden; }
+.infini i.fa-times { display: none; }
+.infini.active i.fa-spin { visibility: visible; }
+.infini.disabled i.fa-spin { display: none; }
+.infini.disabled i.fa-times { display: inline; }
