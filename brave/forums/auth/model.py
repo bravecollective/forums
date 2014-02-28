@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 
 from web.core import config
-from mongoengine import Document, EmbeddedDocument, StringField, DateTimeField, IntField, EmbeddedDocumentField, ListField, MapField
+from mongoengine import Document, EmbeddedDocument, StringField, DateTimeField, IntField, EmbeddedDocumentField, ListField, MapField, queryset_manager
 from brave.api.client import API
 
 
@@ -51,6 +51,10 @@ class Character(Document):
     
     def __repr__(self):
         return "<Character {0.id} \"{0.character.name}\">".format(self)
+    
+    @queryset_manager
+    def objects(doc_cls, queryset):
+        return queryset.exclude('read')
     
     @property
     def admin(self):
@@ -155,7 +159,7 @@ class Character(Document):
             log.debug("%s unread notfound", forum_id)
             return False
         
-        read = self.read[forum_id]
+        read = read.read[forum_id]
         forum_read = read.get('read', None)
         modified = forum.threads.scalar('modified').first()
         
