@@ -174,7 +174,7 @@ class Character(Document):
             
             if thread_id not in read or read[thread_id] < modified:
                 log_date_condition("forum %s unread %s\n\t%s < %s == True",
-                    forum_id, thread_id, read[thread_id], modified)
+                    forum_id, thread_id, read.get(thread_id, None), modified)
                 return False
             
             log_date_condition("forum %s reject %s read", forum_id, thread_id)
