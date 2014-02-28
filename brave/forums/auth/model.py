@@ -102,16 +102,17 @@ class Character(Document):
         return user
     
     def mark_thread_read(self, thread, time=None):
-        return Character.objects(id=self.id).update_one(**{
-                'set__read__{0}__{1}'.format(thread.forum.id, thread.id): time or datetime.utcnow()
-            })
+        if not time or not self.is_thread_read(thread, since_time=time):
+            return Character.objects(id=self.id).update_one(**{
+                    'set__read__{0}__{1}'.format(thread.forum.id, thread.id): time or datetime.utcnow()
+                })
     
     def mark_forum_read(self, forum, time=None):
         return Character.objects(id=self.id).update_one(**{
                 'set__read__{0}'.format(forum.id): {'read': time or datetime.utcnow()}
             })
     
-    def is_thread_read(self, thread):
+    def is_thread_read(self, thread, since_time=None):
         forum_id = unicode(thread.forum.id)
         thread_id = unicode(thread.id)
         
@@ -127,7 +128,7 @@ class Character(Document):
         
         read = read.read[forum_id]
         forum_read = read.get('read', None)
-        modified = thread.modified
+        modified = since_time or thread.modified
         
         if forum_read and forum_read >= modified:
             log_date_condition("thread %s read forum %s >= %s", thread_id, forum_read, modified)

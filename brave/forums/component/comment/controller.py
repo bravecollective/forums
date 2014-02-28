@@ -26,6 +26,9 @@ class CommentIndex(HTTPMethod):
         super(CommentIndex, self).__init__()
     
     def get(self):
+        if user:
+            user.mark_thread_read(self.thread, self.comment.modified)
+        
         if self.format == 'html':
             return only('brave.forums.template.thread', 'render_push',
                     page = 1,

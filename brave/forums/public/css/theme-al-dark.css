@@ -16,6 +16,10 @@ html, body, #wrap {
   border: 1px solid #666666;
 }
 
+.unread {
+  background-color: rgba(66, 139, 202, 0.15);
+}
+
 a {
   color: #07C;
   transition: color 0.5s;
