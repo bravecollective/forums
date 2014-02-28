@@ -27,10 +27,10 @@ class ThreadIndex(HTTPMethod):
     
     def get(self, page=1):
         Thread.objects(id=self.thread.id).update_one(inc__stat__views=1)
-
+        
         if user:
             user.mark_thread_read(self.thread)
-
+        
         return 'brave.forums.template.thread', dict(page=page, forum=self.forum, thread=self.thread)
     
     def post(self, message, upload=None, vote=None):
