@@ -77,12 +77,9 @@
                 var target = $('.infini'),
                     offset = target.offset().top;
                 
-                console.log(offset, $(window).scrollTop(), $(document).height() - 2*$(window).height());
-                
                 if ( target.hasClass('active') ) return;
                 
                 if ( $(window).scrollTop() > $(document).height() - 2*$(window).height()) {
-                    console.log('triggering');
                     target.addClass('active');
                     
                     $.ajax({
@@ -90,7 +87,6 @@
                             type: 'GET',
                             data: {page: page},
                             success: function(result) {
-                                console.log('done');
                                 target.removeClass('active');
                                 var parsed = $(result);
                                 

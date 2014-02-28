@@ -291,7 +291,7 @@ Thread.prototype.commented = function(e, identifier) {
 
     if ( $('#' + identifier).length ) return;
     
-    $.get(window.location + '/' + identifier + '.html', function(result) {
+    $.get(window.location.pathname + '/' + identifier + '.html', function(result) {
         $(result).insertAfter('.comment:last');
         $('time.relative').timeago();
     });
@@ -302,7 +302,7 @@ Thread.prototype.refreshed = function(e, identifier) {
 
     if ( ! $('#' + identifier).length ) return;
     
-    $.get(window.location + '/' + identifier + '.html', function(result) {
+    $.get(window.location.pathname + '/' + identifier + '.html', function(result) {
         $('#' + identifier).replaceWith(result);
         $('time.relative').timeago();
     });
