@@ -133,6 +133,7 @@ class Character(Document):
         
         if thread_id in read and read[thread_id] >= modified:
             log_date_condition("thread %s read %s >= %s", thread_id, read.get(thread_id, None), modified)
+            return True
         else:
             log_date_condition("%s >= %s == False", read.get(thread_id, None), modified)
         
@@ -151,7 +152,7 @@ class Character(Document):
         read = query.first()
         
         if not read:
-            log.debug("%s unread notfound")
+            log.debug("%s unread notfound", forum_id)
             return False
         
         read = self.read[forum_id]
