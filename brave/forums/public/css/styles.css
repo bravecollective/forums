@@ -313,3 +313,10 @@ div[id^="comment-"] {
 .nav.alice .dropdown-header { padding-left: 29px; }
 .nav.alice a[data-theme] { padding-left: 8px; }
 .nav.alice a[data-theme] i { margin-right: 3px; }
+
+.infini { text-align: center; margin-bottom: 20px; }
+.infini i.fa-spin { visibility: hidden; }
+.infini i.fa-times { display: none; }
+.infini.active i.fa-spin { visibility: visible; }
+.infini.disabled i.fa-spin { display: none; }
+.infini.disabled i.fa-times { display: inline; }

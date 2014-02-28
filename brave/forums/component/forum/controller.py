@@ -21,10 +21,14 @@ class ForumIndex(HTTPMethod):
     
     def get(self, page=1):
         page = int(page)
-        data = dict(page=page, forum=self.forum)
+        data = dict(page=int(page), forum=self.forum)
         
-        if request.is_xhr:
-            return only('brave.forums.template.forum', 'threads', **data)
+        if request.is_xhr or request.format == 'html':
+            return only('brave.forums.template.forum', 'threads',
+                    results = self.forum.threads.filter(flag__sticky=False),
+                    limit = 5,
+                    **data
+                )
         
         return 'brave.forums.template.forum', data
     
