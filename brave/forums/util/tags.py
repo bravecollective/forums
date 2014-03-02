@@ -26,6 +26,7 @@ class SemanticTagParser(object):
             self.parser.add_formatter(tag, parser, standalone=True)
         
         self.parser.add_formatter('Spoiler', self.format_spoilers, standalone=False, strip=True)
+        self.parser.add_formatter('h', self.format_heading, standalone=False, strip=True)
     
     def format(self, text):
         try:
@@ -70,3 +71,6 @@ class SemanticTagParser(object):
                 H.span ( class_ = 'description' ) [ options[tag_name] ],
                 H.div ( class_ = 'spoilers' ) [ value ]
             ])
+    
+    def format_heading(self, tag_name, value, options, parent, context):
+        return unicode(H.h4 [ value ])
