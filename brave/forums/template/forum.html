@@ -81,6 +81,7 @@
                 
                 if ( $(window).scrollTop() > $(document).height() - 2*$(window).height()) {
                     target.addClass('active');
+                    page += 1;
                     
                     $.ajax({
                             url: window.location.pathname,
@@ -97,7 +98,6 @@
                                 }
                                 
                                 target.before(parsed);
-                                page += 1;
                             }
                         });
                 }
