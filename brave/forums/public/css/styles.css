@@ -320,3 +320,5 @@ div[id^="comment-"] {
 .infini.active i.fa-spin { visibility: visible; }
 .infini.disabled i.fa-spin { display: none; }
 .infini.disabled i.fa-times { display: inline; }
+
+.comment .panel-body img { max-width: 100%; }
