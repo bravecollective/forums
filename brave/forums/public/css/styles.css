@@ -321,4 +321,4 @@ div[id^="comment-"] {
 .infini.disabled i.fa-spin { display: none; }
 .infini.disabled i.fa-times { display: inline; }
 
-.comment .panel-body img { max-width: 100%; }
+.comment .panel-body img { display: block; max-width: 100%; }
