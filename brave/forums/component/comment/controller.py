@@ -47,9 +47,16 @@ class CommentIndex(HTTPMethod):
     def post(self, message):
         """Update the comment."""
         
+        if not (user and (user.admin or user._current_obj() == self.comment.creator)):
+            return 'json:', dict(success = False, message="Not allowed.")
+        
+        enabled = True
+        success = self.thread.update_comment(self.comment.id, set__message = message,
+                 set__modified = datetime.utcnow()
+             )
         self.thread.channel.send('refresh', str(self.comment.id))
         
-        return 'json:', dict(success=True)
+        return 'json:', dict(success = bool(success))
     
     def delete(self):
         """Delete the comment."""
@@ -112,14 +119,3 @@ class CommentController(Controller):
                 success = bool(success),
                 enabled = enabled if success else not enabled
             )
-    
-    def edit(self, new_text):
-        if comment.creator == user._current_obj()
-            enabled = True
-            success = self.thread.update_comment(self.comment.id, set__message = new_text,
-                     set__modified = datetime.utcnow()
-                 )
-        else:
-            enabled = False
-            success = False
-        return 'json:', dict(success = bool(success), enabled = bool(enabled))
