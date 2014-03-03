@@ -156,6 +156,10 @@ ul.nav-pills i.fa {
     z-index: 1;
 }
 
+.comment .panel-body {
+    word-wrap: break-word;
+}
+
 .spoiler-container {
     padding: 5px;
     border: 1px solid;
