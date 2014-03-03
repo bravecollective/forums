@@ -96,7 +96,21 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 return false;
             });
             
-            
+            $('body').on('click', '.spoiler-container .target', function(e){
+                var self = $(this),
+                    container = self.parent();
+                if (container.hasClass('unhidden')) {
+                    self.removeClass('fa-minus-square');
+                    self.addClass('fa-plus-square');
+                    container.removeClass('unhidden');
+                } else {
+                    self.removeClass('fa-plus-square');
+                    self.addClass('fa-minus-square');
+                    container.addClass('unhidden');
+                }
+                e.preventDefault();
+                return false;
+            });
             
             $('a#trigger-preview').on('show.bs.tab', function(e) {
                 $('#preview-panel .content').empty().hide();
@@ -113,8 +127,6 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 self.addClass('disabled').prop('disabled', true);
                 
                 $.post($('#comment-panel').attr('action'), {message: $('#comment-message').val()}, function(result){
-                    console.log(result);
-                    
                     if ( ! result.success ) {
                         alert(result.message);
                         self.removeClass('disabled').prop('disabled', false);
@@ -123,7 +135,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                     
                     // We would hopefully have had our own message pushed to us.  :3
                     $('#comment-message').val('');
-                    $('#preview-panel .content').empty(); //Clears the preview panel
+                    $('#preview-panel .content').empty();
                     self.removeClass('disabled').prop('disabled', false);
                 });
                 
@@ -194,7 +206,7 @@ ${render_comment(comment)}
             <img src="//image.eveonline.com/Character/${comment.creator.character.id}_64.jpg" class="img-thumbnail img-circle thumb-50">
         </div>
         <div class="media-body">
-            <a href="/profile/${comment.creator.id}"><strong>${comment.creator.character.name}</strong></a>
+            <a href="https://gate.eveonline.com/Profile/${comment.creator.character.name}" target="_blank"><strong>${comment.creator.character.name}</strong></a>
             <br>
             <small><a href="#${comment.id}"><time class="relative" datetime="${comment.created |n,f.iso}">${comment.created |n,f.pretty}</time></a></small>
         </div>
