@@ -75,6 +75,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                         editor.find('.trigger-preview').attr('data-target', '#'+identifier+' .preview-panel');
                         editor.find('.trigger-style').attr('data-target', '#'+identifier+' .style-panel');
                         editor.find('.comment-panel').attr('action', target);
+                        editor.addClass('comment-composer-edit');
                         comment.replaceWith(editor);
                         editor.find('.trigger-edit').tab('show');
                     }
@@ -147,6 +148,18 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                     preview_panel.find('.content').html(result).show();
                     preview_panel.find('.spinner').hide();
                 }, 'html');
+            });
+            
+            $('body').on('click', '.comment-composer .cancel', function(e){
+                var self = $(this),
+                    editor = self.parents('.comment-composer'),
+                    identifier = editor.attr('id'),
+                    target = $('body').data('base') + '/' + identifier + '.html';
+                $.get(target, function(result){
+                    editor.replaceWith(result);
+                });
+                e.preventDefault();
+                return false;
             });
             
             $('body').on('click', '.comment-composer .submit', function(e){
@@ -332,9 +345,17 @@ ${render_comment(comment, None if i else thread.title)}
                         </a>
                     </li>
                 </ul>
-                <button type="button" class="submit btn navbar-btn btn-primary navbar-right"><i
-                        class="fa fa-fw fa-check"></i> Submit Comment
-                </button>
+                <div class="btn-toolbar navbar-right">
+                    <button type="button" class="cancel btn navbar-btn btn-default"><i
+                            class="fa fa-fw fa-check"></i> Cancel
+                    </button>
+                    <button type="button" class="submit submit-edit btn navbar-btn btn-primary navbar-right"><i
+                            class="fa fa-fw fa-check"></i> Edit Comment
+                    </button>
+                    <button type="button" class="submit submit-new btn navbar-btn btn-primary"><i
+                            class="fa fa-fw fa-check"></i> Submit Comment
+                    </button>
+                </div>
             </nav>
 
             <div class="tab-content">

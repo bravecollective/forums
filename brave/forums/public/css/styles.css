@@ -240,6 +240,14 @@ div[id^="comment-"] {
     border-top-right-radius: 4px;
 }
 
+#comment .cancel, #comment .submit-edit {
+    display: none;
+}
+
+.comment-composer-edit .submit-new {
+    display: none;
+}
+
 .previewAlert{
 	margin-bottom: 0;
 }
