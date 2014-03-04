@@ -330,3 +330,5 @@ div[id^="comment-"] {
 .infini.disabled i.fa-times { display: inline; }
 
 .comment-content img { display: block; max-width: 100%; }
+
+a[data-toggle]:hover { cursor: pointer; }
