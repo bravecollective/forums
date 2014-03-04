@@ -252,11 +252,11 @@ div[id^="comment-"] {
 	margin-bottom: 0;
 }
 
-#style-panel{
+.style-panel{
 	padding: 0;
 }
 
-#style-panel .content{
+.style-panel .content{
 	padding: 0;
 	display: block !important;
 }
