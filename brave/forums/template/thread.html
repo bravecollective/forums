@@ -263,7 +263,7 @@ ${render_comment(comment)}
                 <h3 class="panel-title">${post_title}</h3>
             </div>
             % endif
-            <div class="panel-body">
+            <div class="panel-body comment-content">
                 ${(comment.message if comment.message and comment.message.strip() else post_title) | n, f.bb}
             </div>
             % if comment.vote_count:
@@ -321,6 +321,7 @@ ${render_comment(comment, None if i else thread.title)}
             <small>right now</small>
         </div>
     </div>
+    <div class="liner"></div>
     
     <div class="col-xs-9 col-sm-9">
         <div class="panel panel-default">
@@ -347,10 +348,10 @@ ${render_comment(comment, None if i else thread.title)}
                 </ul>
                 <div class="btn-toolbar navbar-right">
                     <button type="button" class="cancel btn navbar-btn btn-default"><i
-                            class="fa fa-fw fa-check"></i> Cancel
+                            class="fa fa-fw fa-times"></i> Cancel
                     </button>
                     <button type="button" class="submit submit-edit btn navbar-btn btn-primary navbar-right"><i
-                            class="fa fa-fw fa-check"></i> Edit Comment
+                            class="fa fa-fw fa-check"></i> Submit Changes
                     </button>
                     <button type="button" class="submit submit-new btn navbar-btn btn-primary"><i
                             class="fa fa-fw fa-check"></i> Submit Comment
@@ -365,7 +366,7 @@ ${render_comment(comment, None if i else thread.title)}
                 </form>
                 <div class="preview-panel tab-pane fade">
                     <div class="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
-                    <div class="content"></div>
+                    <div class="content comment-content"></div>
                 </div>
                 <div class="style-panel tab-pane fade">
                     <div class="content">

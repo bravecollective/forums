@@ -134,19 +134,19 @@ ul.nav-pills i.fa {
     background-color: rgba(66, 139, 202, 0.15);
 }
 
-.comment {
+.comment, .comment-composer-edit {
     position: relative;
 }
 
-.comment > .media {
+.comment > .media, .comment-composer-edit > .media {
     z-index: 2;
 }
 
-.comment > .media-body {
+.comment > .media-body, .comment-composer-edit > .media-body  {
     padding-top: 5px;
 }
 
-.comment > .liner {
+.comment > .liner, .comment-composer-edit > .liner {
     position: absolute;
     left: 250px;
     top: 0px;
@@ -182,25 +182,25 @@ ul.nav-pills i.fa {
 /* START - Media Queries for .liner classes */
 
 @media (min-width:0px) and (max-width:767px) {
-   .comment > .liner{
+   .comment > .liner, .comment-composer-edit > .liner {
 		display:none
 	}
 }
 
 @media (min-width: 768px){
-	.comment > .liner{
+	.comment > .liner, .comment-composer-edit > .liner {
 		left: 147px;
 	}
 }
 
 @media (min-width: 992px){
-	.comment > .liner{
+	.comment > .liner, .comment-composer-edit > .liner {
 		left: 201px;
 	}
 }
 
 @media (min-width: 1200px){
-	.comment > .liner{
+	.comment > .liner, .comment-composer-edit > .liner {
 		left: 251px;
 	}
 }
@@ -329,4 +329,4 @@ div[id^="comment-"] {
 .infini.disabled i.fa-spin { display: none; }
 .infini.disabled i.fa-times { display: inline; }
 
-.comment .panel-body img { display: block; max-width: 100%; }
+.comment-content img { display: block; max-width: 100%; }
