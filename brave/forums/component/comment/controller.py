@@ -48,15 +48,17 @@ class CommentIndex(HTTPMethod):
         """Update the comment."""
         
         if not (user and (user.admin or user._current_obj() == self.comment.creator)):
-            return 'json:', dict(success = False, message="Not allowed.")
+            return 'json:', dict(success = False, message = "Not allowed.")
         
         enabled = True
         success = self.thread.update_comment(self.comment.id, set__message = message,
                  set__modified = datetime.utcnow()
              )
-        self.thread.channel.send('refresh', str(self.comment.id))
+        if not success:
+            return 'json:', dict(success = False, message = "Thread not found.")
         
-        return 'json:', dict(success = bool(success))
+        self.thread.channel.send('refresh', str(self.comment.id))
+        return 'json:', dict(success = True)
     
     def delete(self):
         """Delete the comment."""
