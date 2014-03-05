@@ -35,6 +35,7 @@ class CommentIndex(HTTPMethod):
                     forum = self.thread.forum,
                     thread = self.thread,
                     comment = self.comment,
+                    post_title = self.thread.title if self.comment == self.thread.oldest() else None,
                     BASE = "/{0}/{1}".format(self.thread.forum.short, self.thread.id)
                 )
         
