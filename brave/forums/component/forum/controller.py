@@ -40,9 +40,9 @@ class ForumIndex(HTTPMethod):
         if not title.strip() or not message.strip():
             return 'json:', dict(success=False, message="Must supply both a title and a message for a new thread.")
         
-        self.forum.create_thread(user._current_obj(), title, message)
+        thread = self.forum.create_thread(user._current_obj(), title, message)
         
-        return 'json:', dict(success=True)
+        return 'json:', dict(success=True, id=str(thread.id))
 
 
 class ForumController(Controller):
