@@ -9,9 +9,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
-
+        
         <title><%block name="title"/> — Brave Collective: Forums</title>
-
+        
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/ico/apple-touch-icon-144-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/ico/apple-touch-icon-72-precomposed.png">
@@ -28,7 +28,7 @@
         % endif
         
         <%block name="styles"/>
-
+        
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
             <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -36,24 +36,25 @@
         <![endif]-->
         </%block>
     </head>
-    <body\
-<%block name="bodydata"/>\
->
+    <body <%block name="bodydata"/>>
         <%block name="pre"/>
         <div id="wrap">
             <%include file="brave.forums.template.navigation"/>
-
+            <div id="notices"></div>
+            
             <div class="container">
+                
                 ${self.body()}
             </div>
         </div>
-
+        
         <%block name="post">
         <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
         <script src="/js/vendor/jquery.timeago.js" charset="utf-8"></script>
         <script src="/js/vendor/jquery.cookie.js" charset="utf-8"></script>
-        <script src="/js/changedelay.js"></script>
+        <script src="/js/vendor/bootbox.js" charset="utf-8"></script>
+        <script src="/js/common.js"></script>
         <script src="/js/script.js"></script>
         </%block>
     </body>

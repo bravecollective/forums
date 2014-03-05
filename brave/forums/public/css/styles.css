@@ -326,3 +326,13 @@ div[id^="comment-"] {
 .infini.disabled i.fa-times { display: inline; }
 
 .comment .panel-body img { display: block; max-width: 100%; }
+
+#modal .dl-horizontal dd { margin-bottom: 5px; }
+#modal .modal-header { padding: 0; border-bottom-width: 0; }
+#modal .modal-body { position: relative; }
+#modal .modal-header .nav-tabs { margin: 0; padding: 9px 15px 0 15px; }
+#modal .modal-header a.disabled { background-color: transparent !important; color: black !important; border-color: white white transparent !important; font-weight: bold; padding-left: 0; }
+#modal label { margin-bottom: 0; }
+#modal .control-group:last-child { margin-bottom: 0; }
+#modal form { margin-bottom: 0; }
+#modal form .tabs-below .nav-tabs { margin-bottom: 0; }
