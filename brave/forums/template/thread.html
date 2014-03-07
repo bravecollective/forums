@@ -185,7 +185,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
             });
             
             $('#jump-to-comment').on('click', function(){
-                var comment = $('#comment-message').focus();
+                var comment = $('#comment .message').focus();
                 moveCaretToEnd(comment[0]);
             });
 
