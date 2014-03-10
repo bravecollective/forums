@@ -48,7 +48,7 @@ class CommentIndex(HTTPMethod):
     def post(self, message):
         """Update the comment."""
         
-        if not (user and (user.admin or user._current_obj() == self.comment.creator)):
+        if not (user and (user.admin or forum.moderate in user.tags or user == self.comment.creator)):
             return 'json:', dict(success = False, message = "Not allowed.")
         
         enabled = True
