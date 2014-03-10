@@ -133,7 +133,8 @@ class Thread(Document):
             parts.insert(1 if parts[0] in ops else 0, 'comments__$')
             update['__'.join(parts)] = value
         
-        update.update(raw)
+        if raw:
+            update.update(raw)
         
         return Thread.objects(comments__id=id).update_one(**update)
     

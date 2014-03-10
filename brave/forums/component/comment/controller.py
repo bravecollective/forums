@@ -35,6 +35,7 @@ class CommentIndex(HTTPMethod):
                     forum = self.thread.forum,
                     thread = self.thread,
                     comment = self.comment,
+                    post_title = self.thread.title if self.comment == self.thread.oldest() else None,
                     BASE = "/{0}/{1}".format(self.thread.forum.short, self.thread.id)
                 )
         
@@ -47,9 +48,18 @@ class CommentIndex(HTTPMethod):
     def post(self, message):
         """Update the comment."""
         
-        self.thread.channel.send('refresh', str(self.comment.id))
+        if not (user and (user.admin or forum.moderate in user.tags or user == self.comment.creator)):
+            return 'json:', dict(success = False, message = "Not allowed.")
         
-        return 'json:', dict(success=True)
+        enabled = True
+        success = self.thread.update_comment(self.comment.id, set__message = message,
+                 set__modified = datetime.utcnow()
+             )
+        if not success:
+            return 'json:', dict(success = False, message = "Thread not found.")
+        
+        self.thread.channel.send('refresh', str(self.comment.id))
+        return 'json:', dict(success = True)
     
     def delete(self):
         """Delete the comment."""
@@ -90,14 +100,18 @@ class CommentController(Controller):
     def vote(self):
         if user.id in self.comment.vote_trail:
             enabled = False
-            success = self.thread.update_comment(self.comment.id, dict(dec__stat__votes=1),
+            success = self.thread.update_comment(
+                    self.comment.id,
+                    dict(dec__stat__votes=1),
                     dec__vote_count = 1,
                     pull__vote_trail = user.id
                 )
         
         else:
             enabled = True
-            success = self.thread.update_comment(self.comment.id, dict(inc__stat__votes=1),
+            success = self.thread.update_comment(
+                    self.comment.id,
+                    dict(inc__stat__votes=1),
                     inc__vote_count = 1,
                     push__vote_trail = user.id
                 )

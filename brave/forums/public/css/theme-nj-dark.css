@@ -53,35 +53,35 @@ blockquote {
   border: 1px solid #aaaaaa;
 }
   
-.comment > .liner {
+.comment > .liner, .comment-composer-edit > .liner {
   background-color: #aaaaaa;
 }
   
   
-#comment-message {
+.comment-composer .message {
   background-color: #dddddd;
   color: #222222;
 }
   
-#comment .navbar-brand, #comment .navbar-nav, #comment .navbar-default{
+.comment-composer .navbar-brand, .comment-composer .navbar-nav, .comment-composer .navbar-default{
   background-image: none;
   box-shadow: none;
   background-color: #444444;
   color: #dddddd;
 }
   
-#comment .navbar-nav > .active > a {
+.comment-composer .navbar-nav > .active > a {
   background-image: none;
   background-color: #428BCA;
   color: #dddddd;
 }
   
-#comment .navbar-nav > li > a {
+.comment-composer .navbar-nav > li > a {
   background-color: #444444;
   color: #dddddd;
 }
   
-#comment .navbar-nav > li > a:hover {
+.comment-composer .navbar-nav > li > a:hover {
   color: #ffffff;
 }
   

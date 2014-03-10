@@ -45,7 +45,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 var self = $(this),
                     identifier = self.parents('.comment').attr('id'),
                     target = $('body').data('base') + '/' + identifier,
-                    message = $('#comment-message');
+                    message = $('#comment .message');
                 
                 // TODO: Confirm this before enacting.  ;P
                 
@@ -56,6 +56,30 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                     }
                 });
                 
+                e.preventDefault();
+                return false;
+            });
+            
+            $('body').on('click', '.edit', function(e){
+                var self = $(this),
+                    comment = self.parents('.comment'),
+                    identifier = comment.attr('id'),
+                    target = $('body').data('base') + '/' + identifier;
+                
+                $.get(target, function(result){
+                    if ( result.success ) {
+                        var editor = $('#comment').clone();
+                        editor.attr('id', identifier);
+                        editor.find('.message').val(result.comment);
+                        editor.find('.trigger-edit').attr('data-target', '#'+identifier+' .comment-panel');
+                        editor.find('.trigger-preview').attr('data-target', '#'+identifier+' .preview-panel');
+                        editor.find('.trigger-style').attr('data-target', '#'+identifier+' .style-panel');
+                        editor.find('.comment-panel').attr('action', target);
+                        editor.addClass('comment-composer-edit');
+                        comment.replaceWith(editor);
+                        editor.find('.trigger-edit').tab('show');
+                    }
+                });
                 e.preventDefault();
                 return false;
             });
@@ -112,21 +136,38 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                 return false;
             });
             
-            $('a#trigger-preview').on('show.bs.tab', function(e) {
-                $('#preview-panel .content').empty().hide();
-                $('#preview-panel .spinner').show();
+            $('body').on('show.bs.tab', 'a.trigger-preview', function(e) {
+                var self = $(this),
+                    editor = self.parents('.comment-composer'),
+                    preview_panel = editor.find('.preview-panel');
                 
-                $.post('/preview', {content: $('#comment-message').val()}, function(result) {
-                    $('#preview-panel .content').html(result).show();
-                    $('#preview-panel .spinner').hide();
+                preview_panel.find('.content').empty().hide();
+                preview_panel.find('.spinner').show();
+                
+                $.post('/preview', {content: editor.find('.message').val()}, function(result) {
+                    preview_panel.find('.content').html(result).show();
+                    preview_panel.find('.spinner').hide();
                 }, 'html');
             });
             
-            $('#comment-submit').on('click', function(){
-                var self = $(this);
+            $('body').on('click', '.comment-composer .cancel', function(e){
+                var self = $(this),
+                    editor = self.parents('.comment-composer'),
+                    identifier = editor.attr('id'),
+                    target = $('body').data('base') + '/' + identifier + '.html';
+                $.get(target, function(result){
+                    editor.replaceWith(result);
+                });
+                e.preventDefault();
+                return false;
+            });
+            
+            $('body').on('click', '.comment-composer .submit', function(e){
+                var self = $(this),
+                    editor = self.parents('.comment-composer');
                 self.addClass('disabled').prop('disabled', true);
                 
-                $.post($('#comment-panel').attr('action'), {message: $('#comment-message').val()}, function(result){
+                $.post(editor.find('.comment-panel').attr('action'), {message: editor.find('.message').val()}, function(result){
                     if ( ! result.success ) {
                         alert(result.message);
                         self.removeClass('disabled').prop('disabled', false);
@@ -134,16 +175,17 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                     }
                     
                     // We would hopefully have had our own message pushed to us.  :3
-                    $('#comment-message').val('');
-                    $('#preview-panel .content').empty();
+                    editor.find('.message').val('');
+                    editor.find('.preview-panel .content').empty();
                     self.removeClass('disabled').prop('disabled', false);
                 });
                 
+                e.preventDefault();
                 return false;
             });
             
             $('#jump-to-comment').on('click', function(){
-                var comment = $('#comment-message').focus();
+                var comment = $('#comment .message').focus();
                 moveCaretToEnd(comment[0]);
             });
 
@@ -185,9 +227,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
     <li${' class="active"' if web.user and web.user.id in comment.vote_trail else ''}><a href="${BASE}/${comment.id}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
     % endif
     % if web.user and (web.user.admin or forum.moderate in web.user.tags or comment.creator.id == web.user.id):
-    % if False:
     <li><a href="#" class="edit"><i class="fa fa-pencil fa-fw fa-lg"></i></a></li>
-    % endif
     <li><a href="#" class="delete"><i class="fa fa-trash-o fa-fw fa-lg"></i></a></li>
     % endif
 % endif
@@ -195,7 +235,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
 
 
 <%def name="render_push()">
-${render_comment(comment)}
+${render_comment(comment, post_title)}
 </%def>
 
 
@@ -223,7 +263,7 @@ ${render_comment(comment)}
                 <h3 class="panel-title">${post_title}</h3>
             </div>
             % endif
-            <div class="panel-body">
+            <div class="panel-body comment-content">
                 ${(comment.message if comment.message and comment.message.strip() else post_title) | n, f.bb}
             </div>
             % if comment.vote_count:
@@ -271,7 +311,7 @@ ${render_comment(comment, None if i else thread.title)}
 % endfor
 
 % if web.user and not thread.flag.locked and (web.user.admin or forum.read in web.user.tags or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
-<div class="row row-offcanvas row-offcanvas-left" id="comment">
+<div class="row row-offcanvas row-offcanvas-left comment-composer" id="comment">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
             <img src="//image.eveonline.com/Character/${web.user.character.id}_64.jpg" class="img-thumbnail img-circle thumb-64">
@@ -281,6 +321,7 @@ ${render_comment(comment, None if i else thread.title)}
             <small>right now</small>
         </div>
     </div>
+    <div class="liner"></div>
     
     <div class="col-xs-9 col-sm-9">
         <div class="panel panel-default">
@@ -290,35 +331,44 @@ ${render_comment(comment, None if i else thread.title)}
                 </div>
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="#comment-panel" data-toggle="tab"><i class="fa fa-pencil-square"></i> Write</a>
+                    <!-- XXX -->
+                        <a class="trigger-edit" data-target="#comment .comment-panel" data-toggle="tab"><i class="fa fa-pencil-square"></i> Write</a>
                     </li>
                     <li>
-                        <a id="trigger-preview" href="#preview-panel" data-toggle="tab">
+                        <a class="trigger-preview" data-target="#comment .preview-panel" data-toggle="tab">
                             <i class="fa fa-check-square"></i>
                             Preview
                         </a>
                     </li>
                     <li>
-                        <a href="#style-panel" data-toggle="tab">
+                        <a class="trigger-style" data-target="#comment .style-panel" data-toggle="tab">
                             <i class="fa fa-font"></i> Style Guide
                         </a>
                     </li>
                 </ul>
-                <button id="comment-submit" type="button" class="btn navbar-btn btn-primary navbar-right"><i
-                        class="fa fa-fw fa-check"></i> Submit Comment
-                </button>
+                <div class="btn-toolbar navbar-right">
+                    <button type="button" class="cancel btn navbar-btn btn-default"><i
+                            class="fa fa-fw fa-times"></i> Cancel
+                    </button>
+                    <button type="button" class="submit submit-edit btn navbar-btn btn-primary navbar-right"><i
+                            class="fa fa-fw fa-check"></i> Submit Changes
+                    </button>
+                    <button type="button" class="submit submit-new btn navbar-btn btn-primary"><i
+                            class="fa fa-fw fa-check"></i> Submit Comment
+                    </button>
+                </div>
             </nav>
 
             <div class="tab-content">
-                <form class="tab-pane fade in active panel-body" id="comment-panel" action="/${forum.short}/${thread.id}"
+                <form class="comment-panel tab-pane fade in active panel-body" action="/${forum.short}/${thread.id}"
                       method="post">
-                    <textarea id="comment-message" class="form-control" placeholder="Leave a comment." rows="5"></textarea>
+                    <textarea class="message form-control" placeholder="Leave a comment." rows="5"></textarea>
                 </form>
-                <div class="tab-pane fade" id="preview-panel">
-                    <div id="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
-                    <div class="content"></div>
+                <div class="preview-panel tab-pane fade">
+                    <div class="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
+                    <div class="content comment-content"></div>
                 </div>
-                <div class="tab-pane fade" id="style-panel">
+                <div class="style-panel tab-pane fade">
                     <div class="content">
                         <%include file="brave.forums.template.syntax"/>
                     </div>

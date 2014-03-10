@@ -74,21 +74,21 @@ ul.nav-pills i.fa {
     border-top-right-radius: 4px;
 }
 
-#discuss .tab-content, #comment .tab-content {
+#discuss .tab-content, .comment-composer .tab-content {
     padding: 0;
 }
 
-#discuss form, #comment form {
+#discuss form, .comment-composer form {
     padding: 0;
 }
 
-#discuss #spinner, #comment #spinner {
+#discuss #spinner, .comment-composer .spinner {
     display: none;
     text-align: center;
     padding: 25px;
 }
 
-#comment textarea {
+.comment-composer textarea {
     border-width: 0;
     padding: 15px;
     font-size: 14px;
@@ -97,7 +97,7 @@ ul.nav-pills i.fa {
     border-top-right-radius: 0;
 }
 
-#discuss .tab-pane .content, #comment .tab-pane .content {
+#discuss .tab-pane .content, .comment-composer .tab-pane .content {
     display: none;
     padding: 15px;
     font-size: 14px;
@@ -113,7 +113,7 @@ ul.nav-pills i.fa {
     border-radius: 0;
 }
 
-#comment-message {
+.comment-composer .message {
     border-width: 0;
     padding: 15px;
     font-size: 14px;
@@ -122,7 +122,7 @@ ul.nav-pills i.fa {
     border-top-right-radius: 0;
 }
 
-#comment-submit {
+.comment-composer .submit {
     margin-right: 8px;
 }
 
@@ -134,19 +134,19 @@ ul.nav-pills i.fa {
     background-color: rgba(66, 139, 202, 0.15);
 }
 
-.comment {
+.comment, .comment-composer-edit {
     position: relative;
 }
 
-.comment > .media {
+.comment > .media, .comment-composer-edit > .media {
     z-index: 2;
 }
 
-.comment > .media-body {
+.comment > .media-body, .comment-composer-edit > .media-body  {
     padding-top: 5px;
 }
 
-.comment > .liner {
+.comment > .liner, .comment-composer-edit > .liner {
     position: absolute;
     left: 250px;
     top: 0px;
@@ -186,25 +186,25 @@ ul.nav-pills i.fa {
 /* START - Media Queries for .liner classes */
 
 @media (min-width:0px) and (max-width:767px) {
-   .comment > .liner{
+   .comment > .liner, .comment-composer-edit > .liner {
 		display:none
 	}
 }
 
 @media (min-width: 768px){
-	.comment > .liner{
+	.comment > .liner, .comment-composer-edit > .liner {
 		left: 147px;
 	}
 }
 
 @media (min-width: 992px){
-	.comment > .liner{
+	.comment > .liner, .comment-composer-edit > .liner {
 		left: 201px;
 	}
 }
 
 @media (min-width: 1200px){
-	.comment > .liner{
+	.comment > .liner, .comment-composer-edit > .liner {
 		left: 251px;
 	}
 }
@@ -214,13 +214,13 @@ ul.nav-pills i.fa {
 /* START - Media Queries for Hiding Icon Fonts in the comment pane at small screen sizes */
 
 @media (min-width: 768px){
-	#comment .panel i.fa{
+	.comment-composer .panel i.fa{
 		display:none;
 	}
 }
 
 @media (min-width: 992px){
-	#comment .panel i.fa{
+	.comment-composer .panel i.fa{
 		display:inline;
 	}
 }
@@ -234,25 +234,33 @@ ul.nav-pills i.fa {
 div[id^="comment-"] {
 }
 
-#comment .author {
+.comment-composer .author {
     padding-top: 12px;
 }
 
-#comment .navbar {
+.comment-composer .navbar {
     margin: 0;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+}
+
+#comment .cancel, #comment .submit-edit {
+    display: none;
+}
+
+.comment-composer-edit .submit-new {
+    display: none;
 }
 
 .previewAlert{
 	margin-bottom: 0;
 }
 
-#style-panel{
+.style-panel{
 	padding: 0;
 }
 
-#style-panel .content{
+.style-panel .content{
 	padding: 0;
 	display: block !important;
 }
@@ -325,4 +333,6 @@ div[id^="comment-"] {
 .infini.disabled i.fa-spin { display: none; }
 .infini.disabled i.fa-times { display: inline; }
 
-.comment .panel-body img { display: block; max-width: 100%; }
+.comment-content img { display: block; max-width: 100%; }
+
+a[data-toggle]:hover { cursor: pointer; }
