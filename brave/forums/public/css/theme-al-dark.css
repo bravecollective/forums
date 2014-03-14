@@ -116,7 +116,7 @@ blockquote {
   color: #ffffff;
 }
   
-#preview-panel {
+.comment-composer .preview-panel {
   background-color: #333333;
 }
 
