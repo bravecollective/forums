@@ -260,7 +260,7 @@ div[id^="comment-"] {
 	padding: 0;
 }
 
-.style-panel .content{
+.style-panel .content, #style-panel .content {
 	padding: 0;
 	display: block !important;
 }
