@@ -5,7 +5,34 @@
 <%namespace name="forum" file="brave.forums.template.forum"/>
 
 <%block name="title">Dashboard</%block>
+
+<%block name="post">
+    ${parent.post()}
+
+    <script type="text/javascript" charset="utf-8">
+        $(function(){
+            $('.mark-read').on('click', function(){
+                var self = $(this);
+                $.post(self.attr('data-action'), {}, function(result){
+                    if ( ! result.success ) {
+                        if(result.message){
+                          alert(result.message)
+                        }
+                        return;
+                    }
+                    window.location = window.location;
+                });
+                return false;
+            });
+        });
+    </script>
+</%block>
+
 <%f:page title="Dashboard" minor="of somewhat useful and supposedly relevant things." />
+
+<ul class="nav nav-pills pull-right">
+    <li><a href="#" class="mark-read" data-action="/readall"><i class="fa fa-lg fa-eye"></i>Mark <i>Everything</i> Read</a></li>
+</ul>
 
 % if announcements and announcements.threads.count():
 <ul class="nav nav-pills pull-right">
@@ -23,7 +50,7 @@
 
 % for category in categories:
     <% if not category.forums.count(): continue %>
-    ${render_category(category.title, category.forums)}
+    ${render_category(category.id, category.title, category.forums)}
 % endfor
 
 
@@ -47,13 +74,16 @@
 </ul>
 
 
-<%def name="render_category(category_title, forums_list)">
+<%def name="render_category(category_id, category_title, forums_list)">
     <%def name="stat(singular, plural, count)">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${int(count)}</big><br><small>${singular if count == 1 else plural}</small>
         </div>
     </%def>
     
+    <ul class="nav nav-pills pull-right">
+        <li><a href="#" class="mark-read" data-action="/category/${category_id}/read"><i class="fa fa-lg fa-eye"></i>Mark Forums Read</a></li>
+    </ul>
     <h4>${category_title}</h4>
     <ul class="list-group media-list clearfix">
         % for forum_item in forums_list:
