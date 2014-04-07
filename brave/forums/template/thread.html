@@ -77,6 +77,10 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                         editor.find('.comment-panel').attr('action', target);
                         editor.addClass('comment-composer-edit');
                         comment.replaceWith(editor);
+                        if (comment.find('.panel-title')) {
+                            editor.addClass('first-post');
+                            editor.find('.thread-title').val(comment.find('.panel-title').text());
+                        }
                         editor.find('.trigger-edit').tab('show');
                     }
                 });
@@ -167,7 +171,13 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                     editor = self.parents('.comment-composer');
                 self.addClass('disabled').prop('disabled', true);
                 
-                $.post(editor.find('.comment-panel').attr('action'), {message: editor.find('.message').val()}, function(result){
+                var postdata = {message: editor.find('.message').val()};
+                var title = editor.find('.thread-title').val();
+                if (title != "") {
+                    postdata.title = title;
+                }
+                
+                $.post(editor.find('.comment-panel').attr('action'), postdata, function(result){
                     if ( ! result.success ) {
                         alert(result.message);
                         self.removeClass('disabled').prop('disabled', false);
@@ -362,6 +372,7 @@ ${render_comment(comment, None if i else thread.title)}
             <div class="tab-content">
                 <form class="comment-panel tab-pane fade in active panel-body" action="/${forum.short}/${thread.id}"
                       method="post">
+                    <input class="thread-title form-control" placeholder="Enter a title for your discussion.">
                     <textarea class="message form-control" placeholder="Leave a comment." rows="5"></textarea>
                 </form>
                 <div class="preview-panel tab-pane fade">

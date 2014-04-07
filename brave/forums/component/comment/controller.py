@@ -45,18 +45,23 @@ class CommentIndex(HTTPMethod):
                 comment = self.comment.message
             )
     
-    def post(self, message):
+    def post(self, message, title=None):
         """Update the comment."""
         
         if not (user and (user.admin or self.thread.forum.moderate in user.tags or user._current_obj() == self.comment.creator)):
             return 'json:', dict(success = False, message = "Not allowed.")
+        
+        if title:
+            if self.comment.id != self.thread.oldest().id:
+                return 'json:', dict(success = False, message = "Setting title on invalid comment")
+            assert self.thread.update_title(title), "Couldn't update thread title?!"
         
         enabled = True
         success = self.thread.update_comment(self.comment.id, set__message = message,
                  set__modified = datetime.utcnow()
              )
         if not success:
-            return 'json:', dict(success = False, message = "Thread not found.")
+            return 'json:', dict(success = False, message = "Comment not found.")
         
         self.thread.channel.send('refresh', str(self.comment.id))
         return 'json:', dict(success = True)

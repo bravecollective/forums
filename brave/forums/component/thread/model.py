@@ -138,6 +138,9 @@ class Thread(Document):
         
         return Thread.objects(comments__id=id).update_one(**update)
     
+    def update_title(self, title):
+        return Thread.objects(id=self.id).update_one(set__title=title)
+    
     def oldest(self, cache=True):
         """Return the first (oldest) comment in this thread.
         
