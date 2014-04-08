@@ -23,7 +23,6 @@ class Fit(Document):
     def get_fit(eft):
         query = Fit.objects(eft=eft)
         if query:
-            print "hello"
             return query[0]
         
         resp = requests.post(OSMIUM_BASE+"/api/convert/eft/dna", data=dict(input=eft))
