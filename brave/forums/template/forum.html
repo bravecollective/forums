@@ -143,12 +143,14 @@
         </div>
     </div>
 </div>
+% endif
 
 <ul class="nav nav-pills pull-right">
     <li><a href="#" id="mark-read" data-action="/${forum.short}/read/"><i class="fa fa-lg fa-eye"></i>Mark Forum Read</a></li>
+% if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
     <li><a href="#discuss" id="new-discussion" data-toggle="modal"><i class="fa fa-comments fa-lg"></i>Start Discussion</a></li>
-</ul>
 % endif
+</ul>
 
 <%def name="threads(forum=None, results=None, page=1, limit=20)">
 <ul class="list-group media-list clearfix">
