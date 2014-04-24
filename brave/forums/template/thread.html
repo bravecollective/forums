@@ -311,7 +311,7 @@ ${render_comment(comment, None if i else thread.title)}
 % endfor
 
 % if web.user and not thread.flag.locked and (web.user.admin or forum.read in web.user.tags or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
-<div class="row row-offcanvas row-offcanvas-left comment-composer" id="comment">
+<div class="row row-offcanvas row-offcanvas-left comment-composer comment-composer-inline" id="comment">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
             <img src="//image.eveonline.com/Character/${web.user.character.id}_64.jpg" class="img-thumbnail img-circle thumb-64">

@@ -1,4 +1,4 @@
-html, body, #wrap {
+html, body, #wrap, .modal-content {
   background-color: #333333;
   color: #888888;
 }
@@ -58,7 +58,7 @@ blockquote {
 }
   
   
-.comment-composer .message {
+.comment-composer .message, #thread-title {
   background-color: #dddddd;
   color: #222222;
 }
@@ -84,6 +84,19 @@ blockquote {
 .comment-composer .navbar-nav > li > a:hover {
   color: #ffffff;
 }
+
+.comment-composer .nav-tabs {
+  border-bottom: 1px solid #444;
+}
+
+.comment-composer .nav-tabs > li.active > a {
+  background: transparent;
+  border-color: #444 #444 transparent;
+}
+
+.comment-composer .nav-tabs > li > a:hover {
+  border-color: #444 #444 #444;
+}
   
 .comment-composer .preview-panel {
   background-color: #dddddd;
@@ -92,3 +105,5 @@ blockquote {
 .nav.alice .dropdown-header { padding-left: 29px; }
 .nav.alice a[data-theme] { padding-left: 8px; }
 .nav.alice a[data-theme] i { margin-right: 3px; }
+
+#discuss.modal .modal-header a.disabled { background-color: transparent; color: #999; border-color: #333 #333 transparent; }

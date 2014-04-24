@@ -43,14 +43,6 @@
                 return false;
             });
             
-            $('#new-discussion').on('click', function(){
-                var self = $(this);
-                
-                self.parent().toggleClass('active');
-                $('#discuss').slideToggle(125);
-                $('#thread-title').focus();
-            });
-            
             $('#mark-read').on('click', function(){
                 $.post($('#mark-read').attr('data-action'), {}, function(result){
                     if ( ! result.success ) {
@@ -110,24 +102,13 @@
 <%f:page title="${forum.name}" minor="${forum.summary}" />
 
 % if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
-<div class="row row-offcanvas row-offcanvas-left" id="discuss">
-    <div class="col-xs-3 col-sm-3 text-right media thumb-64">
-        <div class="pull-right media-object text-center">
-            <img src="//image.eveonline.com/Character/${web.user.character.id}_64.jpg" class="img-thumbnail img-circle">
-        </div>
-        <div class="media-body">
-            <a href="/profile/${web.user.id}"><strong>${web.user.character.name}</strong></a><br>
-            <small>right now</small>
-        </div>
-    </div>
-    
-    <div class="col-xs-9 col-sm-9">
-        <div class="panel panel-default">
-            <nav class="navbar navbar-default navbar-static-top">
-                <div class="navbar-header">
-                    <span class="navbar-brand"><i class="fa fa-lg fa-comments"></i> Discuss</span>
-                </div>
-                <ul class="nav navbar-nav">
+<div class="modal fade comment-composer comment-composer-modal" id="discuss" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <ul class="nav nav-tabs">
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i></button>
+                    <li><a class="disabled">Start Discussion</a></li>
                     <li class="active"><a href="#comment-panel" data-toggle="tab"><i class="fa fa-pencil-square"></i> Write</a></li>
                     <li><a id="trigger-preview" href="#preview-panel" data-toggle="tab"><i class="fa fa-check-square"></i> Preview</a></li>
                     <li>
@@ -136,22 +117,27 @@
                         </a>
                     </li>
                 </ul>
-                <button id="comment-submit" type="button" class="btn navbar-btn btn-primary navbar-right"><i class="fa fa-fw fa-check"></i> Post Discussion</button>
-            </nav>
-
-            <div class="tab-content">
-                <form class="tab-pane fade in active panel-body" id="comment-panel" action="/${forum.short}/" method="post">
-                    <input id="thread-title" class="form-control" placeholder="Enter a title for your discussion." required autofocus>
-                    <textarea id="comment-message" class="form-control" placeholder="Leave a comment." rows="5"></textarea>
-                </form>
-                <div class="tab-pane fade" id="preview-panel">
-                    <div id="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
-                    <div class="content"></div>
-                </div>
-                <div class="tab-pane fade" id="style-panel" style="padding: 0;">
-                    <div class="content" style="padding: 0;">
-                        <%include file="brave.forums.template.syntax"/>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <form class="tab-pane fade in active panel-body comment-panel" id="comment-panel" action="/${forum.short}/" method="post">
+                                <input id="thread-title" class="form-control" placeholder="Enter a title for your discussion." required autofocus>
+                                <textarea id="comment-message" class="form-control message" placeholder="Leave a comment." rows="5"></textarea>
+                            </form>
+                            <div class="tab-pane fade preview-panel" id="preview-panel">
+                                <div class="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
+                                <div class="content"></div>
+                            </div>
+                            <div class="tab-pane fade style-panel" id="style-panel" style="padding: 0;">
+                                <div class="content" style="padding: 0;">
+                                    <%include file="brave.forums.template.syntax"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <button id="comment-submit" type="button" class="btn navbar-btn btn-primary navbar-right"><i class="fa fa-fw fa-check"></i> Post Discussion</button>
                 </div>
             </div>
         </div>
@@ -162,7 +148,7 @@
 <ul class="nav nav-pills pull-right">
     <li><a href="#" id="mark-read" data-action="/${forum.short}/read/"><i class="fa fa-lg fa-eye"></i>Mark Forum Read</a></li>
 % if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
-    <li><a href="#" id="new-discussion"><i class="fa fa-comments fa-lg"></i>Start Discussion</a></li>
+    <li><a href="#discuss" id="new-discussion" data-toggle="modal"><i class="fa fa-comments fa-lg"></i>Start Discussion</a></li>
 % endif
 </ul>
 
