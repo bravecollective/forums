@@ -96,10 +96,13 @@ class SemanticTagParser(object):
         else:
             description_contents = title
         
-        value = value.replace('\n', "<br />")
+        value_contents = []
+        for v in value.split('\n'):
+            value_contents.extend([v, H.br()])
+        value_contents.pop() # remove extra br
         
         return unicode(H.div ( class_ = 'spoiler-container' ) [
                 H.a ( href = '#', class_ = 'target fa fa-plus-square fa-fw fa-lg' ),
                 H.span ( class_ = 'description' ) [ description_contents ],
-                H.div ( class_ = 'spoilers' ) [ value ]
+                H.div ( class_ = 'spoilers' ) [ value_contents ]
             ])
