@@ -59,7 +59,7 @@ class CommentIndex(HTTPMethod):
             return 'json:', dict(success = False, message = "Thread not found.")
         
         self.thread.channel.send('refresh', str(self.comment.id))
-        return 'json:', dict(success = True)
+        return 'json:', dict(success=True, comment=self.comment.id)
     
     def delete(self):
         """Delete the comment."""
