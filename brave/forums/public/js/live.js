@@ -292,6 +292,8 @@ Thread.prototype.commented = function(e, identifier) {
     if ( $('#' + identifier).length ) return;
     
     $.get(window.location.pathname + '/' + identifier + '.html', function(result) {
+        // This is really where de-dupe is most critical.
+        if ( $('#' + identifier).length ) return;
         $(result).insertAfter('.comment:last');
         $('time.relative').timeago();
     });

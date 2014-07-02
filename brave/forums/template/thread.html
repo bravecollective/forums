@@ -172,9 +172,11 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                         alert(result.message);
                         self.removeClass('disabled').prop('disabled', false);
                         return;
+                    } else {
+                        // Why use a push request when we're already getting an AJAX response?
+                        thread.commented(null, result.comment);
                     }
                     
-                    // We would hopefully have had our own message pushed to us.  :3
                     editor.find('.message').val('');
                     editor.find('.preview-panel .content').empty();
                     self.removeClass('disabled').prop('disabled', false);
