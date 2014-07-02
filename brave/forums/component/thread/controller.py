@@ -48,7 +48,7 @@ class ThreadIndex(HTTPMethod):
         
         new_comment = self.thread.add_comment(user._current_obj(), message)
         
-        return 'json:', dict(success=True, comment=new_comment.id)
+        return 'json:', dict(success=True, comment=str(new_comment.id))
 
 
 
