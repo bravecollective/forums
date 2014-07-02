@@ -46,9 +46,9 @@ class ThreadIndex(HTTPMethod):
         if not message or not message.strip():
             return 'json:', dict(success=False, message="Empty message.")
         
-        self.thread.add_comment(user._current_obj(), message)
+        new_comment = self.thread.add_comment(user._current_obj(), message)
         
-        return 'json:', dict(success=True)
+        return 'json:', dict(success=True, comment=new_comment.id)
 
 
 
