@@ -28,7 +28,7 @@
     </script>
 </%block>
 
-<%f:page title="Dashboard" minor="of somewhat useful and supposedly relevant things." />
+<%f:page title="Dashboard"/>
 
 <ul class="nav nav-pills pull-right">
     <li><a href="#" class="mark-read" data-action="/readall"><i class="fa fa-lg fa-eye"></i>Mark <i>Everything</i> Read</a></li>
@@ -46,7 +46,7 @@
 <h4>Your Active Discussions</h4>
 <%forum:threads results="${activity}" limit="5" />
 
-
+<center><h2>Categories</h2></center>
 
 % for category in categories:
     <% if not category.forums.count(): continue %>
@@ -54,12 +54,11 @@
 % endfor
 
 
-<h4>Latest Discussions</h4>
+<!--- <h4>Latest Discussions</h4>
 <%forum:threads results="${latest}" limit="5" />
 
 <h4>Top Voted Discussions <small>active in the last seven days.</small></h4>
 <%forum:threads results="${voted}" limit="5" />
-
 
 <ul class="nav nav-pills pull-right">
     <li><a href="#"><i class="fa fa-cogs fa-lg"></i>Subscription Preferences</a></li>
@@ -73,14 +72,14 @@
     </li>
 </ul>
 
-
+---!>
 <%def name="render_category(category_id, category_title, forums_list)">
     <%def name="stat(singular, plural, count)">
         <div class="pull-right media-object hidden-xs text-center">
             <big>${int(count)}</big><br><small>${singular if count == 1 else plural}</small>
         </div>
     </%def>
-    
+
     <ul class="nav nav-pills pull-right">
         <li><a href="#" class="mark-read" data-action="/category/${category_id}/read"><i class="fa fa-lg fa-eye"></i>Mark Forums Read</a></li>
     </ul>
@@ -89,7 +88,8 @@
         % for forum_item in forums_list:
             <a href="/${forum_item.short}" class="list-group-item media thread ${'unread' if web.user and not web.user.is_forum_read(forum_item) else ''}">
                 <i class="pull-left media-object fa fa-arrow-circle-o-right fa-3x dim"></i>
-                
+
+
                 ${stat('thread', 'threads', forum_item.threads.count())}
                 ${stat('comment', 'comments', forum_item.threads.sum('stat.comments'))}
                 ${stat('view', 'views', forum_item.threads.sum('stat.views'))}
@@ -100,11 +100,11 @@
                         ${forum_item.summary}
                     </small>
                 </h4>
-                
+
                 % if forum_item.threads.count():
                 <% latest = forum_item.threads.first() %>
                 <div class="list-group-item-text">
-                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in ${latest.oldest().creator.character.name}&apos;s thread “${latest.title}”.
+                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in ${latest.oldest().creator.character.$
                 </div>
                 % else:
                 <div class="list-group-item-text">
