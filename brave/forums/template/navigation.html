@@ -17,12 +17,13 @@
                 <li><a href="/p/">Public Forum</a></li>
                 % else:
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Official <i class="fa fa-caret-down"></i></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">General <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="/ann/">Announcements</a></li>
                         <li class="divider"></li>
-                        <li><a href="/council/">BRAVE Council</a></li>
-                        <li><a href="/it/">Information Technology</a></li>
+                        <li><a href="/cnm/">BRAVE Council</a></li>
+                        <li><a href="/alliance/">Alliance</a></li>
+                        <li><a href="/hero/">HERO Coalition</a></li>
                         <li class="divider"></li>
                         <li class="dropdown-header">CCP — EVE Online <i class="fa fa-fa-external-link"></i></li>
                         <li><a href="http://community.eveonline.com/news/news-channels/" target="_blank">News</a></li>
@@ -30,7 +31,7 @@
                         <li><a href="http://community.eveonline.com/news/patch-notes/" target="_blank">Patch Notes</a></li>
                     </ul>
                 </li>
-                <li class="dropdown">
+                <!---<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">General</li>
@@ -59,17 +60,37 @@
                         <li><a href="/i/">Industry &amp; Trade</a></li>
                         <li><a href="/d/">DUST 514</a></li>
                     </ul>
+                </li>---!>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">BRAVE Operations <i class="fa fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/it">Brave IT</a></li>
+                        <li><a href="/mil">Military Ops</a></li>
+                        <li><a href="/diplo">Diplomacy</a></li>
+                        <li><a href="/edu">Education</a></li>
+                        <li><a href="/hr">Internal Affairs</a></li>
+                        <li><a href="/assets">Asset Management</a></li>
+                        <li><a href="/$$$">Finance</a></li>
+                        <li><a href="/industry">Industry</a></li>
+                    </ul>
                 </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Corporations <i class="fa fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/bni">BNI</a></li>
+                    </ul>
+                </li>
+
                 % endif
             </ul>
-        
+
             % if False and web.user:
             <form class="form-inline navbar-form navbar-left" role="search">
                 <label for="rgsearch" class="sr-only">Search all forums:</label>
                 <input id="rgsearch" type="search" class="form-control" placeholder="Global search.">
             </form>
             % endif
-            
+
             % if web.user:
             <ul class="nav navbar-nav navbar-right alice">
                 <li class="dropdown" style="display: inline-block">
@@ -90,8 +111,8 @@
 <li class="dropdown" style="display: inline-block">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> ${web.user.character.name} <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Preferences</a></li>
-                        <li class="divider"></li>
+                       <!--- <li><a href="#">Preferences</a></li>
+                        <li class="divider"></li>---!>
                         <li><a href="/goodbye">Sign Out</a></li>
                         <li><a href="/switch">Switch Characters…</a></li>
                     </ul>
