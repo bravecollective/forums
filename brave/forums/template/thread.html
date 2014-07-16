@@ -229,7 +229,9 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
         % endif
     % endif
 % else:  # Comment actions.
+    % if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
     <li><a href="#" class="quote"><i class="fa fa-reply fa-fw fa-lg"></i></a></li>
+    % endif
     % if web.user and comment.creator.id != web.user.id:
     <li${' class="active"' if web.user and web.user.id in comment.vote_trail else ''}><a href="${BASE}/${comment.id}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
     % endif
