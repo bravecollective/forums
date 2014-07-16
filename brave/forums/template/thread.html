@@ -206,7 +206,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
     % if side == 'left':
         <li><a href="/${forum.short}/"><i class="fa fa-arrow-circle-o-left fa-lg"></i> Back to <strong>${forum.name}</strong></a></li>
     % elif side == 'middle':
-        % if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
+        % if forum.user_can_write(web.user):
         % if thread.flag.locked:
         <li class="disabled"><a href="#comment-panel" id="jump-to-comment"><i class="fa fa-arrow-circle-o-down fa-lg"></i> Comment</a></li>
         <li class="disabled"><a href="#comment-panel" id="thread-locked" class="disabled"><i class="fa fa-lock fa-lg"></i> Thread Locked</a></li>
@@ -222,20 +222,20 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
             Live
         </a></li>
     % elif side == 'right':
-        % if web.user and (web.user.admin or forum.moderate in web.user.tags):
+        % if forum.user_can_moderate(web.user):
         <li${' class="active"' if thread.flag.locked else ''}><a href="${BASE}/lock" class="sjax"><i class="fa fa-lock fa-fw fa-lg"></i></a></li>
         <li${' class="active"' if thread.flag.sticky else ''}><a href="${BASE}/sticky" class="sjax"><i class="fa fa-thumb-tack fa-fw fa-lg"></i></a></li>
         <li${' class="active"' if thread.flag.hidden else ''}><a href="${BASE}/hide" class="sjax"><i class="fa fa-eye-slash fa-fw fa-lg"></i></a></li>
         % endif
     % endif
 % else:  # Comment actions.
-    % if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
+    % if forum.user_can_write(web.user):
     <li><a href="#" class="quote"><i class="fa fa-reply fa-fw fa-lg"></i></a></li>
     % endif
     % if web.user and comment.creator.id != web.user.id:
     <li${' class="active"' if web.user and web.user.id in comment.vote_trail else ''}><a href="${BASE}/${comment.id}/vote" class="sjax"><i class="fa fa-thumbs-o-up fa-fw fa-lg"></i></a></li>
     % endif
-    % if web.user and (web.user.admin or forum.moderate in web.user.tags or comment.creator.id == web.user.id):
+    % if thread.user_can_edit_comment(web.user, comment):
     <li><a href="#" class="edit"><i class="fa fa-pencil fa-fw fa-lg"></i></a></li>
     <li><a href="#" class="delete"><i class="fa fa-trash-o fa-fw fa-lg"></i></a></li>
     % endif
@@ -319,7 +319,7 @@ ${render_comment(comment, post_title)}
 ${render_comment(comment, None if i else thread.title)}
 % endfor
 
-% if web.user and not thread.flag.locked and (web.user.admin or forum.read in web.user.tags or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
+% if not thread.flag.locked and forum.user_can_write(web.user):
 <div class="row row-offcanvas row-offcanvas-left comment-composer comment-composer-inline" id="comment">
     <div class="col-xs-3 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">

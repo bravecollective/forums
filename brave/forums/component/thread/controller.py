@@ -36,11 +36,7 @@ class ThreadIndex(HTTPMethod):
     def post(self, message, upload=None, vote=None):
         forum = self.forum
         
-        if forum.moderate in user.tags:
-            pass
-        elif user.admin or forum.read and forum.read in user.tags:
-            pass
-        elif forum.write and forum.write not in user.tags:
+        if not forum.user_can_write(user):
             return 'json:', dict(success=False, message="Not allowed.")
         
         if not message or not message.strip():
@@ -76,7 +72,7 @@ class ThreadController(Controller):
         return resume(CommentController, comment, args, format, self.thread)
     
     def lock(self):
-        if not (user.admin or self.forum.moderate in user.tags):
+        if not self.forum.user_can_moderate(user):
             return dict(success=False, enabled=self.thread.flag.locked, message="Not allowed.")
         
         thread = self.thread
@@ -89,7 +85,7 @@ class ThreadController(Controller):
         return 'json:', dict(success=True, enabled=thread.flag.locked)
     
     def sticky(self):
-        if not (user.admin or self.forum.moderate in user.tags):
+        if not forum.user_can_moderate(user):
             return dict(success=False, enabled=self.thread.flag.sticky, message="Not allowed.")
         
         thread = self.thread
@@ -102,7 +98,7 @@ class ThreadController(Controller):
         return 'json:', dict(success=True, enabled=thread.flag.sticky)
     
     def hide(self):
-        if not (user.admin or self.forum.moderate in user.tags):
+        if not forum.user_can_moderate(user):
             return dict(success=False, enabled=self.thread.flag.hidden, message="Not allowed.")
         
         thread = self.thread

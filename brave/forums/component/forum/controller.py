@@ -33,7 +33,7 @@ class ForumIndex(HTTPMethod):
         return 'brave.forums.template.forum', data
     
     def post(self, title, message, upload=None, vote=None):
-        if not user.admin and self.forum.write and self.forum.write not in user.tags:
+        if not self.forum.user_can_write(user):
             log.debug("deny post to %r: w=%r t=%r", self.forum, self.forum.write, user.tags)
             raise HTTPNotFound()
         
@@ -52,20 +52,7 @@ class ForumController(Controller):
         except Forum.DoesNotExist:
             raise HTTPNotFound()
         
-        tags = user.tags if user else ()
-        
-        log.debug("%r vs %s", f, ",".join(tags))
-        
-        # Weird structure here, but we want to redirect under some circumstances.
-        if user and user.admin:
-            log.debug("Granting access to Admin.")
-        elif f.moderate and f.moderate in tags:
-            log.debug("granting access to moderator")
-        elif f.write and f.write in tags:
-            log.debug("granting access to authorized poster")
-        elif not f.read or f.read in tags:
-            log.debug("granting access to authorized viewer")
-        else:
+        if not f.user_can_read(user):
             log.debug("conditions failed")
             if user:
                 raise HTTPNotFound()
