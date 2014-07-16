@@ -215,12 +215,6 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
         <li class="hidden disabled"><a href="#comment-panel" id="thread-locked" class="disabled"><i class="fa fa-lock fa-lg"></i> Thread Locked</a></li>
         % endif
         % endif
-        <li class="pull-right connection-state"><a href="#" id="toggle-live">
-            <i class="fa fa-lg fa-refresh fa-spin live hidden"></i>
-            <i class="fa fa-lg fa-cog fa-spin connecting hidden"></i>
-            <i class="fa fa-lg fa-minus disconnected"></i>
-            Live
-        </a></li>
     % elif side == 'right':
         % if web.user and (web.user.admin or forum.moderate in web.user.tags):
         <li${' class="active"' if thread.flag.locked else ''}><a href="${BASE}/lock" class="sjax"><i class="fa fa-lock fa-fw fa-lg"></i></a></li>
@@ -372,7 +366,7 @@ ${render_comment(comment, None if i else thread.title)}
                     <textarea class="message form-control" placeholder="Leave a comment." rows="5"></textarea>
                 </form>
                 <div class="preview-panel tab-pane fade">
-                    <div class="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
+                    <div class="spinner"><i class="fa fa-5x fa-cog"></i></div>
                     <div class="content comment-content"></div>
                 </div>
                 <div class="style-panel tab-pane fade">
