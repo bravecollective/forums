@@ -57,7 +57,9 @@ class ForumController(Controller):
         log.debug("%r vs %s", f, ",".join(tags))
         
         # Weird structure here, but we want to redirect under some circumstances.
-        if f.moderate and f.moderate in tags:
+        if user and user.admin:
+            log.debug("Granting access to Admin.")
+        elif f.moderate and f.moderate in tags:
             log.debug("granting access to moderator")
         elif f.write and f.write in tags:
             log.debug("granting access to authorized poster")
