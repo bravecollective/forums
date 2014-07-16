@@ -60,6 +60,9 @@ class ThreadController(Controller):
             t = self.thread = Thread.objects.get(id=id)
         except Thread.DoesNotExist:
             raise HTTPNotFound()
+            
+        if self.forum.short != self.thread.forum.short:
+            raise HTTPNotFound()
         
         self.index = ThreadIndex(forum, t)
         
