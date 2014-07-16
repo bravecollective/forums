@@ -101,6 +101,8 @@ class Thread(Document):
                 push__comments = comment
             )
         
+        log.info("{0.character.name} added comment '{1}' to {2.forum.short}/{2.id}".format(user, message, self))
+
         self.channel.send('comment', str(comment.id))
         
         return comment
