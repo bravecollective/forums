@@ -169,4 +169,4 @@ class Thread(Document):
         return self._latest
 
     def user_can_edit_comment(self, u, c):
-        return self.forum.user_can_moderate(u) or (u and u._current_obj == c.creator)
+        return self.forum.user_can_moderate(u) or (u and u._current_obj() == c.creator)
