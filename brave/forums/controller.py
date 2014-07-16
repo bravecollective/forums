@@ -9,6 +9,7 @@ from web.auth import user, anonymous, authenticated
 from web.core import Controller, session
 
 from brave.forums.auth.controller import AuthenticationMixIn
+from brave.forums.component.category.controller import CategoryController
 from brave.forums.component.category.model import Category
 from brave.forums.component.forum.controller import ForumController
 from brave.forums.component.forum.model import Forum
@@ -22,14 +23,17 @@ log = __import__('logging').getLogger(__name__)
 
 
 class RootController(Controller, StartupMixIn, AuthenticationMixIn):
-    def __lookup__(self, forum, *args, **kw):
+    def __lookup__(self, first, *args, **kw):
         """Internal redirect if the first path element doesn't match a method at this level.
         
         Path elements are passed positionally, GET/POST as keyword arguments.
         Must return a new controller instance and the remaining path elements to process.
         Yes, these remaining path elements don't need to be the ones that came in originally!
         """
-        return resume(ForumController, forum, args)
+        if first == "category":
+            return resume(CategoryController, args[0] if args else None, args[1:])
+        else:
+            return resume(ForumController, first, args)
     
     @require(anonymous)
     def index(self):
@@ -43,7 +47,7 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
         allowed = list(Forum.get().scalar('id'))
         
         return 'brave.forums.template.index', dict(
-                categories = Category.objects.only('title', 'members'),
+                categories = Category.objects.only('id', 'title', 'members'),
                 announcements = Forum.get('ann').first(),
                 activity = Thread.objects.get_active(allowed, user.id, 30),
                 latest = Thread.objects.get_active(allowed).order_by('-id'),
@@ -75,6 +79,12 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
         u.save()
         
         return 'json:', dict(success=True)
+
+    @require(authenticated)
+    def readall(self):
+        for forum in Forum.objects:
+            user.mark_forum_read(forum)
+        return "json:", dict(success=True)
     
     @require(debugging)
     def die(self):

@@ -16,6 +16,10 @@ html, body, #wrap, .modal-content {
   border: 1px solid #666666;
 }
 
+.list-group-item-text {
+  color: #888888;
+}
+
 .unread {
   background-color: rgba(66, 139, 202, 0.15);
 }
@@ -33,6 +37,10 @@ a:hover, a:focus {
 
 a.list-group-item .list-group-item-heading {
   color: #999999;
+}
+
+a.list-group-item .list-group-item-heading small {
+  color: #666666;
 }
 
 a.list-group-item:hover, a.list-group-item:focus {

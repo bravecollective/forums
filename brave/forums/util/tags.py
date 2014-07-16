@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from bbcode import Parser
 from urllib import quote
 from marrow.tags import html5 as H
+from brave.forums.util.osmium import Fit
 
 
 log = __import__('logging').getLogger(__name__)
@@ -28,6 +29,8 @@ class SemanticTagParser(object):
         self.parser.add_formatter('Spoiler', self.format_spoilers, standalone=False, strip=True)
         self.parser.add_formatter('h', self.format_heading, standalone=False, strip=True)
         self.parser.add_formatter('img', self.format_image, standalone=False, strip=True)
+        self.parser.add_formatter('fit', self.format_fit, standalone=False, strip=True,
+                  transform_newlines=False, escape_html=False)
     
     def format(self, text):
         try:
@@ -51,7 +54,7 @@ class SemanticTagParser(object):
                 label
             )
     
-    evewho_alias = dict(corporation='corp', alliance='ali', character='pilot')
+    evewho_alias = dict(corporation='corp', alliance='alli', character='pilot')
     evewho_template = '<a href="http://evewho.com/{0}/{1}" target="evewho">{2}</a>'
     
     def format_evewho(self, tag_name, value, options, parent, context):
@@ -79,3 +82,27 @@ class SemanticTagParser(object):
     def format_image(self, tag_name, value, options, parent, context):
         return value.replace('">', '" target="_blank"><img src="').replace('</a>', '"></a>')
         return unicode(H.img ( src = value ))
+    
+    def format_fit(self, tag_name, value, options, parent, contex):
+        title = None
+        url = None
+        
+        if value:
+            title = value.split("\n")[0]
+            url = Fit.get_fit(value).fit_url()
+        
+        if url:
+            description_contents = (title, " - ", H.a ( href = url ) [ "Osmium" ])
+        else:
+            description_contents = title
+        
+        value_contents = []
+        for v in value.split('\n'):
+            value_contents.extend([v, H.br()])
+        value_contents.pop() # remove extra br
+        
+        return unicode(H.div ( class_ = 'spoiler-container' ) [
+                H.a ( href = '#', class_ = 'target fa fa-plus-square fa-fw fa-lg' ),
+                H.span ( class_ = 'description' ) [ description_contents ],
+                H.div ( class_ = 'spoilers' ) [ value_contents ]
+            ])

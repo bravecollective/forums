@@ -326,6 +326,10 @@ div[id^="comment-"] {
     font-weight: 500;
 }
 
+blockquote {
+    font-size: 100%
+}
+
 .nav.alice .dropdown-header { padding-left: 29px; }
 .nav.alice a[data-theme] { padding-left: 8px; }
 .nav.alice a[data-theme] i { margin-right: 3px; }

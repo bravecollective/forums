@@ -46,9 +46,9 @@ class ThreadIndex(HTTPMethod):
         if not message or not message.strip():
             return 'json:', dict(success=False, message="Empty message.")
         
-        self.thread.add_comment(user._current_obj(), message)
+        new_comment = self.thread.add_comment(user._current_obj(), message)
         
-        return 'json:', dict(success=True)
+        return 'json:', dict(success=True, comment=str(new_comment.id))
 
 
 
@@ -59,6 +59,9 @@ class ThreadController(Controller):
         try:
             t = self.thread = Thread.objects.get(id=id)
         except Thread.DoesNotExist:
+            raise HTTPNotFound()
+            
+        if self.forum.short != self.thread.forum.short:
             raise HTTPNotFound()
         
         self.index = ThreadIndex(forum, t)

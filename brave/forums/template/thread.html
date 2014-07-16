@@ -168,7 +168,8 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
             
             $('body').on('click', '.comment-composer .submit', function(e){
                 var self = $(this),
-                    editor = self.parents('.comment-composer');
+                    editor = self.parents('.comment-composer'),
+                    isEdit = editor.hasClass('comment-composer-edit');
                 self.addClass('disabled').prop('disabled', true);
                 
                 var postdata = {message: editor.find('.message').val()};
@@ -182,9 +183,15 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                         alert(result.message);
                         self.removeClass('disabled').prop('disabled', false);
                         return;
+                    } else {
+                        // Why use a push request when we're already getting an AJAX response?
+                        if(isEdit) {
+                            thread.refreshed(null, result.comment);
+                        } else {
+                            thread.commented(null, result.comment);
+                        }
                     }
                     
-                    // We would hopefully have had our own message pushed to us.  :3
                     editor.find('.message').val('');
                     editor.find('.preview-panel .content').empty();
                     self.removeClass('disabled').prop('disabled', false);
