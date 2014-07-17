@@ -127,7 +127,7 @@
                                 <textarea id="comment-message" class="form-control message" placeholder="Leave a comment." rows="5"></textarea>
                             </form>
                             <div class="tab-pane fade preview-panel" id="preview-panel">
-                                <div class="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
+                                <div class="spinner"><i class="fa fa-5x fa-cog"></i></div>
                                 <div class="content"></div>
                             </div>
                             <div class="tab-pane fade style-panel" id="style-panel" style="padding: 0;">
@@ -213,6 +213,6 @@ ${threads(forum, forum.threads.filter(flag__sticky=True))}
 ${threads(forum, forum.threads.filter(flag__sticky=False), page)}
 
 <div class="infini">
-    <i class="fa fa-4x fa-spin fa-spinner"></i>
+    <i class="fa fa-4x fa-spinner"></i>
     <i class="fa fa-4x fa-times text-muted"></i>
 </div>

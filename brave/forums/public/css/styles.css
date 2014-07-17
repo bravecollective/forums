@@ -335,10 +335,10 @@ blockquote {
 .nav.alice a[data-theme] i { margin-right: 3px; }
 
 .infini { text-align: center; margin-bottom: 20px; }
-.infini i.fa-spin { visibility: hidden; }
+.infini i.fa-spinner { visibility: hidden; }
 .infini i.fa-times { display: none; }
-.infini.active i.fa-spin { visibility: visible; }
-.infini.disabled i.fa-spin { display: none; }
+.infini.active i.fa-spinner { visibility: visible; }
+.infini.disabled i.fa-spinner { display: none; }
 .infini.disabled i.fa-times { display: inline; }
 
 .comment-content img { display: block; max-width: 100%; }
