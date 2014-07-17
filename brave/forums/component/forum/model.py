@@ -78,3 +78,15 @@ class Forum(Document):
         self.channel.send('thread', str(thread.id))
         
         return thread
+
+    def user_can_admin(self, u):
+        return u and u.admin
+
+    def user_can_moderate(self, u):
+        return self.user_can_admin(u) or (u and self.moderate in u.tags)
+
+    def user_can_write(self, u):
+        return self.user_can_moderate(u) or (u and (not self.write or self.write in u.tags))
+
+    def user_can_read(self, u):
+        return self.user_can_write(u) or not self.read or (u and self.read in u.tags)
