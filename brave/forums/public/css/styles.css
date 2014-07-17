@@ -105,7 +105,14 @@ ul.nav-pills i.fa {
     line-height: 1.4em;
 }
 
-#thread-title {
+.thread-title {
+    display: none;
+}
+.comment-composer-inline.first-post .thread-title {
+    display: block;
+}
+
+#thread-title, .comment-composer-inline .thread-title {
     border-width: 0;
     padding: 15px;
     height: auto;
@@ -113,6 +120,10 @@ ul.nav-pills i.fa {
     line-height: 1.4em;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.comment-composer-inline .thread-title {
+    border-radius: 0;
 }
 
 .comment-composer-inline .submit {
