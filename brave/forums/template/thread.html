@@ -77,7 +77,7 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                         editor.find('.comment-panel').attr('action', target);
                         editor.addClass('comment-composer-edit');
                         comment.replaceWith(editor);
-                        if (comment.find('.panel-title')) {
+                        if (comment.find('.panel-title').text()) {
                             editor.addClass('first-post');
                             editor.find('.thread-title').val(comment.find('.panel-title').text());
                         }
