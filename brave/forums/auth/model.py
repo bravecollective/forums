@@ -39,6 +39,7 @@ class Character(Document):
     corporation = EmbeddedDocumentField(Entity, db_field='o', default=lambda: Entity())
     alliance = EmbeddedDocumentField(Entity, db_field='a', default=lambda: Entity())
     tags = ListField(StringField(), db_field='g', default=list)
+    _display_name = StrinField(db_field='db')
     
     theme = StringField(db_field='h')
     
@@ -59,6 +60,12 @@ class Character(Document):
     @property
     def admin(self):
         return 'admin' in self.tags or 'forum.admin' in self.tags
+    
+    @property
+    def display_name(self):
+        if self._display_name:
+           return self._display_name
+        return self.charcter.name
     
     @classmethod
     def authenticate(cls, identifier, password=None):

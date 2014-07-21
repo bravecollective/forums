@@ -265,7 +265,7 @@ ${render_comment(comment, post_title)}
             % elif forum.user_can_moderate(comment.creator):
                 <font color="green">
             % endif
-                    ${comment.creator.character.name}
+                    ${comment.creator.display_name}
             % if forum.user_can_admin(comment.creator) or forum.user_can_moderate(comment.creator):
                 </font>
             % endif

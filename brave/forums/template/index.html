@@ -114,7 +114,7 @@ ${forum.threads(forum=ann, results=announcements.threads, limit="3")}
                     % elif forum_item.user_can_moderate(latest.oldest().creator):
                         <font color="green">
                     % endif
-                    ${latest.oldest().creator.character.name}<!---
+                    ${latest.oldest().creator.display_name}<!---
                     % if forum_item.user_can_admin(latest.oldest().creator) or forum_item.user_can_moderate(latest.oldest().creator):
                         --></font><!---
                     % endif
