@@ -104,7 +104,17 @@
                 % if forum_item.threads.count():
                 <% latest = forum_item.threads.first() %>
                 <div class="list-group-item-text">
-                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in ${latest.oldest().creator.character.name}&apos;s thread “${latest.title}”.
+                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in 
+                    % if forum_item.user_can_admin(latest.oldest().creator):
+                        <font color="red">
+                    % elif forum_item.user_can_moderate(latest.oldest().creator):
+                        <font color="green">
+                    % endif
+                    ${latest.oldest().creator.character.name}<!---
+                    % if forum_item.user_can_admin(latest.oldest().creator) or forum_item.user_can_moderate(latest.oldest().creator):
+                        --></font><!---
+                    % endif
+                    -->&apos;s thread “${latest.title}”.
                 </div>
                 % else:
                 <div class="list-group-item-text">
