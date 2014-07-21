@@ -101,6 +101,8 @@ class Thread(Document):
                 push__comments = comment
             )
         
+        log.info("{0.character.name} added comment '{1}' to {2.forum.short}/{2.id}".format(user, message, self))
+
         self.channel.send('comment', str(comment.id))
         
         return comment
@@ -138,6 +140,9 @@ class Thread(Document):
         
         return Thread.objects(comments__id=id).update_one(**update)
     
+    def update_title(self, title):
+        return Thread.objects(id=self.id).update_one(set__title=title)
+    
     def oldest(self, cache=True):
         """Return the first (oldest) comment in this thread.
         
@@ -165,3 +170,6 @@ class Thread(Document):
             self._latest = rec.comments[0]
         
         return self._latest
+
+    def user_can_edit_comment(self, u, c):
+        return self.forum.user_can_moderate(u) or (u and u._current_obj() == c.creator)

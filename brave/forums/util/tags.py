@@ -54,7 +54,7 @@ class SemanticTagParser(object):
                 label
             )
     
-    evewho_alias = dict(corporation='corp', alliance='ali', character='pilot')
+    evewho_alias = dict(corporation='corp', alliance='alli', character='pilot')
     evewho_template = '<a href="http://evewho.com/{0}/{1}" target="evewho">{2}</a>'
     
     def format_evewho(self, tag_name, value, options, parent, context):

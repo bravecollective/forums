@@ -101,7 +101,7 @@
 
 <%f:page title="${forum.name}" minor="${forum.summary}" />
 
-% if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
+% if forum.user_can_write(web.user):
 <div class="modal fade comment-composer comment-composer-modal" id="discuss" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -127,7 +127,7 @@
                                 <textarea id="comment-message" class="form-control message" placeholder="Leave a comment." rows="5"></textarea>
                             </form>
                             <div class="tab-pane fade preview-panel" id="preview-panel">
-                                <div class="spinner"><i class="fa fa-5x fa-cog fa-spin"></i></div>
+                                <div class="spinner"><i class="fa fa-5x fa-cog"></i></div>
                                 <div class="content"></div>
                             </div>
                             <div class="tab-pane fade style-panel" id="style-panel" style="padding: 0;">
@@ -147,7 +147,7 @@
 
 <ul class="nav nav-pills pull-right">
     <li><a href="#" id="mark-read" data-action="/${forum.short}/read/"><i class="fa fa-lg fa-eye"></i>Mark Forum Read</a></li>
-% if web.user and (web.user.admin or forum.moderate in web.user.tags or not forum.write or forum.write in web.user.tags):
+% if forum.user_can_write(web.user):
     <li><a href="#discuss" id="new-discussion" data-toggle="modal"><i class="fa fa-comments fa-lg"></i>Start Discussion</a></li>
 % endif
 </ul>
@@ -213,6 +213,6 @@ ${threads(forum, forum.threads.filter(flag__sticky=True))}
 ${threads(forum, forum.threads.filter(flag__sticky=False), page)}
 
 <div class="infini">
-    <i class="fa fa-4x fa-spin fa-spinner"></i>
+    <i class="fa fa-4x fa-spinner"></i>
     <i class="fa fa-4x fa-times text-muted"></i>
 </div>

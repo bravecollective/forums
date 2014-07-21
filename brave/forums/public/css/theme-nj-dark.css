@@ -58,7 +58,7 @@ blockquote {
 }
   
   
-.comment-composer .message, #thread-title {
+.comment-composer .message, #thread-title, .thread-title {
   background-color: #dddddd;
   color: #222222;
 }

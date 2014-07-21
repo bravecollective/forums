@@ -45,18 +45,24 @@ class CommentIndex(HTTPMethod):
                 comment = self.comment.message
             )
     
-    def post(self, message):
+    def post(self, message, title=None):
         """Update the comment."""
         
-        if not (user and (user.admin or self.thread.forum.moderate in user.tags or user._current_obj() == self.comment.creator)):
+        if not self.thread.user_can_edit_comment(user, self.comment):
             return 'json:', dict(success = False, message = "Not allowed.")
+        
+        if title:
+            if self.comment.id != self.thread.oldest().id:
+                return 'json:', dict(success = False, message = "Setting title on invalid comment")
+            assert self.thread.update_title(title), "Couldn't update thread title?!"
         
         enabled = True
         success = self.thread.update_comment(self.comment.id, set__message = message,
                  set__modified = datetime.utcnow()
              )
+        log.info("'{0}' edited comment {1} from '{2}' to '{3}'".format(user.character.name, self.comment.id, self.comment.message, message))
         if not success:
-            return 'json:', dict(success = False, message = "Thread not found.")
+            return 'json:', dict(success = False, message = "Comment not found.")
         
         self.thread.channel.send('refresh', str(self.comment.id))
         return 'json:', dict(success=True, comment=str(self.comment.id))
@@ -66,18 +72,19 @@ class CommentIndex(HTTPMethod):
         
         forum = self.thread.forum
         
-        if not (user and (user.admin or forum.moderate in user.tags
-                          or user._current_obj() == self.comment.creator)):
+        if not self.thread.user_can_edit_comment(user, self.comment):
             return 'json:', dict(success = False, message = "Not allowed.")
         
         if self.comment.id == self.thread.oldest().id:
             forum.channel.send('gone', str(self.thread.id))
             self.thread.channel.send('gone', url('/' + forum.short))
+            log.info("'{0}' deleted thread {1}/{2}".format(user.character.name, forum.short, self.thread.id))
             self.thread.delete()
             
             return 'json:', dict(success=True)
         
         self.thread.update_comment(self.comment.id, dict(dec__stat__comments=1, pull__comments__id=self.comment.id))
+        log.info("'{0}' deleted comment '{1} (2)' by '{3}'  in {4}/{5}".format(user.character.name, self.comment.message, self.comment.id, self.comment.creator.character.name, forum.short, self.thread.id))
         self.thread.channel.send('remove', str(self.comment.id))
         
         return 'json:', dict(success=True)
