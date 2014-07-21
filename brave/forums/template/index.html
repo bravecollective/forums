@@ -37,7 +37,7 @@
 % if announcements and announcements.threads.count():
 <ul class="nav nav-pills pull-right">
     <li><a href="/ann/"><i class="fa fa-arrow-circle-o-right fa-lg"></i>View All Announcements</a></li>
-</ul>
+	</ul>
 
 <h4>Latest Announcement Threads</h4>
 <%forum:threads results="${announcements.threads}" limit="3" />
@@ -53,7 +53,6 @@
     ${render_category(category.id, category.title, category.forums)}
 % endfor
 
-
 <!--- <h4>Latest Discussions</h4>
 <%forum:threads results="${latest}" limit="5" />
 
@@ -62,6 +61,7 @@
 
 <ul class="nav nav-pills pull-right">
     <li><a href="#"><i class="fa fa-cogs fa-lg"></i>Subscription Preferences</a></li>
+
 </ul>
 
 <h4>Your Subscriptions</h4>
@@ -87,9 +87,8 @@
     <ul class="list-group media-list clearfix">
         % for forum_item in forums_list:
             <a href="/${forum_item.short}" class="list-group-item media thread ${'unread' if web.user and not web.user.is_forum_read(forum_item) else ''}">
-                <i class="pull-left media-object fa fa-arrow-circle-o-right fa-3x dim"></i>
-
-
+			    <i class="pull-left media-object fa fa-arrow-circle-o-right fa-3x dim"></i>
+				
                 ${stat('thread', 'threads', forum_item.threads.count())}
                 ${stat('comment', 'comments', forum_item.threads.sum('stat.comments'))}
                 ${stat('view', 'views', forum_item.threads.sum('stat.views'))}
@@ -104,7 +103,7 @@
                 % if forum_item.threads.count():
                 <% latest = forum_item.threads.first() %>
                 <div class="list-group-item-text">
-                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in ${latest.oldest().creator.character.$
+                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in  ${latest.oldest().creator.character.name}&apos;s thread “${latest.title}”.
                 </div>
                 % else:
                 <div class="list-group-item-text">
