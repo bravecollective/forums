@@ -40,7 +40,11 @@
 </ul>
 
 <h4>Latest Announcement Threads</h4>
-<%forum:threads results="${announcements.threads}" limit="3" />
+<%
+from brave.forums.component.forum.model import Forum as formod
+ann = formod.objects(short='ann').first()
+%>
+${forum.threads(forum=ann, results=announcements.threads, limit="3")}
 % endif
 
 <h4>Your Active Discussions</h4>
