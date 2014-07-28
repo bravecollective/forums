@@ -85,7 +85,7 @@ class ThreadController(Controller):
         return 'json:', dict(success=True, enabled=thread.flag.locked)
     
     def sticky(self):
-        if not forum.user_can_moderate(user):
+        if not self.forum.user_can_moderate(user):
             return dict(success=False, enabled=self.thread.flag.sticky, message="Not allowed.")
         
         thread = self.thread
@@ -98,7 +98,7 @@ class ThreadController(Controller):
         return 'json:', dict(success=True, enabled=thread.flag.sticky)
     
     def hide(self):
-        if not forum.user_can_moderate(user):
+        if not self.forum.user_can_moderate(user):
             return dict(success=False, enabled=self.thread.flag.hidden, message="Not allowed.")
         
         thread = self.thread
