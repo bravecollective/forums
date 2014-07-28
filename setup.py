@@ -35,7 +35,7 @@ setup(
                 'MongoEngine>=0.7.999',
                 'Mako>=0.4.1',
                 'beaker>=1.5',
-                'requests==1.1.0',
+                'requests',
                 'blinker',
                 'ecdsa',
                 'xmltodict',
@@ -44,7 +44,8 @@ setup(
                 'babel',
                 'marrow.mailer',
                 'futures',
-                'bbcode'
+                'bbcode',
+                'pysolr',
             ],
         
     )
