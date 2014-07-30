@@ -76,6 +76,8 @@ class CommentIndex(HTTPMethod):
             return 'json:', dict(success = False, message = "Not allowed.")
         
         if self.comment.id == self.thread.oldest().id:
+            if len(self.thread.comments) > 1 and not self.thread.forum.user_can_moderate(user):
+                return 'json:', dict(success=False, message="Not allowed.")
             forum.channel.send('gone', str(self.thread.id))
             self.thread.channel.send('gone', url('/' + forum.short))
             log.info("'{0}' deleted thread {1}/{2}".format(user.character.name, forum.short, self.thread.id))
