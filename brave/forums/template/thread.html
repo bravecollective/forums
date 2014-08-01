@@ -254,7 +254,7 @@ ${render_comment(comment, post_title)}
 
 <%def name="render_comment(comment, post_title=None, last=False, i=None)">
 <div class="row row-offcanvas row-offcanvas-left comment" id="${comment.id}">
-    <div class="col-xs-3 col-sm-3 text-right media">
+    <div class="col-xs-12 col-sm-3 text-right media">
         <div class="pull-right media-object text-center">
             <img src="//image.eveonline.com/Character/${comment.creator.character.id}_64.jpg" class="img-thumbnail img-circle thumb-50">
         </div>
@@ -266,10 +266,10 @@ ${render_comment(comment, post_title)}
     </div>
     
     % if not last:
-    <div class="liner"></div>
+    <div class="liner hidden-xs"></div>
     % endif
     
-    <div class="col-xs-7 col-sm-7">
+    <div class="col-xs-10 col-sm-7">
         <div class="panel panel-default">
             % if post_title and comment.message and comment.message.strip():
             <div class="panel-heading">
