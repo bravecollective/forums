@@ -38,7 +38,8 @@ class Channel(object):
     Channel IDs are SHA256 hashes comprised of the browser session ID, user ID (if applicable), and a nonce.
     """
     
-    url_base = b'{0}/_push?id='.format(config['notify.server'])
+    enabled = bool(config.get('notify.server') != None)
+    url_base = b'{0}/_push?id='.format(config.get('notify.server', ''))
     receiver_base = b'/listen?id='
     
     def __init__(self, *tokens):
@@ -57,6 +58,9 @@ class Channel(object):
         return sha256(b"".join(str(i) for i in tokens)).hexdigest()
     
     def send(self, handler, content):
+        if not self.enabled:
+            return True
+        
         payload = dict(
                 handler = handler,
                 payload = content,
