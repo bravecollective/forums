@@ -53,7 +53,7 @@ class ThreadController(Controller):
         self.forum = forum
         
         try:
-            t = self.thread = Thread.objects.get(id=id)
+            t = self.thread = Thread.get_thread(id=id)
         except Thread.DoesNotExist:
             raise HTTPNotFound()
             
