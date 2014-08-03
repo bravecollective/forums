@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from bson import ObjectId
 from mongoengine.queryset import queryset_manager
 from mongoengine.queryset.field_list import QueryFieldList
-from mongoengine import QuerySet, Document, EmbeddedDocument, ObjectIdField, StringField, DateTimeField, ReferenceField, EmbeddedDocumentField, ListField, BooleanField
+from mongoengine import QuerySet, Document, EmbeddedDocument, ObjectIdField, StringField, DateTimeField, ReferenceField, EmbeddedDocumentField, ListField, BooleanField, ValidationError
 
 from brave.forums.model import Statistics
 from brave.forums.component.comment.model import Comment
@@ -80,6 +80,13 @@ class Thread(Document):
     
     def __repr__(self):
         return 'Thread({0.id} in {0.forum.id}, "{0.title}")'.format(self)
+
+    @staticmethod
+    def get_thread(id):
+        try:
+            return Thread.objects.get(id=id)
+        except ValidationError:
+            raise Thread.DoesNotExist
     
     @property
     def channel(self):
