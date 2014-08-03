@@ -16,6 +16,10 @@
  limitations under the License.
 -->
 
+<!--
+ This file has been modified for use with Brave Forums.
+-->
+
 <!--  
  This is the Solr schema file. This file should be named "schema.xml" and
  should be in the conf directory under the solr home
