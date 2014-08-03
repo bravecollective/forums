@@ -11,6 +11,7 @@ from ecdsa.curves import NIST256p
 
 from web.auth import always, Predicate
 from web.core import config, request
+from web.core.http import HTTPNotFound
 from marrow.mailer import Mailer
 from marrow.util.convert import boolean
 
