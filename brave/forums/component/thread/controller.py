@@ -7,7 +7,7 @@ from datetime import datetime
 
 from web.auth import user
 from web.core import Controller, HTTPMethod, url, request
-from web.core.http import HTTPNotFound
+from web.core.http import HTTPNotFound, HTTPMovedPermanently
 
 from brave.forums.auth.model import Character
 from brave.forums.component.thread.model import Thread
@@ -58,7 +58,7 @@ class ThreadController(Controller):
             raise HTTPNotFound()
             
         if self.forum.short != self.thread.forum.short:
-            raise HTTPNotFound()
+            raise HTTPMovedPermanently(location='/{0}/{1}'.format(self.thread.forum.short, id))
         
         self.index = ThreadIndex(forum, t)
         
