@@ -259,7 +259,17 @@ ${render_comment(comment, post_title)}
             <img src="//image.eveonline.com/Character/${comment.creator.character.id}_64.jpg" class="img-thumbnail img-circle thumb-50">
         </div>
         <div class="media-body">
-            <a href="https://gate.eveonline.com/Profile/${comment.creator.character.name}" target="_blank"><strong>${comment.creator.character.name}</strong></a>
+            <a href="https://gate.eveonline.com/Profile/${comment.creator.character.name}" target="_blank"><strong>
+             % if forum.user_can_admin(comment.creator):
+                <font color="red">
+            % elif forum.user_can_moderate(comment.creator):
+                <font color="green">
+            % endif
+                    ${comment.creator.character.name}
+            % if forum.user_can_admin(comment.creator) or forum.user_can_moderate(comment.creator):
+                </font>
+            % endif
+            </strong></a>
             <br>
             <small><a href="#${comment.id}"><time class="relative" datetime="${comment.created |n,f.iso}">${comment.created |n,f.pretty}</time></a></small>
         </div>
