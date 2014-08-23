@@ -260,15 +260,7 @@ ${render_comment(comment, post_title)}
         </div>
         <div class="media-body">
             <a href="https://gate.eveonline.com/Profile/${comment.creator.character.name}" target="_blank"><strong>
-             % if forum.user_can_admin(comment.creator):
-                <font color="red">
-            % elif forum.user_can_moderate(comment.creator):
-                <font color="green">
-            % endif
-                    ${comment.creator.display_name}
-            % if forum.user_can_admin(comment.creator) or forum.user_can_moderate(comment.creator):
-                </font>
-            % endif
+                    ${comment.creator.display_name(forum)}
             </strong></a>
             <br>
             <small><a href="#${comment.id}"><time class="relative" datetime="${comment.created |n,f.iso}">${comment.created |n,f.pretty}</time></a></small>

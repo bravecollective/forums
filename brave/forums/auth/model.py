@@ -61,11 +61,18 @@ class Character(Document):
     def admin(self):
         return 'admin' in self.tags or 'forum.admin' in self.tags
     
-    @property
-    def display_name(self):
+    def display_name(self, forum):
         if self._display_name:
            return self._display_name
-        return self.charcter.name
+        
+        forum_color = ""
+        
+        if forum.user_can_admin(self):
+            forum_color = "<font color='red'>"
+        elif forum.user_can_moderate(self):
+            forum_color = "<font color='green'>"
+        
+        return forum_color + self.charcter.name + ("</font>" if forum_color else "")
     
     @classmethod
     def authenticate(cls, identifier, password=None):

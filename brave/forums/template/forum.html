@@ -190,29 +190,13 @@
             ${thread.title}
             <small>
                 by
-                % if forum and forum.user_can_admin(thread.oldest().creator):
-                    <font color="red">
-                % elif forum and forum.user_can_moderate(thread.oldest().creator):
-                    <font color="green">
-                % endif
-                    ${thread.oldest().creator.display_name}
-                % if forum and (forum.user_can_admin(thread.oldest().creator) or forum.user_can_moderate(thread.oldest().creator)):
-                    </font>
-                % endif
+                    ${thread.oldest().creator.display_name(forum)}
                 <time class="relative" datetime="${thread.oldest().created |n,f.iso}">on ${thread.oldest().created |n,f.pretty}</time>
             </small>
         </h4>
         <div class="list-group-item-text">
             Last comment by 
-                % if forum and forum.user_can_admin(thread.latest().creator):
-                    <font color="red">
-                % elif forum and forum.user_can_moderate(thread.latest().creator):
-                    <font color="green">
-                % endif
-                    ${thread.latest().creator.display_name}
-                % if forum and (forum.user_can_admin(thread.latest().creator) or forum.user_can_moderate(thread.latest().creator)):
-                    </font>
-                % endif
+                    ${thread.latest().creator.display_name(forum)}
             <time class="relative" datetime="${thread.latest().created |n,f.iso}">on ${thread.latest().created |n,f.pretty}</time>.
         </div>
     </a>
