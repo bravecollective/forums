@@ -40,10 +40,6 @@
 </ul>
 
 <h4>Latest Announcement Threads</h4>
-<%
-from brave.forums.component.forum.model import Forum as formod
-ann = formod.objects(short='ann').first()
-%>
 ${forum.threads(forum=ann, results=announcements.threads, limit="3")}
 % endif
 

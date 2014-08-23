@@ -39,7 +39,7 @@ class Character(Document):
     corporation = EmbeddedDocumentField(Entity, db_field='o', default=lambda: Entity())
     alliance = EmbeddedDocumentField(Entity, db_field='a', default=lambda: Entity())
     tags = ListField(StringField(), db_field='g', default=list)
-    _display_name = StrinField(db_field='db')
+    _display_name = StringField(db_field='db')
     
     theme = StringField(db_field='h')
     
@@ -64,6 +64,9 @@ class Character(Document):
     def display_name(self, forum):
         if self._display_name:
            return self._display_name
+           
+        if not forum:
+            return self.character.name
         
         forum_color = ""
         
@@ -72,7 +75,7 @@ class Character(Document):
         elif forum.user_can_moderate(self):
             forum_color = "<font color='green'>"
         
-        return forum_color + self.charcter.name + ("</font>" if forum_color else "")
+        return forum_color + self.character.name + ("</font>" if forum_color else "")
     
     @classmethod
     def authenticate(cls, identifier, password=None):

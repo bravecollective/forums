@@ -38,7 +38,7 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
     @require(anonymous)
     def index(self):
         """Anonymous welcome splash page."""
-        return 'brave.forums.template.welcome', dict()
+        return 'brave.forums.template.welcome', dict(ann=Forum.objects(short="ann").first())
     
     @index.otherwise
     def index(self):
