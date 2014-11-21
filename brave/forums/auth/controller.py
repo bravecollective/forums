@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from urllib import unquote
 
 from web.auth import authenticate, deauthenticate
-from web.core import config, url, request
+from web.core import config, url, request, session
 from web.core.http import HTTPFound
 
 from brave.api.client import API
@@ -37,6 +37,11 @@ class AuthenticationMixIn(object):
         We pass through to the method defined in the INI file, usually:
             brave.forums.auth.model:Character.authenticate
         """
+
+        # Prevent users from specifying their session IDs (Some user-agents were sending null ids, leading to users
+        # authenticated with a session id of null
+        session.regenerate_id()
+
         authenticate(token)
         raise HTTPFound(location=unquote(redirect).decode('utf8') if redirect else '/')
     
