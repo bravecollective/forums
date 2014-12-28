@@ -93,13 +93,13 @@ BASE = "/{0}/{1}".format(forum.short, thread.id)
                     identifier = self.parents('.comment').attr('id'),
                     target = $('body').data('base') + '/' + identifier;
                 
-                // TODO: Confirm this before enacting.  ;P
-                
-                $.get(target, {"_verb": "delete"}, function(result){
-                    if ( result.success ) {
-                        self.parents('.comment').remove();
-                    }
-                });
+                if (confirm("Really delete?")) {
+                    $.get(target, {"_verb": "delete"}, function(result){
+                        if ( result.success ) {
+                            self.parents('.comment').remove();
+                        }
+                    });
+                }
                 
                 e.preventDefault();
                 return false;

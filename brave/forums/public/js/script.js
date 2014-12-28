@@ -149,8 +149,9 @@ $(function(){
         }).modal();
     }
     
-    // Override the default confirmation dialog.
-    window.confirm = confirm;
+    // Don't override the default confirmation dialog with half-working shit. Can put this back in place when it's fixed.
+    //// Override the default confirmation dialog.
+    //window.confirm = confirm;
     
     // Display notices (errors, warning, informational, etc.)
     $.alert = function(level, title, message, target) {
