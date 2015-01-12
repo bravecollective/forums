@@ -19,14 +19,20 @@ virtualenv --system-site-packages /home/vagrant/forums-env
 echo "source /home/vagrant/forums-env/bin/activate" >> /home/vagrant/.profile
 source /home/vagrant/forums-env/bin/activate
 cd /vagrant
-python setup.py develop
+pip install -r requirements.txt -e .
 
 # Final tweaks
 if [ ! -f /vagrant/local.ini ]; then
-  cp /vagrant/conf/development.ini /vagrant/local.ini
+  cp /vagrant/development.ini /vagrant/local.ini
 fi
-echo 'alias serve="paster serve --reload /vagrant/local.ini"' >> /home/vagrant/.profile
-echo 'echo "To start the server, type serve"' >> /home/vagrant/.profile
+cat <<PROFILE >>/home/vagrant/.profile
+alias serve="paster serve --reload /vagrant/local.ini"
+alias shell="(cd /vagrant; paster shell local.ini)"
+echo
+echo "To start the server, type serve"
+echo "To open a core shell, type shell"
+echo
+PROFILE
 
 SHELLSCRIPT
 

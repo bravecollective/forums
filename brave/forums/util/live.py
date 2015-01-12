@@ -10,7 +10,7 @@ from web.auth import user
 from web.core import config
 from marrow.util.futures import ScalingPoolExecutor
 
-from brave.api.client import API
+from braveapi.client import API
 
 
 log = __import__('logging').getLogger(__name__)
