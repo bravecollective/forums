@@ -352,3 +352,5 @@ a[data-toggle]:hover { cursor: pointer; }
 #discuss.modal .modal-header a.disabled { background-color: transparent; color: black; border-color: white white transparent; font-weight: bold; padding-left: 0; }
 #discuss.modal .modal-header .close { line-height: inherit; }
 #discuss.modal label { margin-bottom: 0; }
+
+a.list-group-item .list-group-item-heading { font-weight: bold; }
