@@ -33,10 +33,10 @@ class ThreadQuerySet(QuerySet):
         
         query = self.order_by('-modified')
         
-        if forum: query = query(forum__in=forum if isinstance(forum, (list, tuple)) else [forum])
-        if user: query = query(comments__creator=user)
-        if days: query = query(modified__gt=datetime.utcnow() - timedelta(days=days))
-        if kw: query = query(**kw)
+        if forum is not None: query = query(forum__in=forum if isinstance(forum, (list, tuple)) else [forum])
+        if user is not None: query = query(comments__creator=user)
+        if days is not None: query = query(modified__gt=datetime.utcnow() - timedelta(days=days))
+        if kw is not None: query = query(**kw)
         
         return query
 
