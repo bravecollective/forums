@@ -57,7 +57,7 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
 
     @require(authenticated)
     def unread(self):
-        allowed = list(Forum.get())
+        allowed = Forum.get()
         allowed_unread = [f for f in allowed if not user.is_forum_read(f)]
         # Potentially HIDEOUSLY EXPENSIVE (could hit every thread in the db).
         unread_gen = user.filter_only_unread(Thread.objects.get_active(allowed_unread))
