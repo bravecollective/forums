@@ -111,6 +111,20 @@ class Character(Document):
         return Character.objects(id=self.id).update_one(**{
                 'set__read__{0}'.format(forum.id): {'read': time or datetime.utcnow()}
             })
+
+    def filter_only_unread(self, threads):
+        """
+        A generator that processes a ThreadQuerySet and yields the first n unread threads.
+        Args:
+            threads (ThreadQuerySet): the threads to filter
+        """
+        # Just load in the whole read dictionary.
+        read = Character.objects(id=self.id).scalar('read').first()
+        log.debug("read: {}".format(read))
+
+        for t in threads.only('forum', 'id', 'modified'):
+            if not self.is_thread_read_helper(t, read.get(unicode(t.forum.id), {})):
+                yield t
     
     def is_thread_read(self, thread, since_time=None):
         forum_id = unicode(thread.forum.id)
@@ -126,8 +140,12 @@ class Character(Document):
             log.debug("thread %s unread notfound", thread_id)
             return False
         
-        read = read.read[forum_id]
-        forum_read = read.get('read', None)
+        return self.is_thread_read_helper(thread, read.read[forum_id])
+
+    @staticmethod
+    def is_thread_read_helper(thread, read_dict_for_forum, since_time=None):
+        thread_id = unicode(thread.id)
+        forum_read = read_dict_for_forum.get('read', None)
         modified = since_time or thread.modified
         
         if forum_read and forum_read >= modified:
@@ -136,11 +154,11 @@ class Character(Document):
         else:
             log_date_condition("%s >= %s == False", forum_read, modified)
         
-        if thread_id in read and read[thread_id] >= modified:
-            log_date_condition("thread %s read %s >= %s", thread_id, read.get(thread_id, None), modified)
+        if thread_id in read_dict_for_forum and read_dict_for_forum[thread_id] >= modified:
+            log_date_condition("thread %s read %s >= %s", thread_id, read_dict_for_forum.get(thread_id, None), modified)
             return True
         else:
-            log_date_condition("%s >= %s == False", read.get(thread_id, None), modified)
+            log_date_condition("%s >= %s == False", read_dict_for_forum.get(thread_id, None), modified)
         
         log.debug("thread %s unread", thread_id)
         return False

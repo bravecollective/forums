@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+import itertools
 import sys
 import bbcode
 
@@ -53,6 +54,18 @@ class RootController(Controller, StartupMixIn, AuthenticationMixIn):
                 latest = Thread.objects.get_active(allowed).order_by('-id'),
                 voted = Thread.objects.get_active(allowed, days=7, stat__votes__gt=0).order_by('-stat__votes')
             )
+
+    @require(authenticated)
+    def unread(self):
+        allowed = list(Forum.get())
+        allowed_unread = [f for f in allowed if not user.is_forum_read(f)]
+        # Potentially HIDEOUSLY EXPENSIVE (could hit every thread in the db).
+        unread_gen = user.filter_only_unread(Thread.objects.get_active(allowed_unread))
+        threads = list(itertools.islice(unread_gen, 0, 20))
+        
+        # This is a little silly, but the template wants a QuerySet.
+        threads = Thread.objects(id__in=[t.id for t in threads])
+        return 'brave.forums.template.unread', dict(threads=threads)
     
     def listen(self, id):
         """Default push notification handler if not running under Nginx."""

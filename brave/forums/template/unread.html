@@ -1,0 +1,12 @@
+## encoding: utf-8
+
+<%inherit file="brave.forums.template.master"/>
+<%namespace name="f" file="brave.forums.template.filter"/>
+<%namespace name="forum" file="brave.forums.template.forum"/>
+
+<%block name="title">Unread Discussions</%block>
+
+<%f:page title="Unread Discussions" minor="because you've gotta read 'em all." />
+
+<%forum:threads results="${threads}" />
+
