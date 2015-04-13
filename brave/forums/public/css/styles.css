@@ -95,7 +95,8 @@ ul.nav-pills i.fa {
     line-height: 1.4em;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    resize: vertical;
+    resize: none;
+    overflow: hidden;
 }
 
 .comment-composer .tab-pane .content {
@@ -128,6 +129,10 @@ ul.nav-pills i.fa {
 
 .comment-composer-inline .submit {
     margin-right: 8px;
+}
+
+.footer-vspace {
+    height: 200px;
 }
 
 .thread {

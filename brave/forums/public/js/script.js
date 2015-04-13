@@ -92,6 +92,20 @@ $(function(){
     
     // A little CSS helper.
     $('tr:first-child').addClass('first');
+
+    // Textarea autogrow. (But not shrinking. I haven't figured that out yet.)
+    function autogrow() {
+        var self = $(this);
+        if (self[0].scrollHeight != self.outerHeight()) {
+            self.outerHeight(self[0].scrollHeight);
+        }
+    }
+    var autogrowEvents = ['change', 'cut', 'paste', 'drop', 'keydown', 'keyup', 'keypress'];
+    for (var i = 0; i < autogrowEvents.length; i++) {
+        $('body').on(autogrowEvents[i], '.autogrow', autogrow);
+    }
+    // Trigger resize on page load, in case there's already text in a textarea.
+    $(document).ready(function() {$('textarea').change();});
     
     // Automatically destroy all modal dialogs.  Keep the DOM clean.
     $('body').on('hidden', '#modal', function(){ $('#modal').remove(); });
