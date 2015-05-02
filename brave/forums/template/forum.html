@@ -189,12 +189,15 @@
         <h4 class="list-group-item-heading">
             ${thread.title}
             <small>
-                by ${thread.oldest().creator.character.name}
+                by
+                    ${thread.oldest().creator.display_name(forum)}
                 <time class="relative" datetime="${thread.oldest().created |n,f.iso}">on ${thread.oldest().created |n,f.pretty}</time>
             </small>
         </h4>
         <div class="list-group-item-text">
-            Last comment by ${thread.latest().creator.character.name} <time class="relative" datetime="${thread.latest().created |n,f.iso}">on ${thread.latest().created |n,f.pretty}</time>.
+            Last comment by 
+                    ${thread.latest().creator.display_name(forum)}
+            <time class="relative" datetime="${thread.latest().created |n,f.iso}">on ${thread.latest().created |n,f.pretty}</time>.
         </div>
     </a>
     % endfor

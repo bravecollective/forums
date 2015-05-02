@@ -259,7 +259,9 @@ ${render_comment(comment, post_title)}
             <img src="//image.eveonline.com/Character/${comment.creator.character.id}_64.jpg" class="img-thumbnail img-circle thumb-50">
         </div>
         <div class="media-body">
-            <a href="https://gate.eveonline.com/Profile/${comment.creator.character.name}" target="_blank"><strong>${comment.creator.character.name}</strong></a>
+            <a href="https://gate.eveonline.com/Profile/${comment.creator.character.name}" target="_blank"><strong>
+                    ${comment.creator.display_name(forum)}
+            </strong></a>
             <br>
             <small><a href="#${comment.id}"><time class="relative" datetime="${comment.created |n,f.iso}">${comment.created |n,f.pretty}</time></a></small>
         </div>

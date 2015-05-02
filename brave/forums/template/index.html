@@ -40,7 +40,7 @@
 </ul>
 
 <h4>Latest Announcement Threads</h4>
-<%forum:threads results="${announcements.threads}" limit="3" />
+${forum.threads(forum=ann, results=announcements.threads, limit="3")}
 % endif
 
 <h4>Your Active Discussions</h4>
@@ -95,7 +95,9 @@
                 % if forum_item.threads.count():
                 <% latest = forum_item.threads.first() %>
                 <div class="list-group-item-text">
-                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in ${latest.oldest().creator.character.name}&apos;s thread “${latest.title}”.
+                    Last comment <time class="relative" datetime="${latest.latest().created |n,f.iso}">${latest.latest().created |n,f.pretty}</time> in 
+                    ${latest.oldest().creator.display_name(forum_item)}<!---
+                    -->&apos;s thread “${latest.title}”.
                 </div>
                 % else:
                 <div class="list-group-item-text">
